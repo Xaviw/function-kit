@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM"],
+    "module": "ES2020",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true, // 允许导入JSON文件
+    "strict": true, // 启用所有严格类型检查选项
+    "declaration": true, // 生成.d.ts类型声明文件
+    "allowSyntheticDefaultImports": true, // 允许合成默认导入
+    "esModuleInterop": true, // 改进CommonJS模块的互操作性
+    "forceConsistentCasingInFileNames": true, // 强制文件名大小写一致
+    "skipLibCheck": true // 跳过声明文件类型检查（提升编译速度）
+  },
+  "include": ["src/*.ts", "test/*.ts", "types.d.ts"]
+}

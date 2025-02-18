@@ -1,0 +1,42 @@
+{
+  "name": "function-kit",
+  "type": "module",
+  "version": "1.0.0",
+  "packageManager": "pnpm@10.4.1",
+  "description": "零依赖多端函数工具库",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build:web": "cross-env MODE=web rollup -c",
+    "build:miniprogram": "cross-env MODE=miniprogram rollup -c",
+    "build:node": "cross-env MODE=node rollup -c",
+    "lint": "eslint . --fix",
+    "clean": "npx rimraf node_modules",
+    "taze": "npx taze -I",
+    "postinstall": "npx simple-git-hooks"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.2.1",
+    "@types/node": "^22.13.4",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.20.1",
+    "lint-staged": "^15.4.3",
+    "rollup": "^4.34.8",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "simple-git-hooks": "^2.11.1",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "simple-git-hooks"
+    ]
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
+  }
+}
