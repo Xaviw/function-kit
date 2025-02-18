@@ -6,7 +6,9 @@
   "description": "零依赖多端函数工具库",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build:web": "cross-env MODE=web rollup -c",
     "build:miniprogram": "cross-env MODE=miniprogram rollup -c",
@@ -30,6 +32,7 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "esbuild",
       "simple-git-hooks"
     ]
   },

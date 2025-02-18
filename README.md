@@ -68,7 +68,7 @@ export function example(): string {
 }
 ```
 
-新建 `src/example.ts` 文件，写入工具函数代码，并**具名导出**
+新建 `src/example.ts` 文件，写入工具函数代码，并**具名导出**（自定义插件实现的条件编译未处理默认导出和同时导出多个）
 
 对导出的函数添加 JSDoc 说明，`@web`、`@miniprogram`、`@node` 注解分别代表该函数支持 web 环境、小程序环境、node 环境，按实际情况添加注解
 
