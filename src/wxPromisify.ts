@@ -1,7 +1,7 @@
 type Callbackify = (options: {
-  success?: Func
-  fail?: Func
-  complete?: Func
+  success?: Fn
+  fail?: Fn
+  complete?: Fn
   [key: string]: any
 }) => any
 
