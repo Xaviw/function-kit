@@ -10,9 +10,9 @@
     "dist"
   ],
   "scripts": {
-    "build:web": "cross-env MODE=web rollup -c",
-    "build:miniprogram": "cross-env MODE=miniprogram rollup -c",
-    "build:node": "cross-env MODE=node rollup -c",
+    "build:web": "cross-env PLATFORM=web rollup -c",
+    "build:miniprogram": "cross-env PLATFORM=miniprogram rollup -c",
+    "build:node": "cross-env PLATFORM=node rollup -c",
     "lint": "eslint . --fix",
     "clean": "npx rimraf node_modules",
     "taze": "npx taze -I",

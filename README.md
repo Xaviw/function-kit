@@ -51,15 +51,15 @@ pnpm taze
  * @node
  */
 export function example(): string {
-  if (MODE === 'web') {
+  if (PLATFORM === 'web') {
     // build:web 时仅会保留这一行
     return 'is web'
   }
-  else if (MODE === 'miniprogram') {
+  else if (PLATFORM === 'miniprogram') {
     // build:miniprogram 时仅会保留这一行
     return 'is miniprogram'
   }
-  else if (MODE === 'node') {
+  else if (PLATFORM === 'node') {
     // build:node 时仅会保留这一行
     return 'is node'
   }
@@ -72,7 +72,7 @@ export function example(): string {
 
 对导出的函数添加 JSDoc 说明，`@web`、`@miniprogram`、`@node` 注解分别代表该函数支持 web 环境、小程序环境、node 环境，按实际情况添加注解
 
-`MODE` 为全局变量，值与注解一致，用于条件编译
+`PLATFORM` 为全局变量，值与注解一致，用于条件编译
 
 **函数需要显式书写返回值类型**，可以提高类型解析速度，另外避免条件编译代码导致的类型自动推断不正确
 
@@ -96,9 +96,9 @@ function nodeExample(): string {
  * @miniprogram
  * @node
  */
-export const example = MODE === 'web'
+export const example = PLATFORM === 'web'
   ? webExample
-  : MODE === 'miniprogram'
+  : PLATFORM === 'miniprogram'
     ? miniprogramExample
     : nodeExample
 ```
