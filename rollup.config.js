@@ -13,7 +13,7 @@ export default defineConfig({
   },
   plugins: [
     filterByPlatform(process.env.PLATFORM),
-    tsPlugin(),
+    tsPlugin({ tsconfigOverride: { exclude: ['test/*.ts'] } }),
   ],
 })
 
@@ -91,7 +91,8 @@ function filterByPlatform(PLATFORM) {
       })
 
       // 添加 PLATFORM 声明
-      code = `const PLATFORM = "${PLATFORM}"\n${code}`
+      // 必须指定 string 类型，否则会推断类型为具体的值，导致报错 TS2367：“无意的比较...”
+      code = `const PLATFORM: string = "${PLATFORM}"\n${code}`
 
       return { code }
     },
