@@ -8,7 +8,7 @@
 
 使用 VSCode 进行开发，并安装推荐的插件（ESLint、Code Spell Checker）
 
-使用 Node18+、PNPM、TypeScript
+使用 Node18+、PNPM、TypeScript、Vitest
 
 ### 项目结构
 
@@ -30,6 +30,9 @@ pnpm build:miniprogram
 
 # 构建支持 node 环境的函数
 pnpm build:node
+
+# 执行测试
+pnpm test
 
 # 代码格式化检查及自动修复
 pnpm lint
@@ -68,7 +71,7 @@ export function example(): string {
 }
 ```
 
-新建 `src/example.ts` 文件，写入工具函数代码，并**具名导出**（自定义插件实现的条件编译未处理默认导出和同时导出多个）
+新建 `src/example.ts` 文件，写入工具函数代码，并导出
 
 对导出的函数添加 JSDoc 说明，`@web`、`@miniprogram`、`@node` 注解分别代表该函数支持 web 环境、小程序环境、node 环境，按实际情况添加注解
 
