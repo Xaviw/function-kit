@@ -14,16 +14,18 @@ export default defineConfig({
   plugins: [
     filterByPlatform(process.env.PLATFORM),
     tsPlugin({ tsconfigOverride: { exclude: ['test/*.ts'] } }),
+    filterEmptyFileAndBuildEntry(),
   ],
+  onwarn(warning, warn) {
+    // 即使已经通过插件过滤掉了空文件，rollup 仍会发出 EMPTY_BUNDLE 警告，这里主动忽略
+    if (warning.code === 'EMPTY_BUNDLE')
+      return
+    warn(warning)
+  },
 })
 
 /**
- * 过滤掉 ts 文件中未带有指定平台 JSDoc 注解的导出，并生成 index.js 入口文件
- *
- * 插件还会在文件开头注入 PLATFORM 常量，用于在函数中创建针对不同平台的分支逻辑
- *
- * @param {string} PLATFORM
- * @returns {import('rollup').Plugin} rollup 插件
+ * 过滤掉 ts 文件中未带有指定平台 JSDoc 注解的导出；并在文件开头注入 PLATFORM 常量，用于在函数中创建针对不同平台的分支逻辑
  */
 function filterByPlatform(PLATFORM) {
   return {
@@ -96,17 +98,29 @@ function filterByPlatform(PLATFORM) {
 
       return { code }
     },
+  }
+}
+
+/**
+ * 过滤空文件、生成入口文件
+ */
+function filterEmptyFileAndBuildEntry() {
+  return {
+    name: 'filter-empty-file-and-build-entry',
     generateBundle(_, bundle) {
       let entry = ''
 
       for (const key in bundle) {
-        // 避免输出空文件
-        if (!bundle[key].exports.length) {
+        if (bundle[key].type === 'asset' && bundle[key].source.trim() === 'export {};') {
           delete bundle[key]
         }
-        // 构建入口文件
-        else {
-          entry += `export * from './${key}'\n`
+        else if (bundle[key].type === 'chunk') {
+          if (!bundle[key].exports.length) {
+            delete bundle[key]
+          }
+          else {
+            entry += `export * from './${key}'\n`
+          }
         }
       }
 

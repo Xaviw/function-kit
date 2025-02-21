@@ -48,5 +48,8 @@
     "scss",
     "pcss",
     "postcss"
+  ],
+  "cSpell.words": [
+    "onwarn"
   ]
 }
