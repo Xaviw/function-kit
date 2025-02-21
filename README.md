@@ -2,26 +2,24 @@
 
 > 零依赖，支持 WEB、小程序、Node 三端条件编译
 
-## 贡献指南
+Node18+、PNPM、TypeScript、Vitest、Rollup
 
-### 开发设置
-
-使用 VSCode 进行开发，并安装推荐的插件（ESLint、Code Spell Checker）
-
-使用 Node18+、PNPM、TypeScript、Vitest
-
-### 项目结构
+## 项目结构
 
 ```sh
 dist       # 构建输出目录
+scripts    # 自定义构建脚本
 src        # 函数源代码
 test       # 函数单元测试代码
-types.d.ts # 全局类型声明
+types      # 全局类型声明、工具类型
 ```
 
-### 常用命令
+## 常用命令
 
 ```sh
+# 交互式手动选择构建范围
+pnpm build
+
 # 构建支持 web 环境的函数
 pnpm build:web
 
@@ -44,7 +42,7 @@ pnpm clean
 pnpm taze
 ```
 
-### 示例
+## 贡献示例
 
 ```ts
 /**
