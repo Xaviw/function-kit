@@ -4,18 +4,22 @@ export interface CanvasPosterOptions {
   node: HTMLCanvasElement
   width: number
   height: number
+  /**
+   * 这里初始化上下文属性会被 save，后续绘制每一项会 restore 到此状态
+   * （自定义绘制函数中再次 save 的情况除外）
+   */
   init?: CanvasRenderFn
 }
 
 export interface CanvasElementRenderFnOptions { ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, rpr: number }
 
-export type CanvasElement = CanvasTextElement | CanvasInlineTextElement | CanvasImageElement | CanvasRectElement | CanvasLineElement
+export type CanvasElement = CanvasTextElement | CanvasImageElement | CanvasRectElement | CanvasLineElement
 
-interface CanvasRenderFn {
+export interface CanvasRenderFn {
   (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement): MaybePromise<void>
 }
 
-interface CanvasElementCommonOptions {
+export interface CanvasElementCommonOptions {
   top?: string
   right?: string
   bottom?: string
@@ -23,7 +27,53 @@ interface CanvasElementCommonOptions {
   rotate?: number
 }
 
-interface CanvasTextCommonOptions {
+export interface CanvasTextCommonOptions {
+  content: string
+  /**
+   * @default 1.2
+   */
+  lineHeight?: number | string
+  /**
+   * @default '16px'
+   */
+  fontSize?: string
+  /**
+   * @default 'sans-serif'
+   */
+  fontFamily?: string
+  /**
+   * @default 'normal'
+   */
+  fontWeight?: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 'normal' | 'bold'
+  /**
+   * @default '#000000'
+   */
+  color?: string
+  /**
+   * @default 'normal'
+   */
+  fontStyle?: 'normal' | 'italic'
+  textDecoration?: 'underline' | 'overline' | 'line-through'
+  /**
+   * 填充或镂空
+   * @default 'fill'
+   */
+  textStyle?: 'fill' | 'stroke'
+  /**
+   * @example '1px 1px 1px #ffffff'
+   */
+  textShadow?: string
+}
+
+/**
+ * 文本
+ */
+export interface CanvasTextElement extends CanvasTextCommonOptions, CanvasElementCommonOptions {
+  type: 'text'
+  /**
+   * 文本内容、支持换行等控制字符
+   */
+  content: string | CanvasTextCommonOptions[]
   /**
    * 设置宽度后支持自动换行、多行省略、对其方式
    */
@@ -31,48 +81,18 @@ interface CanvasTextCommonOptions {
   /**
    * 最大行数，超出...省略显示，需设置 width
    */
-  lineClamp?: string
+  lineClamp?: number
   /**
    * 对齐方式，需设置 width
+   * @default 'left'
    */
   textAlign?: 'left' | 'center' | 'right'
-  lineHeight?: number | string
-  fontSize?: string
-  fontFamily?: string
-  fontWeight?: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 'normal' | 'bold'
-  color?: string
-  fontStyle?: 'normal' | 'italic'
-  textDecoration?: 'underline' | 'overline' | 'line-through'
-  /**
-   * 填充或镂空
-   */
-  textStyle?: 'fill' | 'stroke'
-  textShadow?: string
-}
-
-/**
- * 文本
- */
-interface CanvasTextElement extends CanvasTextCommonOptions extends CanvasElementCommonOptions {
-  type: 'text'
-  /**
-   * 文本内容、支持换行等控制字符
-   */
-  content: string
-}
-
-/**
- * 内联文本，用于一段文本包含不同的样式时
- */
-interface CanvasInlineTextElement extends CanvasElementCommonOptions extends CanvasTextCommonOptions {
-  type: 'inlineText'
-  contentList: Omit<CanvasTextCommonOptions, 'width' | 'lineClamp' | 'textAlign'>[]
 }
 
 /**
  * 图片
  */
-interface CanvasImageElement extends CanvasElementCommonOptions {
+export interface CanvasImageElement extends CanvasElementCommonOptions {
   type: 'image'
   src: string
   width?: string
@@ -91,7 +111,7 @@ interface CanvasImageElement extends CanvasElementCommonOptions {
 /**
  * 矩形
  */
-interface CanvasRectElement extends CanvasElementCommonOptions {
+export interface CanvasRectElement extends CanvasElementCommonOptions {
   type: 'rect'
   width: string
   height: string
@@ -106,7 +126,7 @@ interface CanvasRectElement extends CanvasElementCommonOptions {
 /**
  * 线
  */
-interface CanvasLineElement {
+export interface CanvasLineElement {
   type: 'line'
   begin: [number, number]
   end: [number, number]

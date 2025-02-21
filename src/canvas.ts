@@ -1,5 +1,5 @@
 /* eslint-disable unused-imports/no-unused-vars */
-import type { CanvasElement, CanvasElementRenderFnOptions, CanvasPosterElements, CanvasPosterOptions } from '../types/canvas'
+import type { CanvasElementRenderFnOptions, CanvasPosterElements, CanvasPosterOptions, CanvasTextElement } from '../types/canvas'
 
 /**
  * 配置式生成 Canvas 海报
@@ -61,7 +61,7 @@ export async function canvasPoster(elements: CanvasPosterElements, options: Canv
     }
 
     if (
-      !['text', 'inlineText', 'image', 'rect', 'line'].includes(element.type)
+      !['text', 'image', 'rect', 'line'].includes(element.type)
     ) {
       console.warn(`第${i}项配置错误，请检查配置：${element}`)
       continue
@@ -72,9 +72,6 @@ export async function canvasPoster(elements: CanvasPosterElements, options: Canv
       case 'text':
         renderText(element, contextOptions)
         break
-      case 'inlineText':
-        renderInlineText(element, contextOptions)
-        break
     }
   }
 }
@@ -84,13 +81,26 @@ export async function canvasPoster(elements: CanvasPosterElements, options: Canv
  * @web
  * @miniprogram
  */
-export function renderText(renderOptions: CanvasElement, contextOptions: CanvasElementRenderFnOptions): void {
+export function renderText(renderOptions: CanvasTextElement, contextOptions: CanvasElementRenderFnOptions): void {
 }
 
-/**
- * 绘制 Canvas 文本，支持自定义部分文本样式
- * @web
- * @miniprogram
- */
-export function renderInlineText(renderOptions: CanvasElement, contextOptions: CanvasElementRenderFnOptions): void {
+function normalizeTextOptions(options: CanvasTextElement): CanvasTextElement {
+  const result = {
+    ...options,
+    textAlign: options.textAlign || 'left',
+    lineHeight: options.lineHeight || 1.2,
+    fontSize: options.fontSize || '16px',
+    fontFamily: options.fontFamily || 'sans-serif',
+    fontWeight: options.fontWeight || 'normal',
+    color: options.color || '#000000',
+    fontStyle: options.fontStyle || 'normal',
+    textStyle: options.textStyle || 'fill',
+  }
+  if (!options.left && !options.right) {
+    result.left = '0px'
+  }
+  if (!options.top && !options.bottom) {
+    result.top = '0px'
+  }
+  return result
 }

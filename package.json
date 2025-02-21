@@ -10,6 +10,9 @@
     "dist",
     "types"
   ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "node scripts/build.js",
     "build:web": "cross-env PLATFORM=web rollup -c",
@@ -19,7 +22,8 @@
     "lint": "eslint . --fix",
     "clean": "npx rimraf node_modules",
     "taze": "npx taze -I",
-    "postinstall": "npx simple-git-hooks"
+    "postinstall": "npx simple-git-hooks",
+    "lint-staged": "lint-staged"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.2.1",
@@ -42,7 +46,7 @@
     ]
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm lint-staged"
+    "pre-commit": "lint-staged"
   },
   "lint-staged": {
     "*": "eslint --fix"
