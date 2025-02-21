@@ -27,7 +27,7 @@ export default defineConfig({
 /**
  * 过滤掉 ts 文件中未带有指定平台 JSDoc 注解的导出；并在文件开头注入 PLATFORM 常量，用于在函数中创建针对不同平台的分支逻辑
  */
-function filterByPlatform(PLATFORM) {
+export function filterByPlatform(PLATFORM) {
   return {
     name: 'filter-by-platform',
     transform(code, id) {
@@ -104,26 +104,32 @@ function filterByPlatform(PLATFORM) {
 /**
  * 过滤空文件、生成入口文件
  */
-function filterEmptyFileAndBuildEntry() {
+export function filterEmptyFileAndBuildEntry() {
   return {
     name: 'filter-empty-file-and-build-entry',
     generateBundle(_, bundle) {
       let entry = ''
 
       for (const key in bundle) {
-        if (bundle[key].type === 'asset' && bundle[key].source.trim() === 'export {};') {
-          delete bundle[key]
-        }
-        else if (bundle[key].type === 'chunk') {
-          if (!bundle[key].exports.length) {
-            delete bundle[key]
-          }
-          else {
+        const { type, exports } = bundle[key]
+        if (type === 'chunk') {
+          // 保留的文件记录到入口文件中
+          if (exports.length) {
             entry += `export * from './${key}'\n`
           }
+          // 删除过滤掉的文件及其声明文件
+          else {
+            delete bundle[key]
+            delete bundle[key.replace('.js', '.d.ts')]
+          }
+        }
+        // 自定义构建时，删除未参与构建文件的声明文件
+        else if (type === 'asset' && !bundle[key.replace('.d.ts', '.js')]) {
+          delete bundle[key]
         }
       }
 
+      // 输出入口文件及其声明文件
       if (entry) {
         this.emitFile({ type: 'asset', fileName: 'index.js', source: entry })
         this.emitFile({ type: 'asset', fileName: 'index.d.ts', source: entry })
