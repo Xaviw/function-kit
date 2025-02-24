@@ -1,5 +1,6 @@
 /* eslint-disable unused-imports/no-unused-vars */
-import type { CanvasElementRenderFnOptions, CanvasPosterElements, CanvasPosterOptions, CanvasTextElement } from '../types/canvas'
+import type { CanvasPosterElements, CanvasPosterOptions } from '../types/canvas'
+import { downloadImages } from '../utils/canvas'
 
 /**
  * 配置式生成 Canvas 海报
@@ -44,6 +45,8 @@ export async function canvasPoster(elements: CanvasPosterElements, options: Canv
   }
   ctx.save()
 
+  await downloadImages(elements as any)
+
   for (let i = 0, l = elements.length; i < l; i++) {
     // 校验配置
     const element = elements[i]
@@ -70,37 +73,8 @@ export async function canvasPoster(elements: CanvasPosterElements, options: Canv
     const contextOptions = { ctx, canvas, rpr }
     switch (element.type) {
       case 'text':
-        renderText(element, contextOptions)
+        // renderText(element, contextOptions)
         break
     }
   }
-}
-
-/**
- * 绘制 Canvas 文本
- * @web
- * @miniprogram
- */
-export function renderText(renderOptions: CanvasTextElement, contextOptions: CanvasElementRenderFnOptions): void {
-}
-
-function normalizeTextOptions(options: CanvasTextElement): CanvasTextElement {
-  const result = {
-    ...options,
-    textAlign: options.textAlign || 'left',
-    lineHeight: options.lineHeight || 1.2,
-    fontSize: options.fontSize || '16px',
-    fontFamily: options.fontFamily || 'sans-serif',
-    fontWeight: options.fontWeight || 'normal',
-    color: options.color || '#000000',
-    fontStyle: options.fontStyle || 'normal',
-    textStyle: options.textStyle || 'fill',
-  }
-  if (!options.left && !options.right) {
-    result.left = '0px'
-  }
-  if (!options.top && !options.bottom) {
-    result.top = '0px'
-  }
-  return result
 }

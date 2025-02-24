@@ -10,10 +10,11 @@ export default defineConfig({
   output: {
     dir: 'dist',
     format: 'es',
+    entryFileNames: 'src/[name].js',
   },
   plugins: [
     filterByPlatform(process.env.PLATFORM),
-    tsPlugin({ tsconfigOverride: { exclude: ['test/*.ts'] } }),
+    tsPlugin({ tsconfigOverride: { include: ['src/*.ts', 'types/*.ts'] } }),
     filterEmptyFileAndBuildEntry(),
   ],
   onwarn(warning, warn) {
@@ -37,21 +38,29 @@ export function filterByPlatform(PLATFORM) {
 
       // 记录平台支持的声明，用于在多个声明同时导出时进行过滤
       const declartationMap = {}
+      // 记录最后一条导入语句结束位置，用于注入 PLATFORM 常量
+      let lastImportEnd = 0
 
       const source = ts.createSourceFile(id, code, ts.ScriptTarget.Latest, true)
       ts.forEachChild(source, (node) => {
+        // 导入
+        if (ts.isImportDeclaration(node)) {
+          lastImportEnd = node.getEnd()
+        }
         // 变量、函数、类声明
-        if (ts.isVariableStatement(node) || ts.isFunctionDeclaration(node) || ts.isClassDeclaration(node)) {
+        else if (ts.isVariableStatement(node) || ts.isFunctionDeclaration(node) || ts.isClassDeclaration(node)) {
           // 获取 JSDoc 注解
           const tags = ts.getJSDocTags(node).map(tag => tag.tagName.escapedText)
           // 是否有导出修饰符
           const hasExportModifier = ts.getModifiers(node)?.some?.(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword)
-          // 有导出修饰符时，需要明确包含指定平台注解才保留
-          if (hasExportModifier && !tags.includes(PLATFORM)) {
+          // 是否支持当前平台（没有任何平台注解，或者明确包含指定平台注解）
+          const isSupportPlatform = tags.includes(PLATFORM) || tags.every(item => !['web', 'miniprogram', 'node'].includes(item))
+          // 有导出修饰符
+          if (hasExportModifier && !isSupportPlatform) {
             code = code.replace(node.getFullText(), '')
           }
-          // 没有导出修饰符时，记录包含指定平台注解的声明，用于在导出声明中判断是否需要保留
-          else if (!hasExportModifier && tags.includes(PLATFORM)) {
+          // 没有导出修饰符时，记录声明，用于在导出声明中判断是否需要保留
+          else if (!hasExportModifier && isSupportPlatform) {
             let names
             // 变量可能同一语句声明多个，遍历获取变量名
             if (ts.isVariableStatement(node)) {
@@ -93,8 +102,8 @@ export function filterByPlatform(PLATFORM) {
       })
 
       // 添加 PLATFORM 声明
-      // 必须指定 string 类型，否则会推断类型为具体的值，导致报错 TS2367：“无意的比较...”
-      code = `const PLATFORM: string = "${PLATFORM}"\n${code}`
+      // 指定为 string 类型，避免推断类型为具体的值，导致 TS2367 报错：“无意的比较...”
+      code = `${code.slice(0, lastImportEnd)}\nconst PLATFORM:string = "${PLATFORM}"\n${code.slice(lastImportEnd)}`
 
       return { code }
     },

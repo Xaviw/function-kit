@@ -10,6 +10,7 @@ Node18+、PNPM、TypeScript、Vitest、Rollup
 dist       # 构建输出目录
 scripts    # 自定义构建脚本
 src        # 函数源代码
+utils      # 辅助方法
 test       # 函数单元测试代码
 types      # 全局类型声明、工具类型
 ```
@@ -71,7 +72,7 @@ export function example(): string {
 
 新建 `src/example.ts` 文件，写入工具函数代码，并导出
 
-对导出的函数添加 JSDoc 说明，`@web`、`@miniprogram`、`@node` 注解分别代表该函数支持 web 环境、小程序环境、node 环境，按实际情况添加注解
+对导出的函数添加 JSDoc 说明，`@web`、`@miniprogram`、`@node` 注解分别代表该函数支持 web 环境、小程序环境、node 环境，执行构建命令时，只有支持对应环境的函数会被构建，需要按实际情况添加注解。**没有任何平台注解时，函数始终会被构建**
 
 `PLATFORM` 为全局变量，值与注解一致，用于条件编译
 

@@ -22,8 +22,8 @@
     "lint": "eslint . --fix",
     "clean": "npx rimraf node_modules",
     "taze": "npx taze -I",
-    "postinstall": "npx simple-git-hooks",
-    "lint-staged": "lint-staged"
+    "preinstall": "npx only-allow pnpm",
+    "postinstall": "npx simple-git-hooks"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.2.1",
@@ -33,7 +33,6 @@
     "inquirer": "^12.4.2",
     "lint-staged": "^15.4.3",
     "rollup": "^4.34.8",
-    "rollup-plugin-dts": "^6.1.1",
     "rollup-plugin-typescript2": "^0.36.0",
     "simple-git-hooks": "^2.11.1",
     "typescript": "^5.7.3",
@@ -46,7 +45,7 @@
     ]
   },
   "simple-git-hooks": {
-    "pre-commit": "lint-staged"
+    "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
     "*": "eslint --fix"

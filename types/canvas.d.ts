@@ -60,6 +60,7 @@ export interface CanvasTextCommonOptions {
    */
   textStyle?: 'fill' | 'stroke'
   /**
+   * xOffset yOffset blur color
    * @example '1px 1px 1px #ffffff'
    */
   textShadow?: string
@@ -71,11 +72,11 @@ export interface CanvasTextCommonOptions {
 export interface CanvasTextElement extends CanvasTextCommonOptions, CanvasElementCommonOptions {
   type: 'text'
   /**
-   * 文本内容、支持换行等控制字符
+   * 文本内容,支持换行等控制字符
    */
   content: string | CanvasTextCommonOptions[]
   /**
-   * 设置宽度后支持自动换行、多行省略、对其方式
+   * 设置宽度后支持自动换行、多行省略、对齐方式
    */
   width?: string
   /**

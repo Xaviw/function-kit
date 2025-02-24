@@ -8,6 +8,5 @@
     "declaration": true, // 生成.d.ts类型声明文件
     "forceConsistentCasingInFileNames": true, // 强制文件名大小写一致
     "skipLibCheck": true // 跳过声明文件类型检查（提升编译速度）
-  },
-  "include": ["src/*.ts", "test/*.ts", "types/*.ts"]
+  }
 }
