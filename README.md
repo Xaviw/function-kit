@@ -119,3 +119,5 @@ export type * from '../types/xxx'
 // 或者
 export type { xxx } from '../types/xxx'
 ```
+
+**`types/common.d.ts` 文件中的内容会直接复制到构建输出的 `index.d.ts` 文件中**

@@ -1,4 +1,4 @@
-import { readdirSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { defineConfig } from 'rollup'
 import { dts } from 'rollup-plugin-dts'
@@ -151,7 +151,7 @@ export function filterEmptyEntryAndBuildEntry() {
         if (type === 'chunk') {
           // 保留的文件记录到入口文件中
           if (exports.length) {
-            entry += `export * from './${key}'\n`
+            entry += `export * from './${key.replace(/\.js$/i, '')}'\n\n`
           }
           // 删除过滤掉的文件及其声明文件
           else {
@@ -164,7 +164,9 @@ export function filterEmptyEntryAndBuildEntry() {
       // 输出入口文件及其声明文件
       if (entry) {
         this.emitFile({ type: 'asset', fileName: 'index.js', source: entry })
-        this.emitFile({ type: 'asset', fileName: 'index.d.ts', source: entry })
+
+        const commonDeclare = readFileSync('types/common.d.ts', 'utf-8')
+        this.emitFile({ type: 'asset', fileName: 'index.d.ts', source: entry + commonDeclare })
       }
     },
   }

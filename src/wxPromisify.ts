@@ -1,4 +1,4 @@
-import type { Callbackify, CallbackifyParams } from '../types/utils'
+import type { Callbackify, CallbackifyParams } from '../types/common'
 
 /**
  * 微信小程序异步 API Promise 化

@@ -1,4 +1,4 @@
-import type { CancelableFunction, Fn } from '../types/utils'
+import type { CancelableFunction, Fn } from '../types/common'
 
 /**
  * 节流
