@@ -1,4 +1,4 @@
-import type { CancelableFunction } from '../types/utils'
+import type { CancelableFunction, Fn } from '../types/utils'
 
 /**
  * 防抖

@@ -21,17 +21,28 @@ const { entries, platform } = await inquirer.prompt([
   },
 ])
 
-const bundle = await rollup({
-  ...config,
+const [bundleConfig, declareConfig] = config
+
+await rollup({
+  ...bundleConfig,
   input: entries,
   plugins: [
     filterByPlatform(platform),
-    ...config.plugins.slice(1),
+    ...bundleConfig.plugins.slice(1),
   ],
+}).then(async (bundle) => {
+  await bundle.write(bundleConfig.output)
+  return bundle.close()
 })
 
-await bundle.generate({})
-
-await bundle.write(config.output)
-
-bundle.close()
+await rollup({
+  ...declareConfig,
+  input: entries,
+  plugins: declareConfig.plugins,
+}).then(async (declare) => {
+  await declare.write({
+    ...declareConfig.output,
+    entryFileNames: `${entries.length > 1 ? '' : 'src/'}[name].d.ts`,
+  })
+  return declare.close()
+})

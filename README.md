@@ -2,17 +2,21 @@
 
 > 零依赖，支持 WEB、小程序、Node 三端条件编译
 
-Node18+、PNPM、TypeScript、Vitest、Rollup
+TypeScript、Rollup、Vitest
 
 ## 项目结构
 
 ```sh
-dist       # 构建输出目录
-scripts    # 自定义构建脚本
-src        # 函数源代码
-utils      # 辅助方法
-test       # 函数单元测试代码
-types      # 全局类型声明、工具类型
+├── src              # 函数入口文件（构建时只会以 src 目录下文件作为入口）
+├── types            # 全局类型声明、工具类型
+├── test             # 函数单元测试
+├── dist             # 构建输出目录
+├── scripts          # 自定义构建脚本
+├── rollup.config.js # 构建配置
+├── vitest.config.ts # vitest 配置
+├── tsconfig.json    # typescript 配置
+├── eslint.config.js # 代码格式化配置
+└── xxx              # src 下的代码可以根据需要拆分到其他位置
 ```
 
 ## 常用命令
@@ -39,11 +43,16 @@ pnpm lint
 # 更快的删除 node_modules 文件夹
 pnpm clean
 
+# 更快的删除 dist 文件夹
+pnpm clean:dist
+
 # 交互式升级项目依赖
 pnpm taze
 ```
 
-## 贡献示例
+## 贡献指南
+
+新建 `src/example.ts` 文件，写入工具函数代码，并导出
 
 ```ts
 /**
@@ -70,9 +79,7 @@ export function example(): string {
 }
 ```
 
-新建 `src/example.ts` 文件，写入工具函数代码，并导出
-
-对导出的函数添加 JSDoc 说明，`@web`、`@miniprogram`、`@node` 注解分别代表该函数支持 web 环境、小程序环境、node 环境，执行构建命令时，只有支持对应环境的函数会被构建，需要按实际情况添加注解。**没有任何平台注解时，函数始终会被构建**
+对导出的函数添加 JSDoc 说明，`@web`、`@miniprogram`、`@node` 注解分别代表该函数支持 web 环境、小程序环境、node 环境，执行构建命令时，只有支持对应环境的函数会被构建，需要按实际情况添加注解。**（没有任何平台注解时，相当于支持所有平台）**
 
 `PLATFORM` 为全局变量，值与注解一致，用于条件编译
 
@@ -103,4 +110,12 @@ export const example = PLATFORM === 'web'
   : PLATFORM === 'miniprogram'
     ? miniprogramExample
     : nodeExample
+```
+
+实用的类型定义可以在函数入口文件中进行导出，这些类型声明在编译后也会在函数入口文件对应的声明文件中导出，便于使用 ts 的用户导入使用：
+
+```ts
+export type * from '../types/xxx'
+// 或者
+export type { xxx } from '../types/xxx'
 ```

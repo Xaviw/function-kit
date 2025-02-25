@@ -1,29 +1,48 @@
 import { readdirSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { defineConfig } from 'rollup'
+import { dts } from 'rollup-plugin-dts'
 import tsPlugin from 'rollup-plugin-typescript2'
 import * as ts from 'typescript'
 
 const entries = readdirSync('src').map(item => `src/${item}`)
 
-export default defineConfig({
-  input: entries,
-  output: {
-    dir: 'dist',
-    format: 'es',
-    entryFileNames: 'src/[name].js',
-  },
-  plugins: [
-    filterByPlatform(process.env.PLATFORM),
-    tsPlugin({ tsconfigOverride: { include: ['src/*.ts', 'types/*.ts'] } }),
-    filterEmptyFileAndBuildEntry(),
-  ],
-  onwarn(warning, warn) {
+export default [
+  // 构建 JS 文件
+  defineConfig({
+    input: entries,
+    output: {
+      dir: 'dist',
+      format: 'es',
+      entryFileNames: 'src/[name].js',
+    },
+    plugins: [
+      filterByPlatform(process.env.PLATFORM),
+      tsPlugin({ tsconfigOverride: { exclude: ['types/platform.d.ts'] } }),
+      filterEmptyEntryAndBuildEntry(),
+    ],
+    onwarn(warning, warn) {
     // 即使已经通过插件过滤掉了空文件，rollup 仍会发出 EMPTY_BUNDLE 警告，这里主动忽略
-    if (warning.code === 'EMPTY_BUNDLE')
-      return
-    warn(warning)
-  },
-})
+      if (warning.code === 'EMPTY_BUNDLE')
+        return
+      warn(warning)
+    },
+  }),
+  // 构建类型声明文件
+  defineConfig({
+    input: entries,
+    output: {
+      dir: 'dist',
+      format: 'es',
+      // 统一单入口和多入口情况下声明文件输出位置
+      entryFileNames: `${entries.length > 1 ? '' : 'src/'}[name].d.ts`,
+    },
+    plugins: [
+      dts(),
+      filterEmptyDeclare(),
+    ],
+  }),
+]
 
 /**
  * 过滤掉 ts 文件中未带有指定平台 JSDoc 注解的导出；并在文件开头注入 PLATFORM 常量，用于在函数中创建针对不同平台的分支逻辑
@@ -83,6 +102,10 @@ export function filterByPlatform(PLATFORM) {
         }
         // 具名导出多个
         else if (ts.isExportDeclaration(node)) {
+          // 从其他模块中导出，不做处理
+          if (node.moduleSpecifier)
+            return
+
           const elements = node.exportClause.elements
           const names = []
           for (const element of elements) {
@@ -110,13 +133,17 @@ export function filterByPlatform(PLATFORM) {
   }
 }
 
+// 记录被过滤掉的入口文件
+let filteredModule = []
+
 /**
  * 过滤空文件、生成入口文件
  */
-export function filterEmptyFileAndBuildEntry() {
+export function filterEmptyEntryAndBuildEntry() {
   return {
     name: 'filter-empty-file-and-build-entry',
     generateBundle(_, bundle) {
+      filteredModule = []
       let entry = ''
 
       for (const key in bundle) {
@@ -128,13 +155,9 @@ export function filterEmptyFileAndBuildEntry() {
           }
           // 删除过滤掉的文件及其声明文件
           else {
+            filteredModule.push(resolve(key.replace(/js$/i, 'ts')))
             delete bundle[key]
-            delete bundle[key.replace('.js', '.d.ts')]
           }
-        }
-        // 自定义构建时，删除未参与构建文件的声明文件
-        else if (type === 'asset' && !bundle[key.replace('.d.ts', '.js')]) {
-          delete bundle[key]
         }
       }
 
@@ -142,6 +165,22 @@ export function filterEmptyFileAndBuildEntry() {
       if (entry) {
         this.emitFile({ type: 'asset', fileName: 'index.js', source: entry })
         this.emitFile({ type: 'asset', fileName: 'index.d.ts', source: entry })
+      }
+    },
+  }
+}
+
+/**
+ * 过滤空文件对应的类型声明文件
+ */
+export function filterEmptyDeclare() {
+  return {
+    name: 'filter-empty-declare',
+    generateBundle(_, bundle) {
+      for (const key in bundle) {
+        if (filteredModule.includes(bundle[key].facadeModuleId)) {
+          delete bundle[key]
+        }
       }
     },
   }

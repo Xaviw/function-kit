@@ -2,6 +2,8 @@
 import type { CanvasPosterElements, CanvasPosterOptions } from '../types/canvas'
 import { downloadImages } from '../utils/canvas'
 
+export type * from '../types/canvas'
+
 /**
  * 配置式生成 Canvas 海报
  * @web

@@ -1,3 +1,4 @@
+import type { Recordable } from '../types/utils'
 import { isDataUrl, isOnlineUrl } from './common'
 /**
  * 绘制 Canvas 文本

@@ -1,3 +1,9 @@
+export type Fn = (...args: any[]) => any
+
+export type Recordable = Record<string, any>
+
+export type MaybePromise<T = any> = Promise<T> | T
+
 export type Callbackify = (options: {
   success?: Fn
   fail?: Fn
