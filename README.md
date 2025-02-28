@@ -2,17 +2,16 @@
 
 > 零依赖，支持 WEB、小程序、Node 三端条件编译
 
-TypeScript、Rollup、Vitest
+TypeScript、Vitest、Rollup
 
 ## 项目结构
 
 ```sh
-├── src              # 函数入口文件（构建时只会以 src 目录下文件作为入口）
-├── types            # 全局类型声明、工具类型
+├── src              # 函数入口文件（构建时只会以 src 目录下 ts 文件作为入口）
+├── types            # 类型声明
 ├── test             # 函数单元测试
 ├── dist             # 构建输出目录
-├── scripts          # 自定义构建脚本
-├── rollup.config.js # 构建配置
+├── scripts          # 构建脚本
 ├── vitest.config.ts # vitest 配置
 ├── tsconfig.json    # typescript 配置
 ├── eslint.config.js # 代码格式化配置
@@ -42,9 +41,6 @@ pnpm lint
 
 # 更快的删除 node_modules 文件夹
 pnpm clean
-
-# 更快的删除 dist 文件夹
-pnpm clean:dist
 
 # 交互式升级项目依赖
 pnpm taze
@@ -112,7 +108,7 @@ export const example = PLATFORM === 'web'
     : nodeExample
 ```
 
-实用的类型定义可以在函数入口文件中进行导出，这些类型声明在编译后也会在函数入口文件对应的声明文件中导出，便于使用 ts 的用户导入使用：
+实用的类型定义可以在函数入口文件中进行导出，便于使用 ts 的用户从入口声明文件中导入使用：
 
 ```ts
 export type * from '../types/xxx'
@@ -120,4 +116,4 @@ export type * from '../types/xxx'
 export type { xxx } from '../types/xxx'
 ```
 
-**`types/common.d.ts` 文件中的内容会直接复制到构建输出的 `index.d.ts` 文件中**
+**编译时会默认导出 `types/common.d.ts` 文件中的全部内容，函数入口中无需重复导出**

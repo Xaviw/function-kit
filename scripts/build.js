@@ -40,7 +40,7 @@ if (!['web', 'miniprogram', 'node'].includes(platform)) {
 await rimraf('dist')
 
 // 输出 js 文件，并构建入口文件
-const typeEntryCode = await rollup({
+const [entryCode, typeEntryCode] = await rollup({
   input: entries,
   plugins: [
     // 过滤不支持目标平台的代码
@@ -65,16 +65,19 @@ const typeEntryCode = await rollup({
 
   // 构建类型文件编译入口
   return output.reduce((p, c) => {
-    return `${p}export * from '../${c.fileName.replace(/\.js$/i, '')}'\n\n`
-  }, '')
+    const name = c.fileName.replace(/\.js$/i, '')
+    p[0] += `export * from './${name}'\n\n`
+    p[1] += `export * from '../${name}'\n\n`
+    return p
+  }, [``, `export type * from '../types/common'\n\n`])
 })
 
 // 输出入口文件
-writeFile('dist/index.js', typeEntryCode)
+writeFile('dist/index.js', entryCode)
 
 // 创建类型声明编译入口临时文件
 // 因为 rollup-plugin-dts 插件无法处理虚拟模块，只能通过实际的文件编译
-await writeFile('dist/index.ts', `${typeEntryCode}export type * from '../types/common'`)
+await writeFile('dist/index.ts', typeEntryCode)
 
 // 输出入口文件和类型声明
 await rollup({
