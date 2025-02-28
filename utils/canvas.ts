@@ -1,5 +1,6 @@
-import type { Recordable } from '../types/common'
+import type { CanvasElement, CanvasImageElement, CanvasLineElement, CanvasRectElement, CanvasRenderFn, CanvasTextElement } from '../types/canvas'
 import { isDataUrl, isOnlineUrl } from './common'
+
 /**
  * 绘制 Canvas 文本
  * @web
@@ -29,11 +30,11 @@ import { isDataUrl, isOnlineUrl } from './common'
 //   return result
 // }
 
-export function downloadImages(src: string): Promise<any> {
+export function downloadImage(src: string): Promise<{ src: string, width: number, height: number }> {
   return new Promise((resolve, reject) => {
     if (PLATFORM === 'web') {
       const image = new Image()
-      image.onload = resolve
+      image.onload = () => resolve({ src: image.src, width: image.width, height: image.height })
       image.onerror = reject
       image.src = src
     }
@@ -43,12 +44,16 @@ export function downloadImages(src: string): Promise<any> {
         downloader({
           url: src,
           fileID: src,
-          success: (res: Recordable) => {
-            if (res.statusCode !== 200) {
-              reject(res)
+          success: (file: ICloud.DownloadFileResult) => {
+            if (file.statusCode !== 200) {
+              reject(file)
               return
             }
-            resolve(res.tempFilePath)
+            wx.getImageInfo({
+              src: file.tempFilePath,
+              success: res => resolve({ src: res.path, width: res.width, height: res.height }),
+              fail: reject,
+            })
           },
           fail: reject,
         })
@@ -64,7 +69,7 @@ export function downloadImages(src: string): Promise<any> {
           success: () => {
             wx.getImageInfo({
               src: filePath,
-              success: resolve,
+              success: res => resolve({ src: res.path, width: res.width, height: res.height }),
               fail: reject,
             })
           },
@@ -72,8 +77,24 @@ export function downloadImages(src: string): Promise<any> {
         })
       }
       else {
-        resolve(src)
+        reject(src)
       }
     }
   })
+}
+
+export function isTextElement(element: CanvasElement | CanvasRenderFn): element is CanvasTextElement {
+  return typeof element === 'object' && element.type === 'text'
+}
+
+export function isImageElement(element: CanvasElement | CanvasRenderFn): element is CanvasImageElement {
+  return typeof element === 'object' && element.type === 'image'
+}
+
+export function isRectElement(element: CanvasElement | CanvasRenderFn): element is CanvasRectElement {
+  return typeof element === 'object' && element.type === 'rect'
+}
+
+export function isLineElement(element: CanvasElement | CanvasRenderFn): element is CanvasLineElement {
+  return typeof element === 'object' && element.type === 'line'
 }

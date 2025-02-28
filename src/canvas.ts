@@ -1,6 +1,6 @@
 /* eslint-disable unused-imports/no-unused-vars */
 import type { CanvasPosterElements, CanvasPosterOptions } from '../types/canvas'
-import { downloadImages } from '../utils/canvas'
+import { downloadImage, isImageElement } from '../utils/canvas'
 
 export type * from '../types/canvas'
 
@@ -21,6 +21,13 @@ export async function canvasPoster(elements: CanvasPosterElements, options: Canv
     return
   }
 
+  const downloaders: ReturnType<typeof downloadImage>[] = []
+  elements.forEach((element) => {
+    if (isImageElement(element)) {
+      downloaders.push(downloadImage(element.src))
+    }
+  })
+
   /** 设备像素比（1px 等于多少物理像素） */
   let dpr: number
   /** rpx 像素比（1px 等于多少 rpx） */
@@ -36,8 +43,10 @@ export async function canvasPoster(elements: CanvasPosterElements, options: Canv
   }
 
   const ctx = canvas.getContext('2d')
-  if (!ctx)
+  if (!ctx) {
+    console.error('获取 Canvas 上下文失败')
     return
+  }
 
   canvas.width = width * dpr
   canvas.height = height * dpr
@@ -46,8 +55,6 @@ export async function canvasPoster(elements: CanvasPosterElements, options: Canv
     await init(ctx, canvas)
   }
   ctx.save()
-
-  await downloadImages(elements as any)
 
   for (let i = 0, l = elements.length; i < l; i++) {
     // 校验配置
