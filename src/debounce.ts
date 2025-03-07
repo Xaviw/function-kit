@@ -2,9 +2,6 @@ import type { CancelableFunction, Fn } from '../types/common'
 
 /**
  * 防抖
- * @web
- * @miniprogram
- * @node
  * @param fn 防抖函数
  * @param waitMilliseconds 防抖时长（毫秒），默认 300
  * @param immediate 是否立即执行一次，立即执行时才有返回值，默认 false

@@ -46,7 +46,27 @@ pnpm clean
 pnpm taze
 ```
 
+## 动态编译原理
+
+构建时首先会读取 src 目录下全部 ts 文件中的导出声明，通过判断 JSDoc 注解进行过滤后，创建如下格式的构建入口文件：
+
+```ts
+// 假设 src/xxx 文件中还有不支持目标平台的导出`d`，构建时`d`会被过滤
+export { a, b, c } from 'src/xxx'
+
+export type * from 'types/common'
+```
+
+rollup 根据入口文件的依赖关系获取到全部需要构建的文件后，在这些文件开头注入 PLATFORM 常量，根据 PLATFORM 常量创建的分支会自动被 rollup 进行树摇优化
+
+基于这样的原理，开发时需要注意：
+
+- 假设 `src/a.ts` 文件中的函数 `a` 引入了，`noneSrc/b.ts` 文件中的函数 `b` 时，需要确保函数 `b` 支持的平台与函数 `a` 一致，非 src 目录下的代码不会进行 JSDoc 平台注解校验
+- 假设 `src/a.ts` 文件中通过 `export * from 'noneSrc/b.ts'` 语句进行导出，构建结果不会包含 `noneSrc/b.ts` 文件中的任何导出（类型声明可以导出见后文）
+
 ## 贡献指南
+
+> **构建时会忽略默认导出，请全部使用具名导出**
 
 新建 `src/example.ts` 文件，写入工具函数代码，并导出
 
@@ -108,12 +128,14 @@ export const example = PLATFORM === 'web'
     : nodeExample
 ```
 
-实用的类型定义可以在函数入口文件中进行导出，便于使用 ts 的用户从入口声明文件中导入使用：
+**编译时会默认导出 `types/common.d.ts` 文件中的全部内容**，实用的类型定义可以直接添加到该文件中，或从该文件中导出，便于使用 ts 的用户从入口声明文件中导入使用：
 
 ```ts
-export type * from '../types/xxx'
-// 或者
-export type { xxx } from '../types/xxx'
-```
+// types/common.d.ts
 
-**编译时会默认导出 `types/common.d.ts` 文件中的全部内容，函数入口中无需重复导出**
+// 直接写在文件中
+export type X = 'X'
+
+// 或者在文件中导出
+export type * from './xxx'
+```
