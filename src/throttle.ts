@@ -1,13 +1,19 @@
 import type { CancelableFunction, Fn } from '../types/common'
+import { isFunction } from './is'
 
 /**
- * 节流
- * @param fn 节流函数
- * @param waitMilliseconds 节流时长（毫秒），默认 300
- * @param immediate 是否立即执行一次，立即执行时才有返回值，默认 false
- * @returns 节流函数，可通过自身的 cancel 方法取消
+ * 节流函数，可通过自身的 cancel 方法取消
+ * @param fn
+ * @param waitMilliseconds 单位毫秒，默认 300
+ * @param immediate 默认 false，一段时间内的连续触发仅执行最后一次；设置为 true 则一段时间内的连续触发只执行第一次
  */
-export function throttle<F extends Fn>(fn: F, waitMilliseconds = 300, immediate = false): CancelableFunction<F> {
+export function throttle<F extends Fn>(fn: F, waitMilliseconds?: number, immediate = false): CancelableFunction<F> {
+  if (!isFunction(fn)) {
+    throw new TypeError('第一个参数要求传入函数')
+  }
+
+  waitMilliseconds = Number.parseFloat(waitMilliseconds as any) || 300
+
   let timeoutId: NodeJS.Timeout | undefined
   let lastExecutionTime = 0
 
@@ -18,7 +24,7 @@ export function throttle<F extends Fn>(fn: F, waitMilliseconds = 300, immediate 
 
     if (immediate && !remainingTime) {
       lastExecutionTime = now
-      return fn.apply(this, args)
+      fn.apply(this, args)
     }
 
     if (!immediate) {

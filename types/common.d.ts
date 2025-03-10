@@ -6,14 +6,9 @@ export type Recordable<T = any> = Record<string, T>
 
 export type MaybePromise<T = any> = Promise<T> | T
 
-export type Callbackify = (options: {
-  success?: Fn
-  fail?: Fn
-  complete?: Fn
-  [key: string]: any
-}) => any
+export type CallbackifyParams<T extends Fn> = Parameters<T>[0] extends Recordable ? Omit<Parameters<T>[0], 'success' | 'fail' | 'complete'> : object
 
-export type CallbackifyParams<T extends Callbackify> = Omit<Parameters<T>[0], 'success' | 'fail' | 'complete'>
+export type CallbackifyResults<T extends Fn> = Parameters<T>[0]['success'] extends Fn ? Parameters<Parameters<T>[0]['success']> : never
 
 export interface CancelableFunction<F extends Fn> {
   (this: ThisParameterType<F>, ...args: Parameters<F>): ReturnType<F> | void
