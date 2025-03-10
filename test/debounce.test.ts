@@ -6,15 +6,19 @@ describe('debounce', () => {
 
   it('非立即执行', () => {
     const fn = vi.fn()
-    expect(() => debounce(null as any, 300)).toThrow(TypeError)
+    expect(() => debounce(null as any)).toThrow(TypeError)
 
-    const debouncedFn = debounce(fn)
+    const debouncedFn = debounce(fn, 300, false)
 
     debouncedFn()
+    vi.advanceTimersByTime(150)
+    debouncedFn()
+    vi.advanceTimersByTime(150)
     expect(fn).not.toHaveBeenCalled()
 
+    debouncedFn()
     vi.advanceTimersByTime(300)
-    expect(fn).toHaveBeenCalled()
+    expect(fn).toHaveBeenCalledTimes(1)
 
     debouncedFn()
     debouncedFn.cancel()
@@ -24,12 +28,13 @@ describe('debounce', () => {
 
   it('立即执行', () => {
     const fn = vi.fn()
-    const debouncedFn = debounce(fn, 300, true)
+    const debouncedFn = debounce(fn)
 
-    debouncedFn()
     debouncedFn()
     expect(fn).toHaveBeenCalledTimes(1)
 
+    vi.advanceTimersByTime(150)
+    debouncedFn()
     vi.advanceTimersByTime(300)
     expect(fn).toHaveBeenCalledTimes(1)
 

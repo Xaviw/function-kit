@@ -2,7 +2,7 @@
   "name": "function-kit",
   "type": "module",
   "version": "1.0.0",
-  "packageManager": "pnpm@10.6.1",
+  "packageManager": "pnpm@10.6.2",
   "description": "零依赖多端函数工具库",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
