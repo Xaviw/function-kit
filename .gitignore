@@ -1,8 +1,5 @@
 node_modules
 dist
-web_dist
-miniprogram_dist
-node_dist
 
 .idea
 .temp

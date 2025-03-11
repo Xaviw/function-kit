@@ -3,7 +3,7 @@ import { isFunction } from './is'
 import { objectToString } from './objectToString'
 
 /**
- * 深度比较两个值是否相等，支持 Map、Set 比较
+ * 深度比较两个值是否相等(支持 Map、Set)
  */
 export function isEqual(a: any, b: any): boolean {
   return eq(a, b)

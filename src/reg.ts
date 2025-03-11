@@ -33,7 +33,7 @@ export function isEmail(str: string): boolean {
 }
 
 /**
- * 支持 “·” 分隔
+ * 中文姓名，支持 “·” 分隔
  */
 export function isChineseName(str: string): boolean {
   if (!isString(str))
