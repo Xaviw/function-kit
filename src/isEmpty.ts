@@ -1,4 +1,4 @@
-import { isString } from './is'
+import { isArray, isString } from './is'
 import { isArrayLike } from './isArrayLike'
 import { objectToString } from './objectToString'
 
@@ -9,7 +9,7 @@ export function isEmpty(val: unknown): boolean {
   if (val == null)
     return true
 
-  if (isArrayLike(val) && (Array.isArray(val) || isString(val) || objectToString(val) === '[object Arguments]')) {
+  if (isArrayLike(val) && (isArray(val) || isString(val) || objectToString(val) === '[object Arguments]')) {
     return val.length === 0
   }
 

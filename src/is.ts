@@ -1,6 +1,13 @@
 import type { Fn, Recordable } from '../types/common'
 import { objectToString } from './objectToString'
 
+export function isArray(val: unknown): val is any[] {
+  if (Array.isArray as any)
+    return Array.isArray(val)
+
+  return objectToString(val) === '[object Array]'
+}
+
 export function isArrayBuffer(val: unknown): val is ArrayBuffer {
   return objectToString(val) === '[object ArrayBuffer]'
 }

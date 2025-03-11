@@ -83,8 +83,8 @@ function deepEq(a: any, b: any, aStack?: any[], bStack?: any[]): boolean {
     const aCtor = a.constructor
     const bCtor = b.constructor
     if (
-      // 构造函数不同
-      aCtor !== bCtor
+      'constructor' in a
+      && 'constructor' in b
       // 均是构造函数创建
       && !(
         isFunction(aCtor)
@@ -92,8 +92,9 @@ function deepEq(a: any, b: any, aStack?: any[], bStack?: any[]): boolean {
         && isFunction(bCtor)
         && bCtor instanceof bCtor
       )
-      && 'constructor' in a
-      && 'constructor' in b
+      // 构造函数不同
+      && aCtor !== bCtor
+
     ) {
       return false
     }

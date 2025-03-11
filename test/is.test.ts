@@ -1,5 +1,14 @@
-import { expect, it } from 'vitest'
-import { isArrayBuffer, isBlob, isBoolean, isDate, isError, isFunction, isGeneratorFunction, isMap, isNil, isNumber, isObject, isPrimitive, isPromise, isRegExp, isSet, isString, isSymbol, isTypedArray, isUndef, isWeakMap, isWeakSet } from '../src/is'
+import { expect, it, vi } from 'vitest'
+import { isArray, isArrayBuffer, isBlob, isBoolean, isDate, isError, isFunction, isGeneratorFunction, isMap, isNil, isNumber, isObject, isPrimitive, isPromise, isRegExp, isSet, isString, isSymbol, isTypedArray, isUndef, isWeakMap, isWeakSet } from '../src/is'
+
+it('isArray', () => {
+  vi.stubGlobal('Array', { ...Array, isArray: undefined })
+  expect(isArray([])).toBe(true)
+  expect(isArray({})).toBe(false)
+  vi.unstubAllGlobals()
+  expect(isArray([])).toBe(true)
+  expect(isArray({})).toBe(false)
+})
 
 it('isArrayBuffer', () => {
   expect(isArrayBuffer(new ArrayBuffer(8))).toBe(true)
