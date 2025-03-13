@@ -49,8 +49,10 @@
     "pcss",
     "postcss"
   ],
+
   "cSpell.words": [
     "apng",
+    "dequoted",
     "onwarn"
   ]
 }

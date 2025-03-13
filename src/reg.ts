@@ -1,5 +1,15 @@
 import { isString } from './is'
 
+/**
+ * 判断字符串是否为有效的 Data URL
+ * @param str - 要检查的字符串
+ * @returns 如果是有效的 Data URL 则返回 true，否则返回 false
+ * @example
+ * ```ts
+ * isDataUrl('data:image/png;base64,iVBORw0K...') // true
+ * isDataUrl('https://example.com/image.png') // false
+ * ```
+ */
 export function isDataUrl(str: string): boolean {
   if (!isString(str))
     return false
@@ -8,6 +18,16 @@ export function isDataUrl(str: string): boolean {
   return /^data:(?:[a-z]+\/[a-z0-9-+.]+(?:;[a-z0-9-.!#$%*+{}|~`]+=[a-z0-9-.!#$%*+{}|~`]+)*)?(?:;base64)?,[\w!$&',()*+;=\-.~:@/?%\s]*$/i.test(str.trim())
 }
 
+/**
+ * 判断字符串是否为 Base64 编码的 Data URL
+ * @param str - 要检查的字符串
+ * @returns 如果是 Base64 编码的 Data URL 则返回 true，否则返回 false
+ * @example
+ * ```ts
+ * isBase64('data:image/png;base64,iVBORw0K...') // true
+ * isBase64('data:text/plain,Hello') // false
+ * ```
+ */
 export function isBase64(str: string): boolean {
   if (!isString(str))
     return false
@@ -16,7 +36,14 @@ export function isBase64(str: string): boolean {
 }
 
 /**
- * 支持 localhost
+ * 判断字符串是否为有效的 URL（支持 localhost）
+ * @param str - 要检查的字符串
+ * @returns 如果是有效的 URL 则返回 true，否则返回 false
+ * @example
+ * ```ts
+ * isUrl('https://example.com') // true
+ * isUrl('http://localhost:3000') // true
+ * ```
  */
 export function isUrl(str: string): boolean {
   if (!isString(str))
@@ -25,6 +52,16 @@ export function isUrl(str: string): boolean {
   return /^(?:\w+:)?\/\/(?:[^\s.]+\.\S{2}|localhost)\S*$/.test(str)
 }
 
+/**
+ * 判断字符串是否为有效的电子邮件地址
+ * @param str - 要检查的字符串
+ * @returns 如果是有效的电子邮件地址则返回 true，否则返回 false
+ * @example
+ * ```ts
+ * isEmail('user@example.com') // true
+ * isEmail('invalid-email') // false
+ * ```
+ */
 export function isEmail(str: string): boolean {
   if (!isString(str))
     return false
@@ -33,7 +70,14 @@ export function isEmail(str: string): boolean {
 }
 
 /**
- * 中文姓名，支持 “·” 分隔
+ * 判断字符串是否为中文姓名（支持 "·" 分隔）
+ * @param str - 要检查的字符串
+ * @returns 如果是有效的中文姓名则返回 true，否则返回 false
+ * @example
+ * ```ts
+ * isChineseName('张三') // true
+ * isChineseName('艾力·买买提') // true
+ * ```
  */
 export function isChineseName(str: string): boolean {
   if (!isString(str))
@@ -43,7 +87,14 @@ export function isChineseName(str: string): boolean {
 }
 
 /**
- * 车牌号(新能源+非新能源)
+ * 判断字符串是否为有效的中国车牌号（支持新能源和非新能源）
+ * @param str - 要检查的字符串
+ * @returns 如果是有效的车牌号则返回 true，否则返回 false
+ * @example
+ * ```ts
+ * isVehiclePlate('京A12345') // true
+ * isVehiclePlate('粤B123456') // true
+ * ```
  */
 export function isVehiclePlate(str: string): boolean {
   if (!isString(str))
@@ -53,7 +104,14 @@ export function isVehiclePlate(str: string): boolean {
 }
 
 /**
- * 手机号（严谨）
+ * 判断字符串是否为有效的中国大陆手机号
+ * @param str - 要检查的字符串
+ * @returns 如果是有效的手机号则返回 true，否则返回 false
+ * @example
+ * ```ts
+ * isPhone('13812345678') // true
+ * isPhone('+8613812345678') // true
+ * ```
  */
 export function isPhone(str: string): boolean {
   if (!isString(str))
@@ -63,7 +121,14 @@ export function isPhone(str: string): boolean {
 }
 
 /**
- * 座机号
+ * 判断字符串是否为有效的座机号码
+ * @param str - 要检查的字符串
+ * @returns 如果是有效的座机号码则返回 true，否则返回 false
+ * @example
+ * ```ts
+ * isTelphone('010-12345678') // true
+ * isTelphone('0755-1234567') // true
+ * ```
  */
 export function isTelphone(str: string): boolean {
   if (!isString(str))
@@ -73,7 +138,14 @@ export function isTelphone(str: string): boolean {
 }
 
 /**
- * 身份证号（2代，18位）
+ * 判断字符串是否为有效的中国大陆第二代身份证号
+ * @param str - 要检查的字符串
+ * @returns 如果是有效的身份证号则返回 true，否则返回 false
+ * @example
+ * ```ts
+ * isIDCard('110101199003077758') // true
+ * isIDCard('11010119900307775X') // true
+ * ```
  */
 export function isIDCard(str: string): boolean {
   if (!isString(str))
@@ -83,7 +155,14 @@ export function isIDCard(str: string): boolean {
 }
 
 /**
- * 中文
+ * 判断字符串是否全为中文字符
+ * @param str - 要检查的字符串
+ * @returns 如果全为中文字符则返回 true，否则返回 false
+ * @example
+ * ```ts
+ * isChinese('你好世界') // true
+ * isChinese('Hello世界') // false
+ * ```
  */
 export function isChinese(str: string): boolean {
   if (!isString(str))
@@ -93,7 +172,14 @@ export function isChinese(str: string): boolean {
 }
 
 /**
- * ip-v4[:端口]
+ * 判断字符串是否为有效的 IPv4 地址（可选带端口号）
+ * @param str - 要检查的字符串
+ * @returns 如果是有效的 IPv4 地址则返回 true，否则返回 false
+ * @example
+ * ```ts
+ * isIPV4('192.168.1.1') // true
+ * isIPV4('192.168.1.1:8080') // true
+ * ```
  */
 export function isIPV4(str: string): boolean {
   if (!isString(str))
@@ -102,6 +188,16 @@ export function isIPV4(str: string): boolean {
   return /^(?:(?:\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.){3}(?:\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])(?::(?:\d|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5]))?$/.test(str)
 }
 
+/**
+ * 判断字符串是否为有效的 MAC 地址
+ * @param str - 要检查的字符串
+ * @returns 如果是有效的 MAC 地址则返回 true，否则返回 false
+ * @example
+ * ```ts
+ * isMacAddress('00:0a:95:9d:68:16') // true
+ * isMacAddress('00-0a-95-9d-68-16') // true
+ * ```
+ */
 export function isMacAddress(str: string): boolean {
   if (!isString(str))
     return false
@@ -110,7 +206,14 @@ export function isMacAddress(str: string): boolean {
 }
 
 /**
- * 邮政编码
+ * 判断字符串是否为有效的中国邮政编码
+ * @param str - 要检查的字符串
+ * @returns 如果是有效的邮政编码则返回 true，否则返回 false
+ * @example
+ * ```ts
+ * isPostalCode('518000') // true
+ * isPostalCode('000000') // false
+ * ```
  */
 export function isPostalCode(str: string): boolean {
   if (!isString(str))

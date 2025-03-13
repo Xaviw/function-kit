@@ -3,12 +3,38 @@ import { isFunction } from './is'
 import { objectToString } from './objectToString'
 
 /**
- * 深度比较两个值是否相等(支持 Map、Set)
+ * 深度比较两个值是否相等
+ * @remarks 支持比较的类型：
+ * - 基本类型（包括 NaN、+0/-0 的特殊处理）
+ * - 数组
+ * - 普通对象
+ * - 内置对象（Date、RegExp、Map、Set 等）
+ * - 循环引用对象
+ * @param a - 要比较的第一个值
+ * @param b - 要比较的第二个值
+ * @returns 如果两个值相等返回 true，否则返回 false
+ * @example
+ * ```ts
+ * isEqual(1, 1) // true
+ * isEqual([1, 2], [1, 2]) // true
+ * isEqual(new Date('2024'), new Date('2024')) // true
+ * isEqual(new Map([[1, 2]]), new Map([[1, 2]])) // true
+ * isEqual({ a: 1 }, { a: 2 }) // false
+ * ```
  */
 export function isEqual(a: any, b: any): boolean {
   return eq(a, b)
 }
 
+/**
+ * 内部比较函数，处理基本类型的比较
+ * @param a - 要比较的第一个值
+ * @param b - 要比较的第二个值
+ * @param aStack - 用于检测循环引用的栈，存储第一个值的引用
+ * @param bStack - 用于检测循环引用的栈，存储第二个值的引用
+ * @returns 如果两个值相等返回 true，否则返回 false
+ * @internal
+ */
 function eq(a: any, b: any, aStack?: any[], bStack?: any[]): boolean {
   // 严格相等成立时还需要区分 0 和 -0
   if (a === b)
@@ -30,6 +56,15 @@ function eq(a: any, b: any, aStack?: any[], bStack?: any[]): boolean {
   return deepEq(a, b, aStack, bStack)
 }
 
+/**
+ * 内部深度比较函数，处理复杂类型的比较
+ * @param a - 要比较的第一个值
+ * @param b - 要比较的第二个值
+ * @param aStack - 用于检测循环引用的栈，存储第一个值的引用
+ * @param bStack - 用于检测循环引用的栈，存储第二个值的引用
+ * @returns 如果两个值相等返回 true，否则返回 false
+ * @internal
+ */
 function deepEq(a: any, b: any, aStack?: any[], bStack?: any[]): boolean {
   // 对象值类型判断
   const className = objectToString(a)

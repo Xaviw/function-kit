@@ -15,4 +15,6 @@ it('fileSize', () => {
   expect(fileSize(1500000000)).toBe('1.4G')
 
   expect(fileSize(1500000000000)).toBe('1.36T')
+
+  expect(fileSize(1024 ** 5)).toBe('1024T')
 })

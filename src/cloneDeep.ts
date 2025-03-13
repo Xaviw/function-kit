@@ -3,9 +3,27 @@ import { isArray, isArrayBuffer, isDate, isMap, isPrimitive, isRegExp, isSet } f
 import { mapObject } from './mapObject'
 
 /**
- * 支持拷贝 简单值、Date、RegExp、Map、Set、ArrayBuffer、Array、Object
+ * 深度克隆一个值，支持多种数据类型
+ * @param val - 要克隆的值
+ * @returns 返回克隆后的值
+ * @example
+ * ```ts
+ * // 基础类型
+ * cloneDeep(42) // 42
  *
- * 支持处理循环引用
+ * // 对象和数组
+ * cloneDeep({ a: 1, b: [2, 3] }) // { a: 1, b: [2, 3] }
+ *
+ * // 特殊对象
+ * cloneDeep(new Date()) // new Date()
+ * cloneDeep(new RegExp('test', 'g')) // /test/g
+ * cloneDeep(new Map([['key', 'value']])) // Map(1) { 'key' => 'value' }
+ *
+ * // 循环引用
+ * const obj = { a: 1 }
+ * obj.self = obj
+ * cloneDeep(obj) // { a: 1, self: [Circular] }
+ * ```
  */
 export function cloneDeep<T>(val: T, seen = new WeakMap<any>()): T {
   if (seen.has(val))

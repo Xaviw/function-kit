@@ -1,10 +1,17 @@
 import { isArray, isString } from './is'
 
 /**
- * 生成随机数
- * @param min 最小值，默认 0；只传这一个参数时范围为 [0, min]
- * @param max 最大值，默认100；传递后范围为 [min, max]
- * @param floatNum 小数位数，默认 0
+ * 生成指定范围内的随机数
+ * @param min - 最小值，默认为 0；当只传入一个参数时，范围为 [0, min]
+ * @param max - 最大值，默认为 100；传入后范围为 [min, max]
+ * @param floatNum - 保留的小数位数，默认为 0（整数）
+ * @returns 返回指定范围内的随机数
+ * @example
+ * ```ts
+ * randomNumber(10) // 0-10 之间的整数
+ * randomNumber(1, 10) // 1-10 之间的整数
+ * randomNumber(1, 10, 2) // 1-10 之间的数字，保留 2 位小数
+ * ```
  */
 export function randomNumber(min?: number, max?: number, floatNum?: number): number {
   min = Number.parseInt(min as any)
@@ -23,9 +30,16 @@ export function randomNumber(min?: number, max?: number, floatNum?: number): num
 }
 
 /**
- * 生成随机字符串
- * @param length 长度，默认 8
- * @param chars 可选字符，默认 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+ * 生成指定长度的随机字符串
+ * @param length - 字符串长度，默认为 8
+ * @param chars - 可选字符集，默认为所有大小写字母和数字
+ * @returns 返回生成的随机字符串
+ * @example
+ * ```ts
+ * randomString() // 'Xa4Bm9Pq'
+ * randomString(4) // 'Xm9P'
+ * randomString(4, 'abc123') // 'a1b2'
+ * ```
  */
 export function randomString(length?: number, chars?: string): string {
   length = Number.parseInt(length as any) || 8
@@ -46,7 +60,14 @@ export function randomString(length?: number, chars?: string): string {
 }
 
 /**
- * 打乱数组项顺序
+ * 随机打乱数组元素的顺序
+ * @param arr - 要打乱的数组
+ * @returns 返回打乱顺序后的新数组
+ * @example
+ * ```ts
+ * shuffle([1, 2, 3, 4]) // [3, 1, 4, 2]
+ * shuffle(['a', 'b', 'c']) // ['b', 'c', 'a']
+ * ```
  */
 export function shuffle<T extends unknown[]>(arr: T): T {
   if (!isArray(arr))
