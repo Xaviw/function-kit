@@ -1,0 +1,23 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/tsdoc/v0/tsdoc.schema.json",
+  "extends": ["typedoc/tsdoc.json"],
+  "tagDefinitions": [
+    {
+      "tagName": "@web",
+      "syntaxKind": "modifier"
+    },
+    {
+      "tagName": "@miniprogram",
+      "syntaxKind": "modifier"
+    },
+    {
+      "tagName": "@node",
+      "syntaxKind": "modifier"
+    }
+  ],
+  "supportForTags": {
+    "@web": true,
+    "@miniprogram": true,
+    "@node": true
+  }
+}
