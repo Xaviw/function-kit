@@ -1,7 +1,0 @@
-{
-  "$schema": "https://typedoc.org/schema.json",
-  "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
-  "entryPoints": ["src/**/*.ts"],
-  "out": "./docs/src",
-  "docsRoot": "./docs/src"
-}

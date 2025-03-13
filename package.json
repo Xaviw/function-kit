@@ -17,7 +17,7 @@
     "build:web": "node scripts/build.js web",
     "build:miniprogram": "node scripts/build.js miniprogram",
     "build:node": "node scripts/build.js node",
-    "docs:generate": "node scripts/docs.js",
+    "docs:generate": "typedoc",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",

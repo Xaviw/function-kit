@@ -1,21 +1,23 @@
 import { defineConfig } from 'vitepress'
+import { description, name } from '../../package.json'
 import typedocSidebar from '../src/typedoc-sidebar.json'
 
 export default defineConfig({
+  title: name,
+  description,
   lang: 'zh-cn',
   srcDir: './src',
   outDir: './dist',
   lastUpdated: true,
   themeConfig: {
-    nav: [{ text: '全部函数', link: '/src' }],
     sidebar: [
       {
-        text: '全部函数',
+        text: '目录',
         items: typedocSidebar,
       },
     ],
     outline: {
-      level: 'deep',
+      level: 3,
       label: '大纲',
     },
     lastUpdated: {

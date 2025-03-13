@@ -2,7 +2,7 @@
 
 > 零依赖，支持 WEB、小程序、Node 三端条件编译
 
-TypeScript、Vitest、Rollup、Typedoc、Vitepress
+TypeScript、Vitest、Rollup
 
 ## 项目结构
 
@@ -11,8 +11,6 @@ TypeScript、Vitest、Rollup、Typedoc、Vitepress
 ├── types            # 类型声明
 ├── test             # 函数单元测试
 ├── dist             # 构建输出目录
-├── docs             # 文档目录
-|  └── dist          # 文档构建输出目录
 ├── scripts          # 构建脚本
 ├── vitest.config.ts # vitest 配置
 ├── tsconfig.json    # typescript 配置
@@ -34,18 +32,6 @@ pnpm build:miniprogram
 
 # 构建支持 node 环境的函数
 pnpm build:node
-
-# 生成文档（docs/src）
-pnpm docs:generate
-
-# 运行文档
-pnpm docs:dev
-
-# 构建文档
-pnpm docs:build
-
-# 预览文档构建产物
-pnpm docs:preview
 
 # 执行测试
 pnpm test
@@ -109,7 +95,7 @@ export function example(): string {
 }
 ```
 
-对导出的函数添加 [TSDoc](https://tsdoc.org/) 说明，`@web`、`@miniprogram`、`@node` 注解分别代表该函数支持 web 环境、小程序环境、node 环境，执行构建命令时，只有支持对应环境的函数会被构建，需要按实际情况添加注解。**（没有任何平台注解时，相当于支持所有平台）**
+对导出的函数添加 JSDoc 说明，`@web`、`@miniprogram`、`@node` 注解分别代表该函数支持 web 环境、小程序环境、node 环境，执行构建命令时，只有支持对应环境的函数会被构建，需要按实际情况添加注解。**（没有任何平台注解时，相当于支持所有平台）**
 
 `PLATFORM` 为全局变量，值与注解一致，用于条件编译
 
@@ -153,3 +139,29 @@ export type X = 'X'
 // 或者在文件中导出
 export type * from './xxx'
 ```
+
+## Modules
+
+- [className](className.md)
+- [cloneDeep](cloneDeep.md)
+- [datetime](datetime.md)
+- [debounce](debounce.md)
+- [fileSize](fileSize.md)
+- [filterObject](filterObject.md)
+- [get](get.md)
+- [is](is.md)
+- [isArrayLike](isArrayLike.md)
+- [isEmpty](isEmpty.md)
+- [isEqual](isEqual.md)
+- [isJSON](isJSON.md)
+- [last](last.md)
+- [mapObject](mapObject.md)
+- [math](math.md)
+- [mime](mime.md)
+- [objectToString](objectToString.md)
+- [ordinal](ordinal.md)
+- [random](random.md)
+- [reg](reg.md)
+- [search](search.md)
+- [throttle](throttle.md)
+- [wxPromisify](wxPromisify.md)
