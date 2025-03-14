@@ -2,9 +2,7 @@
 
 # debounce
 
-## Functions
-
-### debounce()
+## debounce()
 
 ```ts
 function debounce<F>(
@@ -13,45 +11,43 @@ function debounce<F>(
 immediate?: boolean): CancelableFunction<F>
 ```
 
-Defined in: [debounce.ts:35](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/debounce.ts#L35)
-
 创建一个防抖函数，限制函数连续触发时仅执行一次
 
-#### Type Parameters
+### 类型参数
 
 • **F** *extends* `Fn`
 
-#### Parameters
+### 参数
 
-##### fn
+#### fn
 
 `F`
 
 要防抖的函数
 
-##### waitMilliseconds?
+#### waitMilliseconds?
 
 `number`
 
 等待时间，单位为毫秒，默认为 300
 
-##### immediate?
+#### immediate?
 
 `boolean` = `true`
 
 是否立即执行，默认为 true。true 时首次调用立即执行，false 时等待结束后执行
 
-#### Returns
+### 返回
 
 `CancelableFunction`\<`F`\>
 
 返回防抖后的函数，该函数包含 cancel 方法用于取消等待
 
-#### Throws
+### 抛出
 
 当第一个参数不是函数时抛出类型错误
 
-#### Example
+### 示例
 
 ```ts
 // 立即执行模式

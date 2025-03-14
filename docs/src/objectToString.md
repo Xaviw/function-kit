@@ -2,33 +2,29 @@
 
 # objectToString
 
-## Functions
-
-### objectToString()
+## objectToString()
 
 ```ts
 function objectToString(val: any): string
 ```
 
-Defined in: [objectToString.ts:13](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/objectToString.ts#L13)
-
 获取值的内部 [[Class]] 属性，等同于 Object.prototype.toString.call
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `any`
 
 要获取类型的值
 
-#### Returns
+### 返回
 
 `string`
 
 返回形如 '[object Type]' 的字符串
 
-#### Example
+### 示例
 
 ```ts
 objectToString([]) // '[object Array]'

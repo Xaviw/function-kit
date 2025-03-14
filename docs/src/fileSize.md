@@ -2,39 +2,35 @@
 
 # fileSize
 
-## Functions
-
-### fileSize()
+## fileSize()
 
 ```ts
 function fileSize(bytes: number, suffixes: string[]): string
 ```
 
-Defined in: [fileSize.ts:24](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/fileSize.ts#L24)
-
 将字节数转换为带单位的文件大小字符串
 
-#### Parameters
+### 参数
 
-##### bytes
+#### bytes
 
 `number`
 
 要转换的字节数
 
-##### suffixes
+#### suffixes
 
 `string`[] = `...`
 
 单位数组，默认为 ['b', 'K', 'M', 'G', 'T']
 
-#### Returns
+### 返回
 
 `string`
 
 返回格式化后的文件大小字符串，最多保留两位小数
 
-#### Example
+### 示例
 
 ```ts
 // 基础转换

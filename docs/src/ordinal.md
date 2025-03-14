@@ -2,37 +2,33 @@
 
 # ordinal
 
-## Functions
-
-### ordinal()
+## ordinal()
 
 ```ts
 function ordinal(num: number): string
 ```
 
-Defined in: [ordinal.ts:18](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/ordinal.ts#L18)
-
 为数字添加英文序数词后缀（st、nd、rd、th）
 
-#### Parameters
+### 参数
 
-##### num
+#### num
 
 `number`
 
 要转换的数字
 
-#### Returns
+### 返回
 
 `string`
 
 返回添加了序数词后缀的字符串
 
-#### Throws
+### 抛出
 
 当输入的值无法转换为数字时抛出类型错误
 
-#### Example
+### 示例
 
 ```ts
 ordinal(1) // '1st'

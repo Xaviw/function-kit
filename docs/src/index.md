@@ -16,6 +16,7 @@ TypeScript、Vitest、Rollup、Typedoc、Vitepress
 ├── scripts          # 构建脚本
 ├── vitest.config.ts # vitest 配置
 ├── tsconfig.json    # typescript 配置
+├── typedoc.json     # typedoc 配置
 ├── eslint.config.js # 代码格式化配置
 └── xxx              # src 下的代码可以根据需要拆分到其他位置
 ```
@@ -60,24 +61,6 @@ pnpm clean
 pnpm taze
 ```
 
-## 动态编译原理
-
-构建时首先会读取 src 目录下全部 ts 文件中的导出声明，通过判断 JSDoc 注解进行过滤后，创建如下格式的构建入口文件：
-
-```ts
-// 假设 src/xxx 文件中还有不支持目标平台的导出`d`，构建时`d`会被过滤
-export { a, b, c } from 'src/xxx'
-
-export type * from 'types/common'
-```
-
-rollup 根据入口文件的依赖关系获取到全部需要构建的文件后，在这些文件开头注入 PLATFORM 常量，根据 PLATFORM 常量创建的分支会自动被 rollup 进行树摇优化
-
-基于这样的原理，开发时需要注意：
-
-- 假设 `src/a.ts` 文件中的函数 `a` 引入了，`noneSrc/b.ts` 文件中的函数 `b` 时，需要确保函数 `b` 支持的平台与函数 `a` 一致，非 src 目录下的代码不会进行 JSDoc 平台注解校验
-- 假设 `src/a.ts` 文件中通过 `export * from 'noneSrc/b.ts'` 语句进行导出，构建结果不会包含 `noneSrc/b.ts` 文件中的任何导出（类型声明可以导出见后文）
-
 ## 贡献指南
 
 > **构建时会忽略默认导出，请全部使用具名导出**
@@ -109,7 +92,7 @@ export function example(): string {
 }
 ```
 
-对导出的函数添加 [TSDoc](https://tsdoc.org/) 说明，`@web`、`@miniprogram`、`@node` 注解分别代表该函数支持 web 环境、小程序环境、node 环境，执行构建命令时，只有支持对应环境的函数会被构建，需要按实际情况添加注解。**（没有任何平台注解时，相当于支持所有平台）**
+对导出的函数添加 [TSDoc](https://tsdoc.org/) 说明，便于 typedoc 生成文档；`@web`、`@miniprogram`、`@node` 注解分别代表该函数支持 web 环境、小程序环境、node 环境，执行构建命令时，只有支持对应环境的函数会被构建，需要按实际情况添加注解。**（没有任何平台注解时，相当于支持所有平台）**
 
 `PLATFORM` 为全局变量，值与注解一致，用于条件编译
 
@@ -142,19 +125,55 @@ export const example = PLATFORM === 'web'
     : nodeExample
 ```
 
-**编译时会默认导出 `types/common.d.ts` 文件中的全部内容**，实用的类型定义可以直接添加到该文件中，或从该文件中导出，便于使用 ts 的用户从入口声明文件中导入使用：
+src 目录下文件中的类型导出也会在编译后被导出，同时**编译会默认导出 `types/common.d.ts` 文件中的全部内容**，实用的类型定义可以直接添加到该文件中，或从该文件中导出，便于使用 ts 的用户从入口声明文件中导入使用：
+
+函数入口文件中导出类型：
+
+```ts
+// src/xxx.ts
+export type X = 'x'
+
+export interface Y {
+  y: 'y'
+}
+```
+
+common.d.ts 文件中导出类型：
 
 ```ts
 // types/common.d.ts
 
 // 直接写在文件中
 export type X = 'X'
+export interface Y {
+  y: 'y'
+}
 
 // 或者在文件中导出
 export type * from './xxx'
 ```
 
-## Modules
+函数完成后，执行 `pnpm docs:generate` 重新生成文档
+
+## 动态编译原理
+
+构建时首先会读取 src 目录下全部 ts 文件中的导出声明，通过判断 TSDoc 注解进行过滤后，创建如下格式的构建入口文件：
+
+```ts
+// 假设 src/xxx 文件中还有不支持目标平台的导出`d`，构建时`d`会被过滤
+export { a, b, c } from 'src/xxx'
+
+export type * from 'types/common'
+```
+
+rollup 根据入口文件的依赖关系获取到全部需要构建的文件后，在这些文件开头注入 PLATFORM 常量，根据 PLATFORM 常量创建的分支会自动被 rollup 进行树摇优化
+
+基于这样的原理，开发时需要注意：
+
+- 假设 `src/a.ts` 文件中的函数 `a` 引入了，`noneSrc/b.ts` 文件中的函数 `b` 时，需要确保函数 `b` 支持的平台与函数 `a` 一致，非 src 目录下的代码不会进行 TSDoc 平台注解校验
+- 假设 `src/a.ts` 文件中通过 `export * from 'noneSrc/b.ts'` 语句进行导出，构建结果不会包含 `noneSrc/b.ts` 文件中的任何导出（类型声明可以导出见后文）
+
+## 模块
 
 - [className](className.md)
 - [cloneDeep](cloneDeep.md)

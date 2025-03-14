@@ -2,9 +2,7 @@
 
 # get
 
-## Functions
-
-### get()
+## get()
 
 ```ts
 function get<TDefault>(
@@ -13,41 +11,39 @@ function get<TDefault>(
    defaultValue?: TDefault): undefined | TDefault
 ```
 
-Defined in: [get.ts:27](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/get.ts#L27)
-
 安全地获取对象或数组中的嵌套值
 
-#### Type Parameters
+### 类型参数
 
 • **TDefault**
 
-#### Parameters
+### 参数
 
-##### value
+#### value
 
 `any`
 
 要获取值的对象或数组
 
-##### path
+#### path
 
 `string`
 
 属性路径字符串，支持点号和方括号表示法
 
-##### defaultValue?
+#### defaultValue?
 
 `TDefault`
 
 当路径不存在时返回的默认值
 
-#### Returns
+### 返回
 
 `undefined` \| `TDefault`
 
 返回路径对应的值，如果路径不存在则返回默认值
 
-#### Example
+### 示例
 
 ```ts
 // 基础对象访问

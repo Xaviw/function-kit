@@ -17,7 +17,7 @@ export default defineConfig({
       },
     ],
     outline: {
-      level: 3,
+      level: 2,
       label: '大纲',
     },
     lastUpdated: {

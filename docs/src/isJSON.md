@@ -2,33 +2,29 @@
 
 # isJSON
 
-## Functions
-
-### isJSON()
+## isJSON()
 
 ```ts
 function isJSON(val: string): boolean
 ```
 
-Defined in: [isJSON.ts:13](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/isJSON.ts#L13)
-
 判断字符串是否是合法的 JSON 格式字符串
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `string`
 
 要检查的字符串
 
-#### Returns
+### 返回
 
 `boolean`
 
 如果字符串是合法的 JSON 格式则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isJSON('{"name": "test"}') // true

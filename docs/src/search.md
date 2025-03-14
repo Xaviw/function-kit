@@ -2,47 +2,37 @@
 
 # search
 
-## Interfaces
+## FuzzySearchOptions
 
-### FuzzySearchOptions
+### 属性
 
-Defined in: [search.ts:5](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/search.ts#L5)
-
-#### Properties
-
-##### caseSensitive?
+#### caseSensitive?
 
 ```ts
 optional caseSensitive: boolean;
 ```
 
-Defined in: [search.ts:9](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/search.ts#L9)
-
 是否区分大小写，默认为 true
 
-##### fuzzy?
+#### fuzzy?
 
 ```ts
 optional fuzzy: boolean;
 ```
 
-Defined in: [search.ts:11](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/search.ts#L11)
-
 是否启用模糊搜索，默认为 false（仅当搜索值和目标值都是字符串时生效）
 
-##### key?
+#### key?
 
 ```ts
 optional key: string;
 ```
 
-Defined in: [search.ts:7](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/search.ts#L7)
-
 当数组项为对象时，指定要搜索的属性路径，支持嵌套路径（如 'user.name'）
 
-## Functions
+***
 
-### search()
+## search()
 
 ```ts
 function search<T>(
@@ -51,41 +41,39 @@ function search<T>(
    options?: FuzzySearchOptions): T[]
 ```
 
-Defined in: [search.ts:36](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/search.ts#L36)
-
 在数组中搜索满足条件的项
 
-#### Type Parameters
+### 类型参数
 
 • **T**
 
-#### Parameters
+### 参数
 
-##### target
+#### target
 
 `any`
 
 要搜索的值，当为字符串时支持模糊匹配
 
-##### sources
+#### sources
 
 `T`[]
 
 要搜索的源数组
 
-##### options?
+#### options?
 
 [`FuzzySearchOptions`](search.md#fuzzysearchoptions)
 
 搜索选项配置
 
-#### Returns
+### 返回
 
 `T`[]
 
 返回所有匹配项组成的数组
 
-#### Example
+### 示例
 
 ```ts
 // 简单值搜索

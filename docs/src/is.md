@@ -2,33 +2,29 @@
 
 # is
 
-## Functions
-
-### isArray()
+## isArray()
 
 ```ts
 function isArray(val: unknown): val is any[]
 ```
 
-Defined in: [is.ts:14](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L14)
-
 判断值是否为数组
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is any[]`
 
 如果值是数组，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isArray([1, 2, 3]) // true
@@ -37,31 +33,29 @@ isArray('hello') // false
 
 ***
 
-### isArrayBuffer()
+## isArrayBuffer()
 
 ```ts
 function isArrayBuffer(val: unknown): val is ArrayBuffer
 ```
 
-Defined in: [is.ts:31](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L31)
-
 判断值是否为 ArrayBuffer
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is ArrayBuffer`
 
 如果值是 ArrayBuffer，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isArrayBuffer(new ArrayBuffer(10)) // true
@@ -70,31 +64,29 @@ isArrayBuffer([]) // false
 
 ***
 
-### isBlob()
+## isBlob()
 
 ```ts
 function isBlob(val: unknown): val is Blob
 ```
 
-Defined in: [is.ts:45](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L45)
-
 判断值是否为 Blob
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is Blob`
 
 如果值是 Blob，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isBlob(new Blob()) // true
@@ -103,31 +95,29 @@ isBlob({}) // false
 
 ***
 
-### isBoolean()
+## isBoolean()
 
 ```ts
 function isBoolean(val: unknown): val is boolean
 ```
 
-Defined in: [is.ts:59](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L59)
-
 判断值是否为布尔值
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is boolean`
 
 如果值是布尔值，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isBoolean(true) // true
@@ -136,31 +126,29 @@ isBoolean(0) // false
 
 ***
 
-### isDate()
+## isDate()
 
 ```ts
 function isDate(val: unknown): val is Date
 ```
 
-Defined in: [is.ts:73](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L73)
-
 判断值是否为日期对象
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is Date`
 
 如果值是日期对象，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isDate(new Date()) // true
@@ -169,31 +157,29 @@ isDate('2021-01-01') // false
 
 ***
 
-### isError()
+## isError()
 
 ```ts
 function isError(val: unknown): val is Error
 ```
 
-Defined in: [is.ts:87](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L87)
-
 判断值是否为错误对象
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is Error`
 
 如果值是错误对象，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isError(new Error()) // true
@@ -202,31 +188,29 @@ isError('error') // false
 
 ***
 
-### isFunction()
+## isFunction()
 
 ```ts
 function isFunction(val: unknown): val is Fn
 ```
 
-Defined in: [is.ts:107](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L107)
-
 判断值是否为函数
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is Fn`
 
 如果值是函数，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isFunction(() => {}) // true
@@ -235,31 +219,29 @@ isFunction(123) // false
 
 ***
 
-### isGeneratorFunction()
+## isGeneratorFunction()
 
 ```ts
 function isGeneratorFunction(val: unknown): val is GeneratorFunction
 ```
 
-Defined in: [is.ts:121](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L121)
-
 判断值是否为生成器函数
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is GeneratorFunction`
 
 如果值是生成器函数，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isGeneratorFunction(function* () { }) // true
@@ -268,31 +250,29 @@ isGeneratorFunction(123) // false
 
 ***
 
-### isMap()
+## isMap()
 
 ```ts
 function isMap(val: unknown): val is Map<any, any>
 ```
 
-Defined in: [is.ts:135](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L135)
-
 判断值是否为 Map
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is Map<any, any>`
 
 如果值是 Map，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isMap(new Map()) // true
@@ -301,31 +281,29 @@ isMap({}) // false
 
 ***
 
-### isNil()
+## isNil()
 
 ```ts
 function isNil(val: unknown): val is undefined | null
 ```
 
-Defined in: [is.ts:148](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L148)
-
 判断值是否为 null 或者 undefined（void 0）
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 val is undefined \| null
 
 如果值是null 或者 undefined（void 0），则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isNil(null) // true
@@ -334,31 +312,29 @@ isNil(123) // false
 
 ***
 
-### isNumber()
+## isNumber()
 
 ```ts
 function isNumber(val: unknown): val is number
 ```
 
-Defined in: [is.ts:162](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L162)
-
 判断值是否为数字
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is number`
 
 如果值是数字，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isNumber(123) // true
@@ -367,31 +343,29 @@ isNumber('123') // false
 
 ***
 
-### isObject()
+## isObject()
 
 ```ts
 function isObject(val: unknown): val is Recordable
 ```
 
-Defined in: [is.ts:176](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L176)
-
 判断值是否为对象（包括函数）
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is Recordable`
 
 如果值是对象，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isObject({}) // true
@@ -400,31 +374,29 @@ isObject(null) // false
 
 ***
 
-### isPrimitive()
+## isPrimitive()
 
 ```ts
 function isPrimitive(val: unknown): val is undefined | null | string | number | boolean | symbol
 ```
 
-Defined in: [is.ts:191](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L191)
-
 判断值是否为原始类型值
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 val is undefined \| null \| string \| number \| boolean \| symbol
 
 如果值是原始类型值，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isPrimitive(1) // true
@@ -433,31 +405,29 @@ isPrimitive({}) // false
 
 ***
 
-### isPromise()
+## isPromise()
 
 ```ts
 function isPromise(val: unknown): val is Promise<any>
 ```
 
-Defined in: [is.ts:207](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L207)
-
 判断值是否为 Promise 对象
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is Promise<any>`
 
 如果值是 Promise 对象，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isPromise(Promise.resolve()) // true
@@ -466,31 +436,29 @@ isPromise({}) // false
 
 ***
 
-### isRegExp()
+## isRegExp()
 
 ```ts
 function isRegExp(val: unknown): val is RegExp
 ```
 
-Defined in: [is.ts:221](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L221)
-
 判断值是否为正则表达式对象
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is RegExp`
 
 如果值是正则表达式对象，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isRegExp(/a/i) // true
@@ -499,31 +467,29 @@ isRegExp({}) // false
 
 ***
 
-### isSet()
+## isSet()
 
 ```ts
 function isSet(val: unknown): val is Set<any>
 ```
 
-Defined in: [is.ts:235](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L235)
-
 判断值是否为 Set 对象
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is Set<any>`
 
 如果值是 Set 对象，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isSet(new Set()) // true
@@ -532,31 +498,29 @@ isSet({}) // false
 
 ***
 
-### isString()
+## isString()
 
 ```ts
 function isString(val: unknown): val is string
 ```
 
-Defined in: [is.ts:249](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L249)
-
 判断值是否为字符串
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is string`
 
 如果值是字符串，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isString('hello') // true
@@ -565,31 +529,29 @@ isString(123) // false
 
 ***
 
-### isSymbol()
+## isSymbol()
 
 ```ts
 function isSymbol(val: unknown): val is symbol
 ```
 
-Defined in: [is.ts:263](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L263)
-
 判断值是否为 Symbol
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is symbol`
 
 如果值是 Symbol，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isSymbol(Symbol('foo')) // true
@@ -598,31 +560,29 @@ isSymbol('foo') // false
 
 ***
 
-### isTypedArray()
+## isTypedArray()
 
 ```ts
 function isTypedArray(val: unknown): val is Int8Array<ArrayBufferLike> | Int16Array<ArrayBufferLike> | Int32Array<ArrayBufferLike> | Uint8Array<ArrayBufferLike> | Uint8ClampedArray<ArrayBufferLike> | Uint16Array<ArrayBufferLike> | Uint32Array<ArrayBufferLike> | Float32Array<ArrayBufferLike> | Float64Array<ArrayBufferLike>
 ```
 
-Defined in: [is.ts:277](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L277)
-
 判断值是否为 typedArray
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 val is Int8Array\<ArrayBufferLike\> \| Int16Array\<ArrayBufferLike\> \| Int32Array\<ArrayBufferLike\> \| Uint8Array\<ArrayBufferLike\> \| Uint8ClampedArray\<ArrayBufferLike\> \| Uint16Array\<ArrayBufferLike\> \| Uint32Array\<ArrayBufferLike\> \| Float32Array\<ArrayBufferLike\> \| Float64Array\<ArrayBufferLike\>
 
 如果值是 typedArray，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isTypedArray(new Int16Array()) // true
@@ -631,31 +591,29 @@ isTypedArray([]) // false
 
 ***
 
-### isUndef()
+## isUndef()
 
 ```ts
 function isUndef(val: unknown): val is undefined
 ```
 
-Defined in: [is.ts:302](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L302)
-
 判断值是否为 undefined（void 0）
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is undefined`
 
 如果值是 undefined（void 0），则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isUndef(undefined) // true
@@ -664,31 +622,29 @@ isUndef(null) // false
 
 ***
 
-### isWeakMap()
+## isWeakMap()
 
 ```ts
 function isWeakMap(val: unknown): val is WeakMap<any, any>
 ```
 
-Defined in: [is.ts:316](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L316)
-
 判断值是否为 WeakMap
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is WeakMap<any, any>`
 
 如果值是 WeakMap，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isWeakMap(new WeakMap()) // true
@@ -697,31 +653,29 @@ isWeakMap({}) // false
 
 ***
 
-### isWeakSet()
+## isWeakSet()
 
 ```ts
 function isWeakSet(val: unknown): val is WeakSet<any>
 ```
 
-Defined in: [is.ts:330](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L330)
-
 判断值是否为 WeakSet
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is WeakSet<any>`
 
 如果值是 WeakSet，则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isWeakSet(new WeakSet()) // true

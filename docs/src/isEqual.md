@@ -2,39 +2,35 @@
 
 # isEqual
 
-## Functions
-
-### isEqual()
+## isEqual()
 
 ```ts
 function isEqual(a: any, b: any): boolean
 ```
 
-Defined in: [isEqual.ts:25](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/isEqual.ts#L25)
-
 深度比较两个值是否相等
 
-#### Parameters
+### 参数
 
-##### a
+#### a
 
 `any`
 
 要比较的第一个值
 
-##### b
+#### b
 
 `any`
 
 要比较的第二个值
 
-#### Returns
+### 返回
 
 `boolean`
 
 如果两个值相等返回 true，否则返回 false
 
-#### Remarks
+### 备注
 
 支持比较的类型：
 - 基本类型（包括 NaN、+0/-0 的特殊处理）
@@ -43,7 +39,7 @@ Defined in: [isEqual.ts:25](https://github.com/Xaviw/function-kit/blob/84d58cf5b
 - 内置对象（Date、RegExp、Map、Set 等）
 - 循环引用对象
 
-#### Example
+### 示例
 
 ```ts
 isEqual(1, 1) // true

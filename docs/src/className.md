@@ -2,21 +2,17 @@
 
 # className
 
-## Functions
-
-### className()
+## className()
 
 ```ts
 function className(...names: any[]): string
 ```
 
-Defined in: [className.ts:25](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/className.ts#L25)
-
 计算动态绑定后的 css class 字符串
 
-#### Parameters
+### 参数
 
-##### names
+#### names
 
 ...`any`[]
 
@@ -25,13 +21,13 @@ Defined in: [className.ts:25](https://github.com/Xaviw/function-kit/blob/84d58cf
 - 对象：key 为 class 名，value 为布尔值
 - 数组：包含上述任意类型
 
-#### Returns
+### 返回
 
 `string`
 
 返回计算后的 class 字符串，多个 class 用空格分隔
 
-#### Example
+### 示例
 
 ```ts
 // 基础用法

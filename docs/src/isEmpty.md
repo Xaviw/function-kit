@@ -2,33 +2,29 @@
 
 # isEmpty
 
-## Functions
-
-### isEmpty()
+## isEmpty()
 
 ```ts
 function isEmpty(val: unknown): boolean
 ```
 
-Defined in: [isEmpty.ts:24](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/isEmpty.ts#L24)
-
 判断参数是否为空值
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `boolean`
 
 如果值为空则返回 true，否则返回 false
 
-#### Remarks
+### 备注
 
 以下情况被认为是空值：
 - null 或 undefined
@@ -36,7 +32,7 @@ Defined in: [isEmpty.ts:24](https://github.com/Xaviw/function-kit/blob/84d58cf5b
 - 空字符串
 - 空对象（没有自身可枚举属性）
 
-#### Example
+### 示例
 
 ```ts
 isEmpty(null) // true

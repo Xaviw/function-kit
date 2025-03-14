@@ -2,9 +2,7 @@
 
 # math
 
-## Functions
-
-### difference()
+## difference()
 
 ```ts
 function difference<T, K>(
@@ -13,43 +11,41 @@ function difference<T, K>(
    identity?: (item: T) => K): T[]
 ```
 
-Defined in: [math.ts:64](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/math.ts#L64)
-
 计算两个数组的差集
 
-#### Type Parameters
+### 类型参数
 
 • **T**
 
 • **K** *extends* `string` \| `number` \| `symbol`
 
-#### Parameters
+### 参数
 
-##### root
+#### root
 
 readonly `T`[]
 
 主数组
 
-##### other
+#### other
 
 readonly `T`[]
 
 要排除的数组
 
-##### identity?
+#### identity?
 
 (`item`: `T`) => `K`
 
 可选的用于获取元素标识符的函数
 
-#### Returns
+### 返回
 
 `T`[]
 
 返回一个新数组，包含在 root 中但不在 other 中的元素
 
-#### Example
+### 示例
 
 ```ts
 difference([1, 2, 3], [2, 3, 4]) // [1]
@@ -58,7 +54,7 @@ difference([{id: 1}, {id: 2}], [{id: 2}], x => x.id) // [{id: 1}]
 
 ***
 
-### intersects()
+## intersects()
 
 ```ts
 function intersects<T, K>(
@@ -67,43 +63,41 @@ function intersects<T, K>(
    identity?: (t: T) => K): T[]
 ```
 
-Defined in: [math.ts:103](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/math.ts#L103)
-
 计算两个数组的交集
 
-#### Type Parameters
+### 类型参数
 
 • **T**
 
 • **K** *extends* `string` \| `number` \| `symbol`
 
-#### Parameters
+### 参数
 
-##### listA
+#### listA
 
 readonly `T`[]
 
 第一个数组
 
-##### listB
+#### listB
 
 readonly `T`[]
 
 第二个数组
 
-##### identity?
+#### identity?
 
 (`t`: `T`) => `K`
 
 可选的用于获取元素标识符的函数
 
-#### Returns
+### 返回
 
 `T`[]
 
 返回一个新数组，包含同时存在于两个数组中的元素
 
-#### Example
+### 示例
 
 ```ts
 intersects([1, 2, 3], [2, 3, 4]) // [2, 3]
@@ -112,31 +106,29 @@ intersects([{id: 1}, {id: 2}], [{id: 2}, {id: 3}], x => x.id) // [{id: 2}]
 
 ***
 
-### isEven()
+## isEven()
 
 ```ts
 function isEven(val: number): boolean
 ```
 
-Defined in: [math.ts:29](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/math.ts#L29)
-
 判断数值是否为偶数
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `number`
 
 要检查的数值
 
-#### Returns
+### 返回
 
 `boolean`
 
 如果数值是偶数则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isEven(2) // true
@@ -146,31 +138,29 @@ isEven(1.2) // false
 
 ***
 
-### isInteger()
+## isInteger()
 
 ```ts
 function isInteger(val: number): boolean
 ```
 
-Defined in: [math.ts:14](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/math.ts#L14)
-
 判断数值是否为整数
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `number`
 
 要检查的数值
 
-#### Returns
+### 返回
 
 `boolean`
 
 如果数值是整数则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isInteger(1) // true
@@ -180,31 +170,29 @@ isInteger(NaN) // false
 
 ***
 
-### isOdd()
+## isOdd()
 
 ```ts
 function isOdd(val: number): boolean
 ```
 
-Defined in: [math.ts:46](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/math.ts#L46)
-
 判断数值是否为奇数
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `number`
 
 要检查的数值
 
-#### Returns
+### 返回
 
 `boolean`
 
 如果数值是奇数则返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 isOdd(3) // true
@@ -214,7 +202,7 @@ isOdd(1.5) // false
 
 ***
 
-### union()
+## union()
 
 ```ts
 function union<T, K>(
@@ -223,43 +211,41 @@ function union<T, K>(
    identity?: (t: T) => K): T[]
 ```
 
-Defined in: [math.ts:139](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/math.ts#L139)
-
 计算两个数组的并集
 
-#### Type Parameters
+### 类型参数
 
 • **T**
 
 • **K** *extends* `string` \| `number` \| `symbol`
 
-#### Parameters
+### 参数
 
-##### listA
+#### listA
 
 readonly `T`[]
 
 第一个数组
 
-##### listB
+#### listB
 
 readonly `T`[]
 
 第二个数组
 
-##### identity?
+#### identity?
 
 (`t`: `T`) => `K`
 
 可选的用于获取元素标识符的函数
 
-#### Returns
+### 返回
 
 `T`[]
 
 返回一个新数组，包含两个数组中的所有不重复元素
 
-#### Example
+### 示例
 
 ```ts
 union([1, 2], [2, 3]) // [1, 2, 3]

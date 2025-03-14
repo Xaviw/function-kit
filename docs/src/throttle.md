@@ -2,9 +2,7 @@
 
 # throttle
 
-## Functions
-
-### throttle()
+## throttle()
 
 ```ts
 function throttle<F>(
@@ -13,45 +11,43 @@ function throttle<F>(
 immediate?: boolean): CancelableFunction<F>
 ```
 
-Defined in: [throttle.ts:35](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/throttle.ts#L35)
-
 创建一个节流函数，限制函数在一定时间内只能执行一次
 
-#### Type Parameters
+### 类型参数
 
 • **F** *extends* `Fn`
 
-#### Parameters
+### 参数
 
-##### fn
+#### fn
 
 `F`
 
 要节流的函数
 
-##### waitMilliseconds?
+#### waitMilliseconds?
 
 `number`
 
 等待时间（毫秒），默认为 300
 
-##### immediate?
+#### immediate?
 
 `boolean` = `true`
 
 是否立即执行，默认为 true。若为 false 则等待时间结束后才执行
 
-#### Returns
+### 返回
 
 `CancelableFunction`\<`F`\>
 
 返回节流后的函数，该函数包含 cancel 方法用于取消等待中的定时器
 
-#### Throws
+### 抛出
 
 当第一个参数不是函数时抛出类型错误
 
-#### Example
+### 示例
 
 ```ts
 // 立即执行模式

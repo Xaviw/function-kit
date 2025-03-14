@@ -2,33 +2,29 @@
 
 # isArrayLike
 
-## Functions
-
-### isArrayLike()
+## isArrayLike()
 
 ```ts
 function isArrayLike(val: unknown): val is ArrayLike<any>
 ```
 
-Defined in: [isArrayLike.ts:29](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/isArrayLike.ts#L29)
-
 判断值是否为类数组值
 
-#### Parameters
+### 参数
 
-##### val
+#### val
 
 `unknown`
 
 要检查的值
 
-#### Returns
+### 返回
 
 `val is ArrayLike<any>`
 
 如果值是类数组值则返回 true，否则返回 false
 
-#### Remarks
+### 备注
 
 类数组值需满足以下条件：
 - 具有 length 属性
@@ -36,7 +32,7 @@ Defined in: [isArrayLike.ts:29](https://github.com/Xaviw/function-kit/blob/84d58
 - length 不大于 Number.MAX_SAFE_INTEGER
 - 不是函数
 
-#### Example
+### 示例
 
 ```ts
 // 字符串

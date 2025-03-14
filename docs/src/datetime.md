@@ -2,33 +2,29 @@
 
 # datetime
 
-## Functions
-
-### isLeapYear()
+## isLeapYear()
 
 ```ts
 function isLeapYear(year: number): boolean
 ```
 
-Defined in: [datetime.ts:19](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/datetime.ts#L19)
-
 判断年份是否是闰年
 
-#### Parameters
+### 参数
 
-##### year
+#### year
 
 `number`
 
 要判断的年份
 
-#### Returns
+### 返回
 
 `boolean`
 
 如果是闰年返回 true，否则返回 false
 
-#### Example
+### 示例
 
 ```ts
 // 世纪闰年

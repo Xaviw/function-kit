@@ -12,5 +12,10 @@
   "expandObjects": true,
   "expandParameters": true,
   "out": "./docs/src",
-  "docsRoot": "./docs/src"
+  "docsRoot": "./docs/src",
+  "hideGroupHeadings": true,
+  "githubPages": false,
+  "hideGenerator": true,
+  "lang": "zh",
+  "disableSources": true
 }
