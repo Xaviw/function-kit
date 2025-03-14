@@ -10,7 +10,7 @@
 function ordinal(num: number): string
 ```
 
-Defined in: [ordinal.ts:18](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/ordinal.ts#L18)
+Defined in: [ordinal.ts:18](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/ordinal.ts#L18)
 
 为数字添加英文序数词后缀（st、nd、rd、th）
 

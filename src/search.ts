@@ -2,7 +2,7 @@ import { get } from './get'
 import { isArray, isObject, isString } from './is'
 import { isEqual } from './isEqual'
 
-interface FuzzySearchOptions {
+export interface FuzzySearchOptions {
   /** 当数组项为对象时，指定要搜索的属性路径，支持嵌套路径（如 'user.name'） */
   key?: string
   /** 是否区分大小写，默认为 true */

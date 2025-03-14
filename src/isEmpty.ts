@@ -6,7 +6,7 @@ import { objectToString } from './objectToString'
  * 判断参数是否为空值
  * @remarks 以下情况被认为是空值：
  * - null 或 undefined
- * - 空数组或空类数组对象
+ * - 空数组或空 Arguments 类数组
  * - 空字符串
  * - 空对象（没有自身可枚举属性）
  * @param val - 要检查的值

@@ -96,9 +96,6 @@ const exts: Record<string, string[]> = {
 }
 
 /**
- * 根据扩展名查询 mime
- */
-/**
  * 根据文件扩展名获取对应的 MIME 类型
  * @param ext - 文件扩展名（不含点号）
  * @returns 返回对应的 MIME 类型，如果未找到则返回 undefined
@@ -117,12 +114,9 @@ export function getMimeFromExtension(ext: string): string | undefined {
 }
 
 /**
- * 根据 mime 查询对应的扩展名
- */
-/**
  * 根据 MIME 类型获取对应的文件扩展名列表
  * @param mime - MIME 类型字符串
- * @returns 返回扩展名数组，如果未找到则返回 undefined
+ * @returns 返回扩展名数组（不含点号），如果未找到则返回 undefined
  * @example
  * ```ts
  * getExtensionsFromMime('image/jpeg') // ['jpeg', 'jpg']

@@ -1,7 +1,7 @@
 import type { Fn, Recordable } from '../types/common'
 import { isFunction, isObject } from './is'
 
-type ObjectIterator<T extends Recordable> = Fn<[key: keyof T, value: T[keyof T]], boolean>
+export type FilterObjectIterator<T extends Recordable> = Fn<[key: keyof T, value: T[keyof T]], boolean>
 
 /**
  * 根据条件过滤对象的属性并返回新对象
@@ -23,7 +23,7 @@ type ObjectIterator<T extends Recordable> = Fn<[key: keyof T, value: T[keyof T]]
  * ) // { a: 1 }
  * ```
  */
-export function filterObject<T extends Recordable>(obj: T, iterator: ObjectIterator<T>): Partial<T> {
+export function filterObject<T extends Recordable>(obj: T, iterator: FilterObjectIterator<T>): Partial<T> {
   if (!isObject(obj))
     return obj
 

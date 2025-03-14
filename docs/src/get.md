@@ -13,7 +13,7 @@ function get<TDefault>(
    defaultValue?: TDefault): undefined | TDefault
 ```
 
-Defined in: [get.ts:27](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/get.ts#L27)
+Defined in: [get.ts:27](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/get.ts#L27)
 
 安全地获取对象或数组中的嵌套值
 

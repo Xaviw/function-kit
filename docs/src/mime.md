@@ -10,7 +10,7 @@
 function getExtensionsFromMime(mime: string): undefined | string[]
 ```
 
-Defined in: [mime.ts:133](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/mime.ts#L133)
+Defined in: [mime.ts:127](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/mime.ts#L127)
 
 根据 MIME 类型获取对应的文件扩展名列表
 
@@ -26,7 +26,7 @@ MIME 类型字符串
 
 `undefined` \| `string`[]
 
-返回扩展名数组，如果未找到则返回 undefined
+返回扩展名数组（不含点号），如果未找到则返回 undefined
 
 #### Example
 
@@ -44,7 +44,7 @@ getExtensionsFromMime('unknown/type') // undefined
 function getMimeFromExtension(ext: string): undefined | string
 ```
 
-Defined in: [mime.ts:112](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/mime.ts#L112)
+Defined in: [mime.ts:109](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/mime.ts#L109)
 
 根据文件扩展名获取对应的 MIME 类型
 

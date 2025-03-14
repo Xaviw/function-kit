@@ -10,7 +10,7 @@
 function isLeapYear(year: number): boolean
 ```
 
-Defined in: [datetime.ts:19](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/datetime.ts#L19)
+Defined in: [datetime.ts:19](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/datetime.ts#L19)
 
 判断年份是否是闰年
 

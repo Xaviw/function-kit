@@ -1,14 +1,14 @@
 import { isFunction, isNumber } from './is'
 
 /**
- * 判断值是否为类数组对象
- * @remarks 类数组对象需满足以下条件：
+ * 判断值是否为类数组值
+ * @remarks 类数组值需满足以下条件：
  * - 具有 length 属性
  * - length 为非负整数
  * - length 不大于 Number.MAX_SAFE_INTEGER
  * - 不是函数
  * @param val - 要检查的值
- * @returns 如果值是类数组对象则返回 true，否则返回 false
+ * @returns 如果值是类数组值则返回 true，否则返回 false
  * @example
  * ```ts
  * // 字符串

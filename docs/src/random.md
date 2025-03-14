@@ -13,7 +13,7 @@ function randomNumber(
    floatNum?: number): number
 ```
 
-Defined in: [random.ts:16](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/random.ts#L16)
+Defined in: [random.ts:16](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/random.ts#L16)
 
 生成指定范围内的随机数
 
@@ -35,7 +35,7 @@ Defined in: [random.ts:16](https://github.com/Xaviw/function-kit/blob/98b9f91b74
 
 `number`
 
-保留的小数位数，默认为 0（整数）
+保留的小数位数，默认为 0
 
 #### Returns
 
@@ -59,7 +59,7 @@ randomNumber(1, 10, 2) // 1-10 之间的数字，保留 2 位小数
 function randomString(length?: number, chars?: string): string
 ```
 
-Defined in: [random.ts:44](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/random.ts#L44)
+Defined in: [random.ts:44](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/random.ts#L44)
 
 生成指定长度的随机字符串
 
@@ -99,7 +99,7 @@ randomString(4, 'abc123') // 'a1b2'
 function shuffle<T>(arr: T): T
 ```
 
-Defined in: [random.ts:72](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/random.ts#L72)
+Defined in: [random.ts:72](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/random.ts#L72)
 
 随机打乱数组元素的顺序
 

@@ -13,7 +13,7 @@ function throttle<F>(
 immediate?: boolean): CancelableFunction<F>
 ```
 
-Defined in: [throttle.ts:25](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/throttle.ts#L25)
+Defined in: [throttle.ts:35](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/throttle.ts#L35)
 
 创建一个节流函数，限制函数在一定时间内只能执行一次
 
@@ -54,14 +54,24 @@ Defined in: [throttle.ts:25](https://github.com/Xaviw/function-kit/blob/98b9f91b
 #### Example
 
 ```ts
-// 基础用法
-const throttled = throttle(() => console.log('scroll'), 1000)
-window.addEventListener('scroll', throttled)
+// 立即执行模式
+const fn1 = throttle(console.log, 1000)
+fn1('a') // 立即输出 'a'
+fn1('b') // 被忽略
 
-// 取消节流
-const fn = throttle(() => {}, 1000)
-fn.cancel()
+// 延迟执行模式
+const fn2 = throttle(console.log, 1000, false)
+fn2('a') // 被忽略
+fn2('b') // 1秒后输出 'b'
 
-// 延迟执行
-const delayed = throttle(() => console.log('delayed'), 1000, false)
+// 立即执行时调用 cancel
+const fn3 = throttle(console.log, 1000)
+fn3('a') // 立即输出 'a'
+fn3.cancel() // 取消运行中的等待
+fn3('b') // 立即输出 'b'
+
+// 非立即执行时调用 cancel
+const fn4 = throttle(console.log, 1000, false)
+fn4('a') // 被忽略
+fn4.cancel() // 取消运行中的等待
 ```

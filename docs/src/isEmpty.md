@@ -10,7 +10,7 @@
 function isEmpty(val: unknown): boolean
 ```
 
-Defined in: [isEmpty.ts:24](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/isEmpty.ts#L24)
+Defined in: [isEmpty.ts:24](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/isEmpty.ts#L24)
 
 判断参数是否为空值
 
@@ -32,7 +32,7 @@ Defined in: [isEmpty.ts:24](https://github.com/Xaviw/function-kit/blob/98b9f91b7
 
 以下情况被认为是空值：
 - null 或 undefined
-- 空数组或空类数组对象
+- 空数组或空 Arguments 类数组
 - 空字符串
 - 空对象（没有自身可枚举属性）
 

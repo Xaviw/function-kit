@@ -10,7 +10,7 @@
 function wxPromisify<M>(method: M, options: CallbackifyParams<M>): Promise<CallbackifyResults<M>>
 ```
 
-Defined in: [wxPromisify.ts:23](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/wxPromisify.ts#L23)
+Defined in: [wxPromisify.ts:23](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/wxPromisify.ts#L23)
 
 **`Miniprogram`**
 

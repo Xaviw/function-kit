@@ -13,7 +13,7 @@ function difference<T, K>(
    identity?: (item: T) => K): T[]
 ```
 
-Defined in: [math.ts:64](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/math.ts#L64)
+Defined in: [math.ts:64](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/math.ts#L64)
 
 计算两个数组的差集
 
@@ -67,7 +67,7 @@ function intersects<T, K>(
    identity?: (t: T) => K): T[]
 ```
 
-Defined in: [math.ts:103](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/math.ts#L103)
+Defined in: [math.ts:103](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/math.ts#L103)
 
 计算两个数组的交集
 
@@ -118,7 +118,7 @@ intersects([{id: 1}, {id: 2}], [{id: 2}, {id: 3}], x => x.id) // [{id: 2}]
 function isEven(val: number): boolean
 ```
 
-Defined in: [math.ts:29](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/math.ts#L29)
+Defined in: [math.ts:29](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/math.ts#L29)
 
 判断数值是否为偶数
 
@@ -152,7 +152,7 @@ isEven(1.2) // false
 function isInteger(val: number): boolean
 ```
 
-Defined in: [math.ts:14](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/math.ts#L14)
+Defined in: [math.ts:14](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/math.ts#L14)
 
 判断数值是否为整数
 
@@ -186,7 +186,7 @@ isInteger(NaN) // false
 function isOdd(val: number): boolean
 ```
 
-Defined in: [math.ts:46](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/math.ts#L46)
+Defined in: [math.ts:46](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/math.ts#L46)
 
 判断数值是否为奇数
 
@@ -223,7 +223,7 @@ function union<T, K>(
    identity?: (t: T) => K): T[]
 ```
 
-Defined in: [math.ts:139](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/math.ts#L139)
+Defined in: [math.ts:139](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/math.ts#L139)
 
 计算两个数组的并集
 

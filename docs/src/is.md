@@ -10,7 +10,7 @@
 function isArray(val: unknown): val is any[]
 ```
 
-Defined in: [is.ts:14](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L14)
+Defined in: [is.ts:14](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L14)
 
 判断值是否为数组
 
@@ -43,7 +43,7 @@ isArray('hello') // false
 function isArrayBuffer(val: unknown): val is ArrayBuffer
 ```
 
-Defined in: [is.ts:31](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L31)
+Defined in: [is.ts:31](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L31)
 
 判断值是否为 ArrayBuffer
 
@@ -76,7 +76,7 @@ isArrayBuffer([]) // false
 function isBlob(val: unknown): val is Blob
 ```
 
-Defined in: [is.ts:45](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L45)
+Defined in: [is.ts:45](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L45)
 
 判断值是否为 Blob
 
@@ -109,7 +109,7 @@ isBlob({}) // false
 function isBoolean(val: unknown): val is boolean
 ```
 
-Defined in: [is.ts:59](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L59)
+Defined in: [is.ts:59](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L59)
 
 判断值是否为布尔值
 
@@ -142,7 +142,7 @@ isBoolean(0) // false
 function isDate(val: unknown): val is Date
 ```
 
-Defined in: [is.ts:73](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L73)
+Defined in: [is.ts:73](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L73)
 
 判断值是否为日期对象
 
@@ -175,7 +175,7 @@ isDate('2021-01-01') // false
 function isError(val: unknown): val is Error
 ```
 
-Defined in: [is.ts:87](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L87)
+Defined in: [is.ts:87](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L87)
 
 判断值是否为错误对象
 
@@ -208,7 +208,7 @@ isError('error') // false
 function isFunction(val: unknown): val is Fn
 ```
 
-Defined in: [is.ts:107](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L107)
+Defined in: [is.ts:107](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L107)
 
 判断值是否为函数
 
@@ -241,7 +241,7 @@ isFunction(123) // false
 function isGeneratorFunction(val: unknown): val is GeneratorFunction
 ```
 
-Defined in: [is.ts:121](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L121)
+Defined in: [is.ts:121](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L121)
 
 判断值是否为生成器函数
 
@@ -274,7 +274,7 @@ isGeneratorFunction(123) // false
 function isMap(val: unknown): val is Map<any, any>
 ```
 
-Defined in: [is.ts:135](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L135)
+Defined in: [is.ts:135](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L135)
 
 判断值是否为 Map
 
@@ -307,7 +307,7 @@ isMap({}) // false
 function isNil(val: unknown): val is undefined | null
 ```
 
-Defined in: [is.ts:148](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L148)
+Defined in: [is.ts:148](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L148)
 
 判断值是否为 null 或者 undefined（void 0）
 
@@ -340,7 +340,7 @@ isNil(123) // false
 function isNumber(val: unknown): val is number
 ```
 
-Defined in: [is.ts:162](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L162)
+Defined in: [is.ts:162](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L162)
 
 判断值是否为数字
 
@@ -373,7 +373,7 @@ isNumber('123') // false
 function isObject(val: unknown): val is Recordable
 ```
 
-Defined in: [is.ts:176](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L176)
+Defined in: [is.ts:176](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L176)
 
 判断值是否为对象（包括函数）
 
@@ -406,7 +406,7 @@ isObject(null) // false
 function isPrimitive(val: unknown): val is undefined | null | string | number | boolean | symbol
 ```
 
-Defined in: [is.ts:191](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L191)
+Defined in: [is.ts:191](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L191)
 
 判断值是否为原始类型值
 
@@ -439,7 +439,7 @@ isPrimitive({}) // false
 function isPromise(val: unknown): val is Promise<any>
 ```
 
-Defined in: [is.ts:207](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L207)
+Defined in: [is.ts:207](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L207)
 
 判断值是否为 Promise 对象
 
@@ -472,9 +472,9 @@ isPromise({}) // false
 function isRegExp(val: unknown): val is RegExp
 ```
 
-Defined in: [is.ts:221](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L221)
+Defined in: [is.ts:221](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L221)
 
-判断值是否为正则
+判断值是否为正则表达式对象
 
 #### Parameters
 
@@ -488,7 +488,7 @@ Defined in: [is.ts:221](https://github.com/Xaviw/function-kit/blob/98b9f91b74d37
 
 `val is RegExp`
 
-如果值是正则，则返回 true，否则返回 false
+如果值是正则表达式对象，则返回 true，否则返回 false
 
 #### Example
 
@@ -505,7 +505,7 @@ isRegExp({}) // false
 function isSet(val: unknown): val is Set<any>
 ```
 
-Defined in: [is.ts:235](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L235)
+Defined in: [is.ts:235](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L235)
 
 判断值是否为 Set 对象
 
@@ -538,7 +538,7 @@ isSet({}) // false
 function isString(val: unknown): val is string
 ```
 
-Defined in: [is.ts:249](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L249)
+Defined in: [is.ts:249](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L249)
 
 判断值是否为字符串
 
@@ -571,7 +571,7 @@ isString(123) // false
 function isSymbol(val: unknown): val is symbol
 ```
 
-Defined in: [is.ts:263](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L263)
+Defined in: [is.ts:263](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L263)
 
 判断值是否为 Symbol
 
@@ -604,7 +604,7 @@ isSymbol('foo') // false
 function isTypedArray(val: unknown): val is Int8Array<ArrayBufferLike> | Int16Array<ArrayBufferLike> | Int32Array<ArrayBufferLike> | Uint8Array<ArrayBufferLike> | Uint8ClampedArray<ArrayBufferLike> | Uint16Array<ArrayBufferLike> | Uint32Array<ArrayBufferLike> | Float32Array<ArrayBufferLike> | Float64Array<ArrayBufferLike>
 ```
 
-Defined in: [is.ts:277](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L277)
+Defined in: [is.ts:277](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L277)
 
 判断值是否为 typedArray
 
@@ -637,7 +637,7 @@ isTypedArray([]) // false
 function isUndef(val: unknown): val is undefined
 ```
 
-Defined in: [is.ts:302](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L302)
+Defined in: [is.ts:302](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L302)
 
 判断值是否为 undefined（void 0）
 
@@ -670,9 +670,9 @@ isUndef(null) // false
 function isWeakMap(val: unknown): val is WeakMap<any, any>
 ```
 
-Defined in: [is.ts:316](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L316)
+Defined in: [is.ts:316](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L316)
 
-判断值是否为 weakMap
+判断值是否为 WeakMap
 
 #### Parameters
 
@@ -686,7 +686,7 @@ Defined in: [is.ts:316](https://github.com/Xaviw/function-kit/blob/98b9f91b74d37
 
 `val is WeakMap<any, any>`
 
-如果值是 weakMap，则返回 true，否则返回 false
+如果值是 WeakMap，则返回 true，否则返回 false
 
 #### Example
 
@@ -703,9 +703,9 @@ isWeakMap({}) // false
 function isWeakSet(val: unknown): val is WeakSet<any>
 ```
 
-Defined in: [is.ts:330](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/is.ts#L330)
+Defined in: [is.ts:330](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/is.ts#L330)
 
-判断值是否为 weakSet
+判断值是否为 WeakSet
 
 #### Parameters
 
@@ -719,7 +719,7 @@ Defined in: [is.ts:330](https://github.com/Xaviw/function-kit/blob/98b9f91b74d37
 
 `val is WeakSet<any>`
 
-如果值是 weakSet，则返回 true，否则返回 false
+如果值是 WeakSet，则返回 true，否则返回 false
 
 #### Example
 

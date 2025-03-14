@@ -10,7 +10,7 @@
 function isEqual(a: any, b: any): boolean
 ```
 
-Defined in: [isEqual.ts:25](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/isEqual.ts#L25)
+Defined in: [isEqual.ts:25](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/isEqual.ts#L25)
 
 深度比较两个值是否相等
 

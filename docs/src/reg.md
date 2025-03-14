@@ -10,7 +10,7 @@
 function isBase64(str: string): boolean
 ```
 
-Defined in: [reg.ts:31](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/reg.ts#L31)
+Defined in: [reg.ts:31](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/reg.ts#L31)
 
 判断字符串是否为 Base64 编码的 Data URL
 
@@ -43,7 +43,7 @@ isBase64('data:text/plain,Hello') // false
 function isChinese(str: string): boolean
 ```
 
-Defined in: [reg.ts:167](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/reg.ts#L167)
+Defined in: [reg.ts:167](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/reg.ts#L167)
 
 判断字符串是否全为中文字符
 
@@ -76,7 +76,7 @@ isChinese('Hello世界') // false
 function isChineseName(str: string): boolean
 ```
 
-Defined in: [reg.ts:82](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/reg.ts#L82)
+Defined in: [reg.ts:82](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/reg.ts#L82)
 
 判断字符串是否为中文姓名（支持 "·" 分隔）
 
@@ -109,7 +109,7 @@ isChineseName('艾力·买买提') // true
 function isDataUrl(str: string): boolean
 ```
 
-Defined in: [reg.ts:13](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/reg.ts#L13)
+Defined in: [reg.ts:13](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/reg.ts#L13)
 
 判断字符串是否为有效的 Data URL
 
@@ -142,7 +142,7 @@ isDataUrl('https://example.com/image.png') // false
 function isEmail(str: string): boolean
 ```
 
-Defined in: [reg.ts:65](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/reg.ts#L65)
+Defined in: [reg.ts:65](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/reg.ts#L65)
 
 判断字符串是否为有效的电子邮件地址
 
@@ -175,7 +175,7 @@ isEmail('invalid-email') // false
 function isIDCard(str: string): boolean
 ```
 
-Defined in: [reg.ts:150](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/reg.ts#L150)
+Defined in: [reg.ts:150](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/reg.ts#L150)
 
 判断字符串是否为有效的中国大陆第二代身份证号
 
@@ -208,7 +208,7 @@ isIDCard('11010119900307775X') // true
 function isIPV4(str: string): boolean
 ```
 
-Defined in: [reg.ts:184](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/reg.ts#L184)
+Defined in: [reg.ts:184](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/reg.ts#L184)
 
 判断字符串是否为有效的 IPv4 地址（可选带端口号）
 
@@ -241,7 +241,7 @@ isIPV4('192.168.1.1:8080') // true
 function isMacAddress(str: string): boolean
 ```
 
-Defined in: [reg.ts:201](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/reg.ts#L201)
+Defined in: [reg.ts:201](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/reg.ts#L201)
 
 判断字符串是否为有效的 MAC 地址
 
@@ -274,7 +274,7 @@ isMacAddress('00-0a-95-9d-68-16') // true
 function isPhone(str: string): boolean
 ```
 
-Defined in: [reg.ts:116](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/reg.ts#L116)
+Defined in: [reg.ts:116](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/reg.ts#L116)
 
 判断字符串是否为有效的中国大陆手机号
 
@@ -307,7 +307,7 @@ isPhone('+8613812345678') // true
 function isPostalCode(str: string): boolean
 ```
 
-Defined in: [reg.ts:218](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/reg.ts#L218)
+Defined in: [reg.ts:218](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/reg.ts#L218)
 
 判断字符串是否为有效的中国邮政编码
 
@@ -340,7 +340,7 @@ isPostalCode('000000') // false
 function isTelphone(str: string): boolean
 ```
 
-Defined in: [reg.ts:133](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/reg.ts#L133)
+Defined in: [reg.ts:133](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/reg.ts#L133)
 
 判断字符串是否为有效的座机号码
 
@@ -373,7 +373,7 @@ isTelphone('0755-1234567') // true
 function isUrl(str: string): boolean
 ```
 
-Defined in: [reg.ts:48](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/reg.ts#L48)
+Defined in: [reg.ts:48](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/reg.ts#L48)
 
 判断字符串是否为有效的 URL（支持 localhost）
 
@@ -406,7 +406,7 @@ isUrl('http://localhost:3000') // true
 function isVehiclePlate(str: string): boolean
 ```
 
-Defined in: [reg.ts:99](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/reg.ts#L99)
+Defined in: [reg.ts:99](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/reg.ts#L99)
 
 判断字符串是否为有效的中国车牌号（支持新能源和非新能源）
 

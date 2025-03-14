@@ -1,9 +1,9 @@
 import type { Fn, Recordable } from '../types/common'
 import { isFunction, isObject } from './is'
 
-type ObjectIterator<T extends Recordable, Res> = Fn<[value: T[keyof T], key: keyof T], Res>
+export type MapObjectIterator<T extends Recordable, Res> = Fn<[value: T[keyof T], key: keyof T], Res>
 
-type MapObjectResult<T extends Recordable, Res> = {
+export type MapObjectResult<T extends Recordable, Res> = {
   -readonly [key in keyof T]: Res
 }
 
@@ -23,7 +23,7 @@ type MapObjectResult<T extends Recordable, Res> = {
  */
 export function mapObject<T extends Recordable, Res = any>(
   obj: T,
-  iterator: ObjectIterator<T, Res>,
+  iterator: MapObjectIterator<T, Res>,
 ): MapObjectResult<T, Res> {
   if (!isObject(obj))
     return obj as any

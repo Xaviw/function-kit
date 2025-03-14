@@ -158,6 +158,18 @@ async function traverseDeclarations(id) {
         declartations.push(...names)
       }
     }
+    // type、interface 声明只判断有没有被导出
+    else if (ts.isTypeAliasDeclaration(node) || ts.isInterfaceDeclaration(node)) {
+      const modifiers = ts.getModifiers(node)?.map(modifier => modifier.kind) || []
+      // 有导出修饰符，直接收集
+      if (modifiers.includes(ts.SyntaxKind.ExportKeyword)) {
+        collectExport(id, node.name.escapedText)
+      }
+      // 没有导出修饰符，记录下来用于在后续的具名导出中判断
+      else {
+        declartations.push(node.name.escapedText)
+      }
+    }
     // 具名导出多个
     else if (ts.isExportDeclaration(node)) {
       // 从其他模块中导出，不做处理
@@ -169,7 +181,7 @@ async function traverseDeclarations(id) {
         // element.propertyName?.escapedText：原变量名，只有存在重命名时才存在
         // element.name.escapedText：导出变量名，未重命名时同原变量名
         const name = element.propertyName?.escapedText || element.name.escapedText
-        if (declartations[name]) {
+        if (declartations.includes(name)) {
           collectExport(id, name)
         }
       }

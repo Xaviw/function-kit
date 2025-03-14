@@ -13,9 +13,9 @@ function debounce<F>(
 immediate?: boolean): CancelableFunction<F>
 ```
 
-Defined in: [debounce.ts:29](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/debounce.ts#L29)
+Defined in: [debounce.ts:35](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/debounce.ts#L35)
 
-创建一个防抖函数，用于限制函数的执行频率
+创建一个防抖函数，限制函数连续触发时仅执行一次
 
 #### Type Parameters
 
@@ -45,7 +45,7 @@ Defined in: [debounce.ts:29](https://github.com/Xaviw/function-kit/blob/98b9f91b
 
 `CancelableFunction`\<`F`\>
 
-返回防抖后的函数，该函数包含 cancel 方法用于取消等待中的执行
+返回防抖后的函数，该函数包含 cancel 方法用于取消等待
 
 #### Throws
 
@@ -55,17 +55,23 @@ Defined in: [debounce.ts:29](https://github.com/Xaviw/function-kit/blob/98b9f91b
 
 ```ts
 // 立即执行模式
-const debouncedFn = debounce(console.log, 1000)
-debouncedFn('a') // 立即输出 'a'
-debouncedFn('b') // 被忽略
+const fn1 = debounce(console.log, 1000)
+fn1('a') // 立即输出 'a'
+fn1('b') // 被忽略
 
 // 延迟执行模式
-const delayedFn = debounce(console.log, 1000, false)
-delayedFn('a') // 1秒后输出 'a'
-delayedFn('b') // 重置定时器，1秒后输出 'b'
+const fn2 = debounce(console.log, 1000, false)
+fn2('a') // 被忽略
+fn2('b') // 1秒后输出 'b'
 
-// 取消防抖
-const fn = debounce(() => {}, 1000)
-fn()
-fn.cancel() // 取消等待中的执行
+// 立即执行时调用 cancel
+const fn3 = debounce(console.log, 1000)
+fn3('a') // 立即输出 'a'
+fn3.cancel() // 取消运行中的等待
+fn3('b') // 立即输出 'b'
+
+// 非立即执行时调用 cancel
+const fn4 = debounce(console.log, 1000, false)
+fn4('a') // 被忽略
+fn4.cancel() // 取消运行中的等待
 ```

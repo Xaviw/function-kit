@@ -209,9 +209,9 @@ export function isPromise(val: unknown): val is Promise<any> {
 }
 
 /**
- * 判断值是否为正则
+ * 判断值是否为正则表达式对象
  * @param val - 要检查的值
- * @returns 如果值是正则，则返回 true，否则返回 false
+ * @returns 如果值是正则表达式对象，则返回 true，否则返回 false
  * @example
  * ```ts
  * isRegExp(/a/i) // true
@@ -304,9 +304,9 @@ export function isUndef(val: unknown): val is undefined {
 }
 
 /**
- * 判断值是否为 weakMap
+ * 判断值是否为 WeakMap
  * @param val - 要检查的值
- * @returns 如果值是 weakMap，则返回 true，否则返回 false
+ * @returns 如果值是 WeakMap，则返回 true，否则返回 false
  * @example
  * ```ts
  * isWeakMap(new WeakMap()) // true
@@ -318,9 +318,9 @@ export function isWeakMap(val: unknown): val is WeakMap<any, any> {
 }
 
 /**
- * 判断值是否为 weakSet
+ * 判断值是否为 WeakSet
  * @param val - 要检查的值
- * @returns 如果值是 weakSet，则返回 true，否则返回 false
+ * @returns 如果值是 WeakSet，则返回 true，否则返回 false
  * @example
  * ```ts
  * isWeakSet(new WeakSet()) // true

@@ -4,7 +4,7 @@ import { isArray, isString } from './is'
  * 生成指定范围内的随机数
  * @param min - 最小值，默认为 0；当只传入一个参数时，范围为 [0, min]
  * @param max - 最大值，默认为 100；传入后范围为 [min, max]
- * @param floatNum - 保留的小数位数，默认为 0（整数）
+ * @param floatNum - 保留的小数位数，默认为 0
  * @returns 返回指定范围内的随机数
  * @example
  * ```ts

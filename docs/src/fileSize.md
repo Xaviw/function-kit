@@ -10,7 +10,7 @@
 function fileSize(bytes: number, suffixes: string[]): string
 ```
 
-Defined in: [fileSize.ts:24](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/fileSize.ts#L24)
+Defined in: [fileSize.ts:24](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/fileSize.ts#L24)
 
 将字节数转换为带单位的文件大小字符串
 
@@ -32,7 +32,7 @@ Defined in: [fileSize.ts:24](https://github.com/Xaviw/function-kit/blob/98b9f91b
 
 `string`
 
-返回格式化后的文件大小字符串，保留两位小数
+返回格式化后的文件大小字符串，最多保留两位小数
 
 #### Example
 
@@ -49,6 +49,6 @@ fileSize(2684354560) // '2.5G'
 fileSize(1024, ['B', 'KB', 'MB']) // '1KB'
 
 // 边界情况
-fileSize(0) // '0b'
+fileSize(-1) // '0b'
 fileSize(1024 ** 5) // '1024T'
 ```

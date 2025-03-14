@@ -10,7 +10,7 @@
 function objectToString(val: any): string
 ```
 
-Defined in: [objectToString.ts:13](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/objectToString.ts#L13)
+Defined in: [objectToString.ts:13](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/objectToString.ts#L13)
 
 获取值的内部 [[Class]] 属性，等同于 Object.prototype.toString.call
 

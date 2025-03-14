@@ -10,16 +10,26 @@ import { isFunction } from './is'
  * @throws 当第一个参数不是函数时抛出类型错误
  * @example
  * ```ts
- * // 基础用法
- * const throttled = throttle(() => console.log('scroll'), 1000)
- * window.addEventListener('scroll', throttled)
+ * // 立即执行模式
+ * const fn1 = throttle(console.log, 1000)
+ * fn1('a') // 立即输出 'a'
+ * fn1('b') // 被忽略
  *
- * // 取消节流
- * const fn = throttle(() => {}, 1000)
- * fn.cancel()
+ * // 延迟执行模式
+ * const fn2 = throttle(console.log, 1000, false)
+ * fn2('a') // 被忽略
+ * fn2('b') // 1秒后输出 'b'
  *
- * // 延迟执行
- * const delayed = throttle(() => console.log('delayed'), 1000, false)
+ * // 立即执行时调用 cancel
+ * const fn3 = throttle(console.log, 1000)
+ * fn3('a') // 立即输出 'a'
+ * fn3.cancel() // 取消运行中的等待
+ * fn3('b') // 立即输出 'b'
+ *
+ * // 非立即执行时调用 cancel
+ * const fn4 = throttle(console.log, 1000, false)
+ * fn4('a') // 被忽略
+ * fn4.cancel() // 取消运行中的等待
  * ```
  */
 export function throttle<F extends Fn>(fn: F, waitMilliseconds?: number, immediate = true): CancelableFunction<F> {

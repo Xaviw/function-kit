@@ -10,7 +10,7 @@
 function cloneDeep<T>(val: T, seen: WeakMap<any, any>): T
 ```
 
-Defined in: [cloneDeep.ts:28](https://github.com/Xaviw/function-kit/blob/98b9f91b74d378f39744fe7ad3262547892c04f0/src/cloneDeep.ts#L28)
+Defined in: [cloneDeep.ts:28](https://github.com/Xaviw/function-kit/blob/84d58cf5bffabbabf64b9123683e107f26af04ae/src/cloneDeep.ts#L28)
 
 深度克隆一个值，支持多种数据类型
 
