@@ -26,7 +26,7 @@ export function randomNumber(min?: number, max?: number, floatNum?: number): num
 
   const val = Math.random() * (_max - _min) + _min
 
-  return +val.toFixed(floatNum)
+  return +(val.toFixed(floatNum).replace(/(?<=\.\d*)0(?=0*$)/g, () => randomNumber(1, 9).toString()))
 }
 
 /**

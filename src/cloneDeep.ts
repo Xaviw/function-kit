@@ -59,7 +59,7 @@ export function cloneDeep<T>(val: T, seen = new WeakMap<any>()): T {
     result = val.map(item => cloneDeep(item, seen)) as T
   }
   else {
-    result = mapObject(val as Recordable, key => cloneDeep(key, seen))
+    result = mapObject(val as Recordable, (k, v) => [k, cloneDeep(v, seen)])
   }
 
   seen.set(val, result)
