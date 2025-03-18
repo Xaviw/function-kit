@@ -15,9 +15,13 @@ function difference<T, K>(
 
 ### 类型参数
 
-• **T**
+#### T
 
-• **K** *extends* `string` \| `number` \| `symbol`
+`T`
+
+#### K
+
+`K` *extends* `string` \| `number` \| `symbol`
 
 ### 参数
 
@@ -67,9 +71,13 @@ function intersects<T, K>(
 
 ### 类型参数
 
-• **T**
+#### T
 
-• **K** *extends* `string` \| `number` \| `symbol`
+`T`
+
+#### K
+
+`K` *extends* `string` \| `number` \| `symbol`
 
 ### 参数
 
@@ -215,9 +223,13 @@ function union<T, K>(
 
 ### 类型参数
 
-• **T**
+#### T
 
-• **K** *extends* `string` \| `number` \| `symbol`
+`T`
+
+#### K
+
+`K` *extends* `string` \| `number` \| `symbol`
 
 ### 参数
 

@@ -12,7 +12,9 @@ function cloneDeep<T>(val: T, seen: WeakMap<any, any>): T
 
 ### 类型参数
 
-• **T**
+#### T
+
+`T`
 
 ### 参数
 

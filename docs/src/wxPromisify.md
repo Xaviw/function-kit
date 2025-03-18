@@ -14,7 +14,9 @@ function wxPromisify<M>(method: M, options: CallbackifyParams<M>): Promise<Callb
 
 ### 类型参数
 
-• **M** *extends* `Fn`
+#### M
+
+`M` *extends* `Fn`
 
 ### 参数
 

@@ -2,47 +2,33 @@
 
 # mapObject
 
-## MapObjectIterator\<T, Res\>
+## MapObjectIterator\<T\>
 
 ```ts
-type MapObjectIterator<T, Res> = Fn<[T[keyof T], keyof T], Res>;
+type MapObjectIterator<T> = Fn<[keyof T, T[keyof T]], [keyof any, any]>;
 ```
 
 ### 类型参数
 
-• **T** *extends* `Recordable`
+#### T
 
-• **Res**
-
-***
-
-## MapObjectResult\<T, Res\>
-
-```ts
-type MapObjectResult<T, Res> = { -readonly [key in keyof T]: Res };
-```
-
-### 类型参数
-
-• **T** *extends* `Recordable`
-
-• **Res**
+`T` *extends* `Recordable`
 
 ***
 
 ## mapObject()
 
 ```ts
-function mapObject<T, Res>(obj: T, iterator: MapObjectIterator<T, Res>): MapObjectResult<T, Res>
+function mapObject<T>(obj: T, iterator: MapObjectIterator<T>): Recordable
 ```
 
-遍历对象的每个属性并返回一个新对象，类似数组的 map 方法
+遍历对象的每个键值并返回一个新对象，类似数组的 map 方法
 
 ### 类型参数
 
-• **T** *extends* `Recordable`
+#### T
 
-• **Res** = `any`
+`T` *extends* `Recordable`
 
 ### 参数
 
@@ -54,13 +40,13 @@ function mapObject<T, Res>(obj: T, iterator: MapObjectIterator<T, Res>): MapObje
 
 #### iterator
 
-[`MapObjectIterator`](mapObject.md#mapobjectiteratort-res)\<`T`, `Res`\>
+[`MapObjectIterator`](#mapobjectiterator)\<`T`\>
 
-遍历函数，接收属性值和属性名作为参数
+遍历函数，接收属性名和属性值作为参数，返回新的属性名和属性值元组
 
 ### 返回
 
-[`MapObjectResult`](mapObject.md#mapobjectresultt-res)\<`T`, `Res`\>
+`Recordable`
 
 返回一个新对象，包含遍历函数处理后的结果
 
@@ -71,8 +57,8 @@ function mapObject<T, Res>(obj: T, iterator: MapObjectIterator<T, Res>): MapObje
 ### 示例
 
 ```ts
-mapObject({ a: 1, b: 2 }, val => val * 2) // { a: 2, b: 4 }
-mapObject({ x: 'hello', y: 'world' }, (val, key) => `${key}_${val}`)
-// { x: 'x_hello', y: 'y_world' }
-mapObject({}, val => val) // {}
+mapObject({ a: 1, b: 2 }, (key, val) => [key, val * 2]) // { a: 2, b: 4 }
+mapObject({ x: 'hello', y: 'world' }, (key, val) => [key.toUpperCase(), `${key}_${val}`])
+// { X: 'x_hello', Y: 'y_world' }
+mapObject({}, (key, val) => [key, val]) // {}
 ```

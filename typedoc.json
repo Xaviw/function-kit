@@ -1,4 +1,5 @@
 {
+  "$schema": "https://typedoc.org/schema.json",
   "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
   "entryPoints": ["src/**/*.ts"],
   "modifierTags": ["@web", "@miniprogram", "@node"],
@@ -17,5 +18,6 @@
   "githubPages": false,
   "hideGenerator": true,
   "lang": "zh",
-  "disableSources": true
+  "disableSources": true,
+  "name": "function-kit"
 }

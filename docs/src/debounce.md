@@ -15,7 +15,9 @@ immediate?: boolean): CancelableFunction<F>
 
 ### 类型参数
 
-• **F** *extends* `Fn`
+#### F
+
+`F` *extends* `Fn`
 
 ### 参数
 

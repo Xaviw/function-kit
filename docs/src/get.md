@@ -15,7 +15,9 @@ function get<TDefault>(
 
 ### 类型参数
 
-• **TDefault**
+#### TDefault
+
+`TDefault`
 
 ### 参数
 

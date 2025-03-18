@@ -97,7 +97,9 @@ function shuffle<T>(arr: T): T
 
 ### 类型参数
 
-• **T** *extends* `unknown`[]
+#### T
+
+`T` *extends* `unknown`[]
 
 ### 参数
 

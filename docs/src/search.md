@@ -45,7 +45,9 @@ function search<T>(
 
 ### 类型参数
 
-• **T**
+#### T
+
+`T`
 
 ### 参数
 
@@ -63,7 +65,7 @@ function search<T>(
 
 #### options?
 
-[`FuzzySearchOptions`](search.md#fuzzysearchoptions)
+[`FuzzySearchOptions`](#fuzzysearchoptions)
 
 搜索选项配置
 

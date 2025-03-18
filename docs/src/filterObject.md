@@ -10,7 +10,9 @@ type FilterObjectIterator<T> = Fn<[keyof T, T[keyof T]], boolean>;
 
 ### 类型参数
 
-• **T** *extends* `Recordable`
+#### T
+
+`T` *extends* `Recordable`
 
 ***
 
@@ -24,7 +26,9 @@ function filterObject<T>(obj: T, iterator: FilterObjectIterator<T>): Partial<T>
 
 ### 类型参数
 
-• **T** *extends* `Recordable`
+#### T
+
+`T` *extends* `Recordable`
 
 ### 参数
 
@@ -36,7 +40,7 @@ function filterObject<T>(obj: T, iterator: FilterObjectIterator<T>): Partial<T>
 
 #### iterator
 
-[`FilterObjectIterator`](filterObject.md#filterobjectiteratort)\<`T`\>
+[`FilterObjectIterator`](#filterobjectiterator)\<`T`\>
 
 过滤函数，接收属性名和属性值作为参数，返回 true 表示保留该属性
 

@@ -12,7 +12,9 @@ function last<T>(arr: T[], defaultValue?: T): undefined | T
 
 ### 类型参数
 
-• **T**
+#### T
+
+`T`
 
 ### 参数
 
