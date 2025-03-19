@@ -5,7 +5,7 @@
 ## MapObjectIterator\<T\>
 
 ```ts
-type MapObjectIterator<T> = Fn<[keyof T, T[keyof T]], [keyof any, any]>;
+type MapObjectIterator<T> = Fn<[keyof T, T[keyof T]], [Key, any]>;
 ```
 
 ### 类型参数

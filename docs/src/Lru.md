@@ -21,18 +21,18 @@ cache.set('c', 3) // 'b' 会被删除
 #### new Lru()
 
 ```ts
-new Lru(max: number): Lru
+new Lru(max?: number): Lru
 ```
 
 创建一个新的 LRU 缓存实例
 
 ##### 参数
 
-###### max
+###### max?
 
 `number`
 
-缓存的最大容量
+缓存的最大容量，默认为 Infinity
 
 ##### 返回
 
@@ -55,7 +55,7 @@ clear(): void
 #### get()
 
 ```ts
-get(key: string): any
+get(key: string | number | symbol): any
 ```
 
 获取缓存中指定键的值，并将其移到最近使用的位置
@@ -64,9 +64,9 @@ get(key: string): any
 
 ###### key
 
-`string`
-
 要获取的键
+
+`string` | `number` | `symbol`
 
 ##### 返回
 
@@ -77,7 +77,7 @@ get(key: string): any
 #### has()
 
 ```ts
-has(key: string): boolean
+has(key: string | number | symbol): boolean
 ```
 
 检查缓存中是否存在指定的键
@@ -86,9 +86,9 @@ has(key: string): boolean
 
 ###### key
 
-`string`
-
 要检查的键
+
+`string` | `number` | `symbol`
 
 ##### 返回
 
@@ -99,7 +99,7 @@ has(key: string): boolean
 #### remove()
 
 ```ts
-remove(key: string): void
+remove(key: string | number | symbol): void
 ```
 
 从缓存中移除指定的键值对
@@ -108,9 +108,9 @@ remove(key: string): void
 
 ###### key
 
-`string`
-
 要移除的键
+
+`string` | `number` | `symbol`
 
 ##### 返回
 
@@ -119,7 +119,7 @@ remove(key: string): void
 #### set()
 
 ```ts
-set(key: string, value: any): void
+set(key: string | number | symbol, value: any): void
 ```
 
 设置缓存中的键值对，如果缓存已满则移除最久未使用的项
@@ -128,9 +128,9 @@ set(key: string, value: any): void
 
 ###### key
 
-`string`
-
 要设置的键
+
+`string` | `number` | `symbol`
 
 ###### value
 

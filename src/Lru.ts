@@ -1,3 +1,5 @@
+import type { Key } from '../types/common'
+
 /**
  * 简单 LRU (Least Recently Used) 缓存实现
  * @example
@@ -11,14 +13,14 @@
  */
 export class Lru {
   private max: number
-  private cache = new Map()
+  private cache = new Map<Key, any>()
 
   /**
    * 创建一个新的 LRU 缓存实例
-   * @param max - 缓存的最大容量
+   * @param max - 缓存的最大容量，默认为 Infinity
    */
-  constructor(max: number) {
-    this.max = max
+  constructor(max?: number) {
+    this.max = Number.parseInt(max as any) || Infinity
   }
 
   /**
@@ -26,7 +28,7 @@ export class Lru {
    * @param key - 要检查的键
    * @returns 如果键存在则返回 true，否则返回 false
    */
-  has(key: string): boolean {
+  has(key: Key): boolean {
     return this.cache.has(key)
   }
 
@@ -34,7 +36,7 @@ export class Lru {
    * 从缓存中移除指定的键值对
    * @param key - 要移除的键
    */
-  remove(key: string): void {
+  remove(key: Key): void {
     if (this.has(key))
       this.cache.delete(key)
   }
@@ -44,7 +46,7 @@ export class Lru {
    * @param key - 要获取的键
    * @returns 键对应的值，如果键不存在则返回 null
    */
-  get(key: string): any {
+  get(key: Key): any {
     if (!this.has(key))
       return null
 
@@ -59,11 +61,14 @@ export class Lru {
    * @param key - 要设置的键
    * @param value - 要设置的值
    */
-  set(key: string, value: any): void {
-    if (this.has(key))
+  set(key: Key, value: any): void {
+    if (this.has(key)) {
       this.cache.delete(key)
-    else if (this.cache.size >= this.max)
-      this.cache.delete(this.cache.keys().next().value)
+    }
+    else if (this.cache.size >= this.max) {
+      const firstKey = this.cache.keys().next().value
+      firstKey && this.cache.delete(firstKey)
+    }
 
     this.cache.set(key, value)
   }

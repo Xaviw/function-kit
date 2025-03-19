@@ -1,7 +1,7 @@
-import type { Fn, Recordable } from '../types/common'
+import type { Fn, Key, Recordable } from '../types/common'
 import { isFunction, isObject } from './is'
 
-export type MapObjectIterator<T extends Recordable> = Fn<[key: keyof T, value: T[keyof T]], [keyof any, any]>
+export type MapObjectIterator<T extends Recordable> = Fn<[key: keyof T, value: T[keyof T]], [Key, any]>
 
 /**
  * 遍历对象的每个键值并返回一个新对象，类似数组的 map 方法

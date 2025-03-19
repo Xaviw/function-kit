@@ -2,7 +2,9 @@ export type Fn<Args = any[], Res = any> = (...args: Args) => Res
 
 export type AsyncFn<Args = any[], Res = any> = (...args: Args) => Promise<Res>
 
-export type Recordable<T = any> = Record<keyof any, T>
+export type Key = keyof any
+
+export type Recordable<T = any> = Record<Key, T>
 
 export type MaybePromise<T = any> = Promise<T> | T
 
