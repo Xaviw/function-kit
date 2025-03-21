@@ -2,6 +2,10 @@
 
 ## 模块
 
+- [canvas/canvas](canvas%5Ccanvas.md)
+- [canvas/line](canvas%5Cline.md)
+- [canvas/poster](canvas%5Cposter.md)
+- [canvas/rect](canvas%5Crect.md)
 - [case](case.md)
 - [className](className.md)
 - [cloneDeep](cloneDeep.md)

@@ -1,0 +1,14 @@
+{
+  "name": "@function-kit/docs",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "函数库文档",
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.3"
+  }
+}
