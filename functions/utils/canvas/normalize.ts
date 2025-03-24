@@ -4,158 +4,157 @@ import { mapObject } from '../../src/mapObject'
 import { memo } from '../../src/memo'
 
 /**
- * 定位、尺寸相关属性
- */
-export type StandardSizeProp = Pick<CanvasElementCommonOptions, 'top' | 'right' | 'bottom' | 'left' | 'width' | 'height'>
-
-/**
  * 根据定位、尺寸属性计算标准盒子属性
  */
 export interface NormalizedBox {
-  x1: number
-  y1: number
+  x: number
+  y: number
   width: number
   height: number
 }
 
-export const standardStrategy = memo(
-  (props: StandardSizeProp, options: CanvasElementRenderFnOptions): NormalizedBox => {
-    const { width: canvasWidth, height: canvasHeight } = options
+/**
+ * 定位、尺寸相关属性
+ */
+export type StandardSizeProp = Pick<CanvasElementCommonOptions, 'top' | 'right' | 'bottom' | 'left' | 'width' | 'height'>
 
-    const normalizeOptions = mapObject(props, (key, value) => {
-      if (isNil(value))
-        return [key, value]
+export const standardStrategy = memo((props: StandardSizeProp, options: NormalizedBox): NormalizedBox => {
+  const { width: containerWidth, height: containerHeight } = options
 
-      return [key, calcSize(value, options) || undefined]
-    })
+  const normalizeOptions = mapObject(props, (key, value) => {
+    if (isNil(value))
+      return [key, value]
 
-    const { top, right, bottom, left, width: elementWidth, height: elementHeight } = normalizeOptions
+    const isVertical = ['top', 'bottom', 'height'].includes(key)
+    return [key, calcSize(value, isVertical ? containerHeight : containerWidth) || undefined]
+  })
 
-    let x1 = 0
-    let y1 = 0
-    let width = 0
-    let height = 0
+  const { top, right, bottom, left, width: elementWidth, height: elementHeight } = normalizeOptions
 
-    if (!isNil(elementWidth)) {
-      width = elementWidth
+  let x = 0
+  let y = 0
+  let width = 0
+  let height = 0
 
-      if (!isNil(left))
-        x1 = left
-      else if (!isNil(right))
-        x1 = canvasWidth - right - width
-      else
-        x1 = 0
-    }
-    else {
-      x1 = left || 0
-      const x2 = right || 0
-      width = canvasWidth - x1 - x2
-    }
+  if (!isNil(elementWidth)) {
+    width = elementWidth
 
-    if (!isNil(elementHeight)) {
-      height = elementHeight
-
-      if (!isNil(top))
-        y1 = top
-      else if (!isNil(bottom))
-        y1 = canvasHeight - bottom - height
-      else
-        y1 = 0
-    }
-    else {
-      y1 = top || 0
-      const y2 = bottom || 0
-      height = canvasHeight - y1 - y2
-    }
-
-    return {
-      x1,
-      y1,
-      width,
-      height,
-    }
-  },
-  {
-    key(props, options) {
-      const { top, right, bottom, left, width, height } = props
-      const { width: canvasWidth, height: canvasHeight } = options
-      return JSON.stringify({ top, right, bottom, left, width, height, canvasWidth, canvasHeight })
-    },
-    lruMax: 20,
-  },
-)
-
-export const lineStrategy = memo((props: Pick<CanvasLine, 'points'>, options: CanvasElementRenderFnOptions): NormalizedBox & { points: [number, number][] } => {
-  const [first = [0, 0], ...points] = props?.points || []
-  const [x1, y1] = first.map(item => calcSize(item, options))
-  const initial: NormalizedBox & { points: [number, number][] } = {
-    x1,
-    y1,
-    width: 0,
-    height: 0,
-    points: [[x1, y1]],
+    if (!isNil(left))
+      x = left
+    else if (!isNil(right))
+      x = containerWidth - right - width
+    else
+      x = 0
+  }
+  else {
+    x = left || 0
+    const x2 = right || 0
+    width = containerWidth - x - x2
   }
 
-  if (!points.length)
-    return initial
+  if (!isNil(elementHeight)) {
+    height = elementHeight
 
-  return points.reduce((p, c) => {
-    const [x, y] = (isArray(c) ? c : []).map(item => calcSize(item, options))
-    if ([x, y].some(Number.isNaN))
-      return p
+    if (!isNil(top))
+      y = top
+    else if (!isNil(bottom))
+      y = containerHeight - bottom - height
+    else
+      y = 0
+  }
+  else {
+    y = top || 0
+    const y2 = bottom || 0
+    height = containerHeight - y - y2
+  }
 
-    return {
-      x1: Math.min(p.x1, x),
-      y1: Math.min(p.y1, y),
-      width: Math.max(p.width, x),
-      height: Math.max(p.height, y),
-      points: [...p.points, [x, y]],
-    }
-  }, initial)
+  return {
+    x,
+    y,
+    width,
+    height,
+  }
 }, {
   key(props, options) {
-    const { points } = props
-    const { width, height } = options
-    return JSON.stringify({ points, width, height })
+    const { top, right, bottom, left, width, height } = props
+    const { width: containerWidth, height: containerHeight, x: containerX, y: containerY } = options
+    return JSON.stringify({ top, right, bottom, left, width, height, containerWidth, containerHeight, containerX, containerY })
   },
   lruMax: 20,
 })
 
-const normalizeStrategies: Record<PosterElement['type'], (props: any, options: CanvasElementRenderFnOptions) => any> = {
+export const lineStrategy = memo((props: Pick<CanvasLine, 'points'>, options: NormalizedBox): NormalizedBox & { points: [number, number][] } => {
+  const [first = [0, 0], ...points] = props?.points || []
+  const { width, height, x, y } = options
+  const [firstX, firstY] = first.map((item, index) => calcSize(item, [width, height][index]))
+
+  let minX = firstX
+  let minY = firstY
+  let maxX = firstX
+  let maxY = firstY
+
+  if (!points.length)
+    return { points: [] } as any
+
+  const normalizedPoints = points.reduce((p, c) => {
+    const [pointX, pointY] = (isArray(c) ? c : []).map((item, index) => calcSize(item, [width, height][index]))
+    if ([pointX, pointY].some(Number.isNaN))
+      return p
+
+    minX = Math.min(minX, pointX)
+    minY = Math.min(minY, pointY)
+    maxX = Math.max(maxX, pointX)
+    maxY = Math.max(maxY, pointY)
+
+    return [...p, [pointX, pointY] as [number, number]]
+  }, [] as [number, number][])
+
+  return {
+    width: maxX - minX || 1,
+    height: maxY - minY || 1,
+    x: x + minX,
+    y: y + minY,
+    points: [[firstX, firstY], ...normalizedPoints].map(([pointX, pointY]) => [x + pointX, y + pointY]),
+  }
+}, {
+  key(props, options) {
+    const { points } = props
+    const { width, height, x, y } = options
+    return JSON.stringify({ points, width, height, x, y })
+  },
+  lruMax: 20,
+})
+
+const normalizeStrategies = {
   rect: standardStrategy,
   text: standardStrategy,
   image: standardStrategy,
   line: lineStrategy,
-}
+} as const
 
 /**
  * 绘制参数标准化中间层
  */
 export function normalizeElement<T extends PosterElement>(element: T, elements: PosterElements, options: CanvasElementRenderFnOptions): ReturnType<(typeof normalizeStrategies)[T['type']]> {
+  const { width, height } = options
   if (!element.relativeTo)
-    return normalizeStrategies[element.type](element, options)
+    return normalizeStrategies[element.type](element, { width, height, x: 0, y: 0 })
 
   const relativeElement = elements.find(item => !isFunction(item) && item.id === element.relativeTo) as PosterElement
   if (!relativeElement)
-    return normalizeStrategies[element.type](element, options)
+    return normalizeStrategies[element.type](element, { width, height, x: 0, y: 0 })
 
-  const { x1: containerX1, y1: containerY1, width, height } = normalizeElement(relativeElement, elements, options) as NormalizedBox
+  const { x: containerX, y: containerY, width: containerWidth, height: containerHeight } = normalizeElement(relativeElement, elements, options)
 
-  const { x1, y1, ...size } = normalizeStrategies[element.type](element, { ...options, width, height })
-
-  return {
-    ...size,
-    x1: containerX1 + x1,
-    y1: containerY1 + y1,
-  }
+  return normalizeStrategies[element.type](element, { width: containerWidth, height: containerHeight, x: containerX, y: containerY })
 }
 
 /**
  * 标准化数值与百分比字符串
  */
-function calcSize(val: number | string, options: CanvasElementRenderFnOptions): number {
+function calcSize(val: number | string, base: number): number {
   if (isString(val) && val.endsWith('%'))
-    return options.width * (Number.parseFloat(val) / 100)
+    return base * Number.parseFloat(val) / 100
 
   return Number.parseFloat(val as any)
 }

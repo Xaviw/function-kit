@@ -23,18 +23,18 @@ onMounted(() => {
     },
     {
       type: 'line',
+      id: 'b',
       relativeTo: 'a',
-      points: [[0, '50%'], ['100%', '30%']]
+      points: [[0, '50%'], ['100%', '50%']]
     },
-    (ctx) => {
-      ctx.restore()
-      ctx.beginPath()
-      ctx.moveTo(150, 10)
-      ctx.lineTo(220, 80)
-      ctx.lineTo(150, 80)
-      // ctx.closePath()
-      ctx.stroke()
-    }
+    {
+      type: 'line',
+      relativeTo: 'b',
+      points: [['20%', '50%'], ['80%', '50%']],
+      backgroundColor: '#00ff00',
+      lineWidth: 5,
+      lineCap: 'round',
+    },
   ], {
     node: canvas.value!,
     width: 400,

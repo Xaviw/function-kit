@@ -8,19 +8,19 @@ import { lineStrategy } from '../../utils/canvas/normalize'
  * @miniprogram
  */
 export function renderLine(renderOptions: CanvasLine, contextOptions: CanvasElementRenderFnOptions): void {
-  const { x1, y1, width, height, points } = lineStrategy(renderOptions, contextOptions)
+  const { ctx, width: canvasWidth, height: canvasHeight } = contextOptions
 
-  if (!width || !height)
+  const { x, y, width, height, points } = lineStrategy(renderOptions, { width: canvasWidth, height: canvasHeight, x: 0, y: 0 })
+
+  if (!width || !height || points.length < 2)
     return
 
   settingCanvasProps(renderOptions, contextOptions)
 
   if (renderOptions.rotate)
-    rotateCanvasElement(renderOptions.rotate, { x1, y1, width, height }, contextOptions)
+    rotateCanvasElement(renderOptions.rotate, { x, y, width, height }, contextOptions)
 
   const [first, ...rest] = points
-
-  const { ctx } = contextOptions
 
   ctx.beginPath()
   ctx.moveTo(...first)
