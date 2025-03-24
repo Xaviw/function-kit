@@ -1,60 +1,30 @@
-// import type { CanvasElementRenderFnOptions, CanvasLineElement } from '../../types/canvas'
-// import { isArray, isNumber } from '../is'
+import type { CanvasElementRenderFnOptions, CanvasLine } from '../../types/canvas'
+import { rotateCanvasElement, settingCanvasProps } from '../../utils/canvas/instancePropertyStrategies'
+import { lineStrategy } from '../../utils/canvas/normalize'
 
-// /**
-//  * 绘制 Canvas 线条
-//  * @web
-//  * @miniprogram
-//  */
-// export function renderLine(renderOptions: CanvasLineElement, contextOptions: CanvasElementRenderFnOptions): void {
-//   const {
-//     begin,
-//     end,
-//     lineWidth,
-//     lineDash,
-//     lineDashOffset,
-//     lineCap,
-//     lineJoin,
-//     miterLimit,
-//     backgroundColor,
-//   } = renderOptions
+/**
+ * 绘制 Canvas 线条
+ * @web
+ * @miniprogram
+ */
+export function renderLine(renderOptions: CanvasLine, contextOptions: CanvasElementRenderFnOptions): void {
+  const { x1, y1, width, height, points } = lineStrategy(renderOptions, contextOptions)
 
-//   const x1 = Number.parseFloat(begin?.[0] as any)
-//   const y1 = Number.parseFloat(begin?.[1] as any)
-//   const x2 = Number.parseFloat(end?.[0] as any)
-//   const y2 = Number.parseFloat(end?.[1] as any)
+  if (!width || !height)
+    return
 
-//   if ([x1, y1, x2, y2].every(Number.isNaN)) {
-//     console.warn(`请检查配置：${renderOptions}`)
-//     return
-//   }
+  settingCanvasProps(renderOptions, contextOptions)
 
-//   const { ctx } = contextOptions
+  if (renderOptions.rotate)
+    rotateCanvasElement(renderOptions.rotate, { x1, y1, width, height }, contextOptions)
 
-//   if (isNumber(lineWidth))
-//     ctx.lineWidth = lineWidth
+  const [first, ...rest] = points
 
-//   if (isArray(lineDash) && lineDash.every(isNumber))
-//     ctx.setLineDash(lineDash)
+  const { ctx } = contextOptions
 
-//   if (isNumber(lineDashOffset))
-//     ctx.lineDashOffset = lineDashOffset
-
-//   if (lineCap && ['butt', 'round', 'square'].includes(lineCap))
-//     ctx.lineCap = lineCap
-
-//   if (lineJoin && ['round', 'bevel', 'miter'].includes(lineJoin))
-//     ctx.lineJoin = lineJoin
-
-//   if (isNumber(miterLimit))
-//     ctx.miterLimit = miterLimit
-
-//   if (backgroundColor)
-//     ctx.strokeStyle = backgroundColor
-
-//   ctx.beginPath()
-//   ctx.moveTo(x1, y1)
-//   ctx.lineTo(x2, y2)
-//   ctx.stroke()
-//   ctx.closePath()
-// }
+  ctx.beginPath()
+  ctx.moveTo(...first)
+  rest.forEach(item => ctx.lineTo(...item))
+  ctx.stroke()
+  ctx.closePath()
+}

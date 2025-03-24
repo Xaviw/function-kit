@@ -1,7 +1,7 @@
 /**
  * poster 绘制项
  */
-export type PosterElements = (CanvasElements | CanvasRenderFn)[]
+export type PosterElements = (PosterElement | PosterRenderFunction)[]
 
 /**
  * poster 基础配置
@@ -24,14 +24,23 @@ export interface PosterOptions {
 /**
  * poster 配置式绘制项
  */
-export type CanvasElements = CanvasTextElement | CanvasImageElement | CanvasRectElement | CanvasLineElement
+export type PosterElement = (CanvasText | CanvasImage | CanvasRect | CanvasLine) & {
+  /**
+   * 用于相对定位
+   */
+  id?: string
+  /**
+   * 相对于某个 id 对应的元素进行定位（注意避免循环依赖）
+   */
+  relativeTo?: string
+}
 
 /**
  * poster 函数式绘制项
  */
-export interface CanvasRenderFn {
+export interface PosterRenderFunction {
   /**
-   * 手动绘制，支持异步
+   * 手动绘制或设置上下文属性，支持异步
    * @param ctx - canvas 上下文
    * @param canvas - canvas 节点
    */
@@ -39,21 +48,44 @@ export interface CanvasRenderFn {
 }
 
 /**
- * poster 配置式绘制项公共配置
+ * canvas 绘制公共配置
  */
 export interface CanvasElementCommonOptions {
   /**
-   * 用于相对定位
+   * 支持数字或百分比
    */
-  id?: string
+  width?: string | number
   /**
-   * 相对于某个 id 对应的元素进行定位（需要注意配置顺序）
+   * 支持数字或百分比
    */
-  relativeTo?: string
-  top?: number
-  right?: number
-  bottom?: number
-  left?: number
+  height?: string | number
+  /**
+   * 支持数字或百分比
+   * 不存在 height 时，根据 top、bottom 计算高度
+   * 存在 height 时，优先使用 top 定位
+   */
+  top?: string | number
+  /**
+   * 支持数字或百分比
+   * 不存在 width 时，根据 left、right 计算宽度
+   * 存在 width 时，优先使用 left 定位
+   */
+  right?: string | number
+  /**
+   * 支持数字或百分比
+   * 不存在 height 时，根据 top、bottom 计算高度
+   * 存在 height 时，优先使用 top 定位
+   */
+  bottom?: string | number
+  /**
+   * 支持数字或百分比
+   * 不存在 width 时，根据 left、right 计算宽度
+   * 存在 width 时，优先使用 left 定位
+   */
+  left?: string | number
+  /**
+   * 旋转角度
+   */
   rotate?: number
   shadowOffsetX?: number
   shadowOffsetY?: number
@@ -98,38 +130,21 @@ export interface CanvasTextCommonOptions {
    * @default 'fill'
    */
   textStyle?: 'fill' | 'stroke'
-  /**
-   * 上下左右、[上下左右]、[上下、左右]、[上、左右、下]、[上, 右, 下, 左]
-   */
-  padding?: number | number[]
-  backgroundColor?: string
-  borderRadius?: number
-  borderSize?: number
-  /**
-   * @default 'solid'
-   */
-  borderStyle?: 'solid' | 'dashed'
-  /**
-   * @default '#000000'
-   */
-  borderColor?: string
 }
 
 /**
- * poster 文本
+ * canvas 文本
  */
-export interface CanvasTextElement extends CanvasTextCommonOptions, CanvasElementCommonOptions {
+export interface CanvasText extends CanvasTextCommonOptions, CanvasElementCommonOptions {
   type: 'text'
   /**
    * 文本内容，支持换行等控制字符；为数组时可以分别设置样式
    */
   content: string | CanvasTextCommonOptions[]
   /**
-   * 设置宽度后支持自动换行、多行省略、对齐方式
-   */
-  width?: number
-  /**
-   * 最大行数，超出省略显示，需设置 width
+   * 最大行数，超出省略显示
+   * 需要能够计算出宽度（存在 left、right 或者 width）
+   * height 小于实际高度时，会进行裁剪
    */
   lineClamp?: number
   /**
@@ -138,22 +153,20 @@ export interface CanvasTextElement extends CanvasTextCommonOptions, CanvasElemen
    */
   ellipsisContent?: string
   /**
-   * 对齐方式，需设置 width
+   * 对齐方式，需要能够计算出宽度（存在 left、right 或者 width）
    * @default 'left'
    */
   textAlign?: 'left' | 'center' | 'right'
 }
 
 /**
- * poster 图片
+ * canvas 图片
  */
-export interface CanvasImageElement extends CanvasElementCommonOptions {
+export interface CanvasImage extends CanvasElementCommonOptions {
   type: 'image'
   src: string
-  width?: number
-  height?: number
   /**
-   * 需设置 width、height
+   * 需能够计算出高度（存在 top、bottom 或者 height）·
    */
   mode?: 'aspectFill' | 'scaleToFill'
   /**
@@ -168,16 +181,17 @@ export interface CanvasImageElement extends CanvasElementCommonOptions {
    * @default '#000000'
    */
   borderColor?: string
-  borderRadius?: number
+  /**
+   * 支持数字或百分比
+   */
+  borderRadius?: number | string
 }
 
 /**
- * poster 矩形
+ * canvas 矩形
  */
-export interface CanvasRectElement extends CanvasElementCommonOptions {
+export interface CanvasRect extends CanvasElementCommonOptions {
   type: 'rect'
-  width: number
-  height: number
   backgroundColor?: string
   /**
    * box-sizing: content-box
@@ -191,22 +205,22 @@ export interface CanvasRectElement extends CanvasElementCommonOptions {
    * @default '#000000'
    */
   borderColor?: string
-  borderRadius?: number
+  /**
+   * 支持数字或百分比
+   */
+  borderRadius?: number | string
 }
 
 /**
- * 线
+ * canvas 直线（元素矩形盒子的左上角到右下角）
  */
-export interface CanvasLineElement extends Omit<CanvasElementCommonOptions, 'top' | 'right' | 'bottom' | 'left'> {
+export interface CanvasLine extends Omit<CanvasElementCommonOptions, 'top' | 'right' | 'bottom' | 'left' | 'width' | 'height'> {
   type: 'line'
   /**
-   * 起点
+   * 线条顶点，可以为 2 个或多个
+   * 支持数字或百分比
    */
-  begin: [number, number]
-  /**
-   * 终点
-   */
-  end: [number, number]
+  points: [number | string, number | string][]
   /**
    * @default 1
    */
@@ -216,11 +230,11 @@ export interface CanvasLineElement extends Omit<CanvasElementCommonOptions, 'top
   /**
    * @default 'butt'
    */
-  lineCap?: 'butt' | 'round' | 'square'
+  lineCap?: CanvasLineCap
   /**
    * @default 'miter'
    */
-  lineJoin?: 'round' | 'bevel' | 'miter'
+  lineJoin?: CanvasLineJoin
   /**
    * @default 10
    */
@@ -228,4 +242,18 @@ export interface CanvasLineElement extends Omit<CanvasElementCommonOptions, 'top
   backgroundColor?: string
 }
 
-export interface CanvasElementRenderFnOptions { ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, width: number, height: number }
+/**
+ * canvas 绘制方法参数
+ */
+export interface CanvasElementRenderFnOptions {
+  ctx: CanvasRenderingContext2D
+  canvas: HTMLCanvasElement
+  /**
+   * 设计图宽度（未乘以 dpr）
+   */
+  width: number
+  /**
+   * 设计图高度（未乘以 dpr）
+   */
+  height: number
+}

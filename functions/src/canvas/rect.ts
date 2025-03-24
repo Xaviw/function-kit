@@ -1,4 +1,4 @@
-// import type { CanvasElementRenderFnOptions, CanvasRectElement } from '../../types/canvas'
+// import type { CanvasElementRenderFnOptions, CanvasRect } from '../../types/canvas'
 // import { isNil } from '../is'
 
 // /**
@@ -6,7 +6,7 @@
 //  * @web
 //  * @miniprogram
 //  */
-// export function renderRect(renderOptions: CanvasRectElement, contextOptions: CanvasElementRenderFnOptions): void {
+// export function renderRect(renderOptions: CanvasRect, contextOptions: CanvasElementRenderFnOptions): void {
 //   let {
 //     width,
 //     height,
@@ -18,10 +18,7 @@
 //     top,
 //     right,
 //     bottom,
-//     left,
-//     // id,
-//     // relativeTo,
-//     // rotate,
+//     rotate,
 //     shadowBlur,
 //     shadowColor,
 //     shadowOffsetX,
