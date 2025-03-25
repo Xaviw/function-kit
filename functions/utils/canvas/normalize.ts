@@ -1,4 +1,5 @@
 import type { CanvasElementCommonOptions, CanvasElementRenderFnOptions, CanvasLine, PosterElement, PosterElements } from '../../types/canvas'
+import type { Recordable } from '../../types/common'
 import { isArray, isFunction, isNil, isString } from '../../src/is'
 import { mapObject } from '../../src/mapObject'
 import { memo } from '../../src/memo'
@@ -13,16 +14,11 @@ export interface NormalizedBox {
   height: number
 }
 
-/**
- * 定位、尺寸相关属性
- */
-export type StandardSizeProp = Pick<CanvasElementCommonOptions, 'top' | 'right' | 'bottom' | 'left' | 'width' | 'height'>
-
-export const standardStrategy = memo((props: StandardSizeProp, options: NormalizedBox): NormalizedBox => {
-  const { width: containerWidth, height: containerHeight } = options
+export const standardStrategy = memo((props: CanvasElementCommonOptions, options: NormalizedBox): NormalizedBox & { top: number, left: number, bottom: undefined, right: undefined } => {
+  const { width: containerWidth, height: containerHeight, x: containerX, y: containerY } = options
 
   const normalizeOptions = mapObject(props, (key, value) => {
-    if (isNil(value))
+    if (isNil(value) || !['top', 'right', 'bottom', 'left', 'width', 'height'].includes(key))
       return [key, value]
 
     const isVertical = ['top', 'bottom', 'height'].includes(key)
@@ -69,8 +65,12 @@ export const standardStrategy = memo((props: StandardSizeProp, options: Normaliz
   }
 
   return {
-    x,
-    y,
+    x: containerX + x,
+    left: containerX + x,
+    y: containerY + y,
+    top: containerY + y,
+    right: undefined,
+    bottom: undefined,
     width,
     height,
   }
@@ -83,7 +83,7 @@ export const standardStrategy = memo((props: StandardSizeProp, options: Normaliz
   lruMax: 20,
 })
 
-export const lineStrategy = memo((props: Pick<CanvasLine, 'points'>, options: NormalizedBox): NormalizedBox & { points: [number, number][] } => {
+export const lineStrategy = memo((props: CanvasLine, options: NormalizedBox): NormalizedBox & { points: [number, number][] } => {
   const [first = [0, 0], ...points] = props?.points || []
   const { width, height, x, y } = options
   const [firstX, firstY] = first.map((item, index) => calcSize(item, [width, height][index]))
@@ -135,18 +135,20 @@ const normalizeStrategies = {
 /**
  * 绘制参数标准化中间层
  */
-export function normalizeElement<T extends PosterElement>(element: T, elements: PosterElements, options: CanvasElementRenderFnOptions): ReturnType<(typeof normalizeStrategies)[T['type']]> {
+export function normalizeElement<T extends PosterElement>(element: T, elements: PosterElements, options: CanvasElementRenderFnOptions): NormalizedBox & Recordable {
   const { width, height } = options
+  const strategy = normalizeStrategies[element.type]
   if (!element.relativeTo)
-    return normalizeStrategies[element.type](element, { width, height, x: 0, y: 0 })
+    return strategy(element as any, { width, height, x: 0, y: 0 })
 
-  const relativeElement = elements.find(item => !isFunction(item) && item.id === element.relativeTo) as PosterElement
+  const relativeElement = elements.find(item => !isFunction(item) && item.id === element.relativeTo) as PosterElement | undefined
+
   if (!relativeElement)
-    return normalizeStrategies[element.type](element, { width, height, x: 0, y: 0 })
+    return strategy(element as any, { width, height, x: 0, y: 0 })
 
-  const { x: containerX, y: containerY, width: containerWidth, height: containerHeight } = normalizeElement(relativeElement, elements, options)
+  const { x, y, width: containerWidth, height: containerHeight } = normalizeElement(relativeElement, elements, options)
 
-  return normalizeStrategies[element.type](element, { width: containerWidth, height: containerHeight, x: containerX, y: containerY })
+  return strategy(element as any, { width: containerWidth, height: containerHeight, x, y })
 }
 
 /**

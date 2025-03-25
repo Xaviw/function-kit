@@ -12,7 +12,7 @@ export function renderLine(renderOptions: CanvasLine, contextOptions: CanvasElem
 
   const { x, y, width, height, points } = lineStrategy(renderOptions, { width: canvasWidth, height: canvasHeight, x: 0, y: 0 })
 
-  if (!width || !height || points.length < 2)
+  if (points.length < 2)
     return
 
   settingCanvasProps(renderOptions, contextOptions)

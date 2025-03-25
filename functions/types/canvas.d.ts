@@ -52,39 +52,39 @@ export interface PosterRenderFunction {
  */
 export interface CanvasElementCommonOptions {
   /**
-   * 支持数字或百分比
+   * 支持数字或百分比（相对于父容器）
    */
   width?: string | number
   /**
-   * 支持数字或百分比
+   * 支持数字或百分比（相对于父容器）
    */
   height?: string | number
   /**
-   * 支持数字或百分比
+   * 支持数字或百分比（相对于父容器）
    * 不存在 height 时，根据 top、bottom 计算高度
    * 存在 height 时，优先使用 top 定位
    */
   top?: string | number
   /**
-   * 支持数字或百分比
+   * 支持数字或百分比（相对于父容器）
    * 不存在 width 时，根据 left、right 计算宽度
    * 存在 width 时，优先使用 left 定位
    */
   right?: string | number
   /**
-   * 支持数字或百分比
+   * 支持数字或百分比（相对于父容器）
    * 不存在 height 时，根据 top、bottom 计算高度
    * 存在 height 时，优先使用 top 定位
    */
   bottom?: string | number
   /**
-   * 支持数字或百分比
+   * 支持数字或百分比（相对于父容器）
    * 不存在 width 时，根据 left、right 计算宽度
    * 存在 width 时，优先使用 left 定位
    */
   left?: string | number
   /**
-   * 旋转角度
+   * 旋转角度，注意旋转不会改变元素盒模型，不会影响子元素相对定位
    */
   rotate?: number
   shadowOffsetX?: number
@@ -171,6 +171,7 @@ export interface CanvasImage extends CanvasElementCommonOptions {
   mode?: 'aspectFill' | 'scaleToFill'
   /**
    * box-sizing: content-box
+   * borderStyle 为 dashed 时，此值不适合设置较大
    */
   borderSize?: number
   /**
@@ -182,9 +183,11 @@ export interface CanvasImage extends CanvasElementCommonOptions {
    */
   borderColor?: string
   /**
-   * 支持数字或百分比
+   * 支持数字或百分比（相对于自身）
    */
   borderRadius?: number | string
+  borderDash?: number[]
+  borderDashOffset?: number
 }
 
 /**
@@ -195,6 +198,8 @@ export interface CanvasRect extends CanvasElementCommonOptions {
   backgroundColor?: string
   /**
    * box-sizing: content-box
+   * borderStyle 为 dashed 时，此值不适合设置较大
+   * @default 1
    */
   borderSize?: number
   /**
@@ -206,9 +211,11 @@ export interface CanvasRect extends CanvasElementCommonOptions {
    */
   borderColor?: string
   /**
-   * 支持数字或百分比
+   * 支持数字或百分比（相对于自身）
    */
   borderRadius?: number | string
+  borderDash?: number[]
+  borderDashOffset?: number
 }
 
 /**
@@ -225,6 +232,7 @@ export interface CanvasLine extends Omit<CanvasElementCommonOptions, 'top' | 'ri
    * @default 1
    */
   lineWidth?: number
+  lineColor?: string
   lineDash?: number[]
   lineDashOffset?: number
   /**
@@ -239,7 +247,6 @@ export interface CanvasLine extends Omit<CanvasElementCommonOptions, 'top' | 'ri
    * @default 10
    */
   miterLimit?: number
-  backgroundColor?: string
 }
 
 /**

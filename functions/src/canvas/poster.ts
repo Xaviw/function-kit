@@ -2,6 +2,7 @@ import type { PosterElements, PosterOptions } from '../../types/canvas'
 import { normalizeElement } from '../../utils/canvas/normalize'
 import { isArray, isFunction, isObject } from '../is'
 import { renderLine } from './line'
+import { renderRect } from './rect'
 
 /**
  * 配置式生成 Canvas 海报
@@ -65,6 +66,9 @@ export async function canvasPoster(elements: PosterElements, options: PosterOpti
     switch (element.type) {
       case 'line':
         renderLine({ ...element, ...normalized }, contextOptions)
+        break
+      case 'rect':
+        renderRect({ ...element, ...normalized }, contextOptions)
         break
     }
 

@@ -9,7 +9,7 @@ onMounted(() => {
     {
       id: 'a',
       type: 'line',
-      backgroundColor: '#ff0000',
+      lineColor: '#ff0000',
       lineWidth: 5,
       lineDash: [5, 10, 20],
       lineCap: 'round',
@@ -17,23 +17,61 @@ onMounted(() => {
     },
     {
       type: 'line',
-      backgroundColor: '#ffff00',
+      lineColor: '#ffff00',
       lineWidth: 10,
       points: [[0,100],[100,0],[200,100]]
     },
     {
       type: 'line',
-      id: 'b',
-      relativeTo: 'a',
-      points: [[0, '50%'], ['100%', '50%']]
+      relativeTo: 'b',
+      points: [['20%', '50%'], ['80%', '50%']],
+      lineColor: '#00ff00',
+      lineWidth: 5,
+      lineCap: 'round',
+      rotate: 90
+    },
+    {
+      id: 'r3',
+      relativeTo: 'r2',
+      type: 'rect',
+      left: '100%',
+      top: '100%',
+      right: '-50%',
+      bottom: '-50%',
+      backgroundColor: '#ffff00',
+      rotate: 45
+    },
+
+    {
+      id: 'r1',
+      type: 'rect',
+      top: 30,
+      left: 230,
+      width: 100,
+      height: 100,
+      backgroundColor: '#0000ff',
+      borderSize: 5,
+      borderColor: '#00ffff',
+      borderRadius: 10,
+      borderStyle: 'dashed',
+      rotate: 45,
+    },
+    {
+      id: 'r2',
+      relativeTo: 'r1',
+      type: 'rect',
+      left: '50%',
+      top: '50%',
+      width: '50%',
+      height: '50%',
+      backgroundColor: '#ff00ff',
     },
     {
       type: 'line',
-      relativeTo: 'b',
-      points: [['20%', '50%'], ['80%', '50%']],
-      backgroundColor: '#00ff00',
-      lineWidth: 5,
-      lineCap: 'round',
+      id: 'b',
+      relativeTo: 'a',
+      lineDash: [5,5],
+      points: [[0, '50%'], ['100%', '50%']]
     },
   ], {
     node: canvas.value!,

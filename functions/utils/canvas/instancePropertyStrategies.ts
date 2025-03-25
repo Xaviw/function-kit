@@ -6,7 +6,7 @@ import { isArray, isNumber, isString } from '../../src/is'
 /**
  * canvas 实例属性绘制策略
  */
-const CanvasPropsStrategies: Record<string, (val: any, ctx: CanvasRenderingContext2D) => void> = {
+const canvasPropsStrategies: Record<string, (val: any, ctx: CanvasRenderingContext2D) => void> = {
   lineWidth(lineWidth: number, ctx: CanvasRenderingContext2D) {
     if (isNumber(lineWidth))
       ctx.lineWidth = lineWidth
@@ -31,9 +31,13 @@ const CanvasPropsStrategies: Record<string, (val: any, ctx: CanvasRenderingConte
     if (isNumber(miterLimit))
       ctx.miterLimit = miterLimit
   },
-  backgroundColor(backgroundColor: string, ctx: CanvasRenderingContext2D) {
-    if (isString(backgroundColor))
-      ctx.strokeStyle = backgroundColor
+  fillStyle(fillStyle: string, ctx: CanvasRenderingContext2D) {
+    if (isString(fillStyle))
+      ctx.fillStyle = fillStyle
+  },
+  strokeStyle(strokeStyle: string, ctx: CanvasRenderingContext2D) {
+    if (isString(strokeStyle))
+      ctx.strokeStyle = strokeStyle
   },
   shadowColor(shadowColor: string, ctx: CanvasRenderingContext2D) {
     if (isString(shadowColor))
@@ -51,7 +55,29 @@ const CanvasPropsStrategies: Record<string, (val: any, ctx: CanvasRenderingConte
     if (isNumber(shadowOffsetY))
       ctx.shadowOffsetY = shadowOffsetY
   },
+  textAlign(textAlign: CanvasTextAlign, ctx: CanvasRenderingContext2D) {
+    if (textAlign && ['left', 'right', 'center'].includes(textAlign))
+      ctx.textAlign = textAlign
+  },
+  wordSpacing(wordSpacing: number, ctx: CanvasRenderingContext2D) {
+    if (isNumber(wordSpacing))
+      ctx.wordSpacing = `${wordSpacing}px`
+  },
+  letterSpacing(letterSpacing: number, ctx: CanvasRenderingContext2D) {
+    if (isNumber(letterSpacing))
+      ctx.letterSpacing = `${letterSpacing}px`
+  },
 }
+
+canvasPropsStrategies.color = canvasPropsStrategies.backgroundColor = canvasPropsStrategies.fillStyle
+
+canvasPropsStrategies.color = canvasPropsStrategies.lineColor = canvasPropsStrategies.strokeStyle
+
+canvasPropsStrategies.borderColor = canvasPropsStrategies.lineColor = canvasPropsStrategies.strokeStyle
+
+canvasPropsStrategies.borderDash = canvasPropsStrategies.lineDash
+
+canvasPropsStrategies.borderDashOffset = canvasPropsStrategies.lineDashOffset
 
 /**
  * 设置 canvas 实例属性
@@ -61,7 +87,7 @@ const CanvasPropsStrategies: Record<string, (val: any, ctx: CanvasRenderingConte
 export function settingCanvasProps(props: Recordable, options: CanvasElementRenderFnOptions) {
   for (const key in props) {
     if (Object.prototype.hasOwnProperty.call(props, key)) {
-      CanvasPropsStrategies[key]?.(props[key], options.ctx)
+      canvasPropsStrategies[key]?.(props[key], options.ctx)
     }
   }
 }
@@ -74,10 +100,10 @@ export function settingCanvasProps(props: Recordable, options: CanvasElementRend
  */
 export function rotateCanvasElement(rotate: number, sizeProps: NormalizedBox, options: CanvasElementRenderFnOptions): void {
   if (isNumber(rotate)) {
-    const { x1, y1, width, height } = sizeProps
+    const { x, y, width, height } = sizeProps
     const { ctx } = options
-    const centerX = x1 + width / 2
-    const centerY = y1 + height / 2
+    const centerX = x + width / 2
+    const centerY = y + height / 2
     ctx.translate(centerX, centerY)
     ctx.rotate((rotate * Math.PI) / 180)
     ctx.translate(-centerX, -centerY)
