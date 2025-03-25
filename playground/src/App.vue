@@ -50,7 +50,7 @@ onMounted(() => {
       width: 100,
       height: 100,
       backgroundColor: '#0000ff',
-      borderSize: 5,
+      borderSize: 20,
       borderColor: '#00ffff',
       borderRadius: 10,
       borderStyle: 'dashed',
@@ -73,6 +73,24 @@ onMounted(() => {
       lineDash: [5,5],
       points: [[0, '50%'], ['100%', '50%']]
     },
+    {
+      type: 'image',
+      top: 200,
+      left: 20,
+      width: 100,
+      height: 100,
+      src: '/avatar.png',
+      borderSize: 20,
+      borderColor: '#00ffff66',
+      borderRadius: 10,
+      borderStyle: 'dashed',
+      // rotate: 45,
+      mode: 'aspectFill',
+      // sourceX: '50%',
+      // sourceY: '50%',
+      // sourceWidth: '50%',
+      // sourceHeight: '50%',
+    }
   ], {
     node: canvas.value!,
     width: 400,

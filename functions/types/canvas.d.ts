@@ -166,6 +166,30 @@ export interface CanvasImage extends CanvasElementCommonOptions {
   type: 'image'
   src: string
   /**
+   * 裁剪图片的起点 X 坐标
+   * 支持数值或百分比（相对于图片宽度）
+   * @default 0
+   */
+  sourceX?: string | number
+  /**
+   * 裁剪图片的起点 Y 坐标
+   * 支持数值或百分比（相对于图片高度）
+   * @default 0
+   */
+  sourceY?: string | number
+  /**
+   * 裁剪图片宽度
+   * 支持数值或百分比（相对于图片高度）
+   * @default '100%'
+   */
+  sourceWidth?: string | number
+  /**
+   * 裁剪图片高度
+   * 支持数值或百分比（相对于图片高度）
+   * @default '100%'
+   */
+  sourceHeight?: string | number
+  /**
    * 需能够计算出高度（存在 top、bottom 或者 height）·
    */
   mode?: 'aspectFill' | 'scaleToFill'

@@ -1,6 +1,8 @@
 import type { PosterElements, PosterOptions } from '../../types/canvas'
+import { downloadImage } from '../../utils/canvas/downloadImage'
 import { normalizeElement } from '../../utils/canvas/normalize'
 import { isArray, isFunction, isObject } from '../is'
+import { renderImage } from './image'
 import { renderLine } from './line'
 import { renderRect } from './rect'
 
@@ -43,6 +45,11 @@ export async function canvasPoster(elements: PosterElements, options: PosterOpti
   const contextOptions = { ctx, canvas, width, height }
 
   // 图片预加载
+  elements.forEach((element) => {
+    if (!isFunction(element) && element.type === 'image' && element.src) {
+      downloadImage(element.src)
+    }
+  })
 
   // 绘制元素
   for (let i = 0, l = elements.length; i < l; i++) {
@@ -69,6 +76,9 @@ export async function canvasPoster(elements: PosterElements, options: PosterOpti
         break
       case 'rect':
         renderRect({ ...element, ...normalized }, contextOptions)
+        break
+      case 'image':
+        await renderImage({ ...element, ...normalized }, contextOptions)
         break
     }
 

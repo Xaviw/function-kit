@@ -154,7 +154,7 @@ export function normalizeElement<T extends PosterElement>(element: T, elements: 
 /**
  * 标准化数值与百分比字符串
  */
-function calcSize(val: number | string, base: number): number {
+export function calcSize(val: any, base: number): number {
   if (isString(val) && val.endsWith('%'))
     return base * Number.parseFloat(val) / 100
 
