@@ -38,6 +38,7 @@ export async function canvasPoster(elements: PosterElements, options: PosterOpti
     return
   }
 
+  // 适配高清屏
   canvas.width = width * dpr
   canvas.height = height * dpr
   ctx.scale(dpr, dpr)

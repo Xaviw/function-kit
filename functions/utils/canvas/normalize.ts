@@ -1,4 +1,4 @@
-import type { CanvasElementCommonOptions, CanvasElementRenderFnOptions, CanvasLine, PosterElement, PosterElements } from '../../types/canvas'
+import type { CanvasElementCommonOptions, CanvasElementRenderFnOptions, CanvasLine, CanvasText, PosterElement, PosterElements } from '../../types/canvas'
 import type { Recordable } from '../../types/common'
 import { isArray, isFunction, isNil, isString } from '../../src/is'
 import { mapObject } from '../../src/mapObject'
@@ -14,6 +14,9 @@ export interface NormalizedBox {
   height: number
 }
 
+/**
+ * 标准盒子元素参数规范化
+ */
 export const standardStrategy = memo((props: CanvasElementCommonOptions, options: NormalizedBox): NormalizedBox & { top: number, left: number, bottom: undefined, right: undefined } => {
   const { width: containerWidth, height: containerHeight, x: containerX, y: containerY } = options
 
@@ -83,6 +86,9 @@ export const standardStrategy = memo((props: CanvasElementCommonOptions, options
   lruMax: 20,
 })
 
+/**
+ * 线条参数规范化
+ */
 export const lineStrategy = memo((props: CanvasLine, options: NormalizedBox): NormalizedBox & { points: [number, number][] } => {
   const [first = [0, 0], ...points] = props?.points || []
   const { width, height, x, y } = options
@@ -125,9 +131,17 @@ export const lineStrategy = memo((props: CanvasLine, options: NormalizedBox): No
   lruMax: 20,
 })
 
+export const textStrategy = memo((props: CanvasText, options: NormalizedBox): NormalizedBox => {
+  const box = standardStrategy(props, options)
+  if (!box.width)
+    box.width = options.width
+  // if (box.height)
+  return box
+})
+
 const normalizeStrategies = {
   rect: standardStrategy,
-  text: standardStrategy,
+  text: textStrategy,
   image: standardStrategy,
   line: lineStrategy,
 } as const

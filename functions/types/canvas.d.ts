@@ -99,9 +99,10 @@ export interface CanvasElementCommonOptions {
 export interface CanvasTextCommonOptions {
   content: string
   /**
-   * @default 1.2
+   * 数值或百分比（相对于字体）
+   * @default '120%'
    */
-  lineHeight?: number
+  lineHeight?: number | string
   /**
    * @default 16
    */
@@ -190,9 +191,14 @@ export interface CanvasImage extends CanvasElementCommonOptions {
    */
   sourceHeight?: string | number
   /**
-   * 需能够计算出高度（存在 top、bottom 或者 height）·
+   * 仅容器有固定宽高时生效
+   * @remarks
+   * - scaleToFill: 不保持比例填充
+   * - aspectFit: 保持比例缩放，保证长边能完全显示
+   * - aspectFill: 保持比例缩放，保证短边能完全显示
+   * @default 'scaleToFill'
    */
-  mode?: 'aspectFill' | 'scaleToFill'
+  mode?: 'scaleToFill' | 'aspectFill' | 'aspectFit'
   /**
    * box-sizing: content-box
    * borderStyle 为 dashed 时，此值不适合设置较大
@@ -212,6 +218,14 @@ export interface CanvasImage extends CanvasElementCommonOptions {
   borderRadius?: number | string
   borderDash?: number[]
   borderDashOffset?: number
+  /**
+   * 沿 x 轴翻转
+   */
+  flipX?: boolean
+  /**
+   * 沿 y 轴翻转
+   */
+  flipY?: boolean
 }
 
 /**

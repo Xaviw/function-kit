@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, useTemplateRef } from 'vue'
-import { canvasPoster } from "../../functions/src/canvas/poster"
+import { canvasPoster } from '../../functions/src/canvas/poster'
 
 const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
 
@@ -13,13 +13,13 @@ onMounted(() => {
       lineWidth: 5,
       lineDash: [5, 10, 20],
       lineCap: 'round',
-      points: [[0,0],[100,100],[200,0]]
+      points: [[0, 0], [100, 100], [200, 0]],
     },
     {
       type: 'line',
       lineColor: '#ffff00',
       lineWidth: 10,
-      points: [[0,100],[100,0],[200,100]]
+      points: [[0, 100], [100, 0], [200, 100]],
     },
     {
       type: 'line',
@@ -28,7 +28,7 @@ onMounted(() => {
       lineColor: '#00ff00',
       lineWidth: 5,
       lineCap: 'round',
-      rotate: 90
+      rotate: 90,
     },
     {
       id: 'r3',
@@ -39,7 +39,7 @@ onMounted(() => {
       right: '-50%',
       bottom: '-50%',
       backgroundColor: '#ffff00',
-      rotate: 45
+      rotate: 45,
     },
 
     {
@@ -50,7 +50,7 @@ onMounted(() => {
       width: 100,
       height: 100,
       backgroundColor: '#0000ff',
-      borderSize: 20,
+      borderSize: 5,
       borderColor: '#00ffff',
       borderRadius: 10,
       borderStyle: 'dashed',
@@ -70,27 +70,29 @@ onMounted(() => {
       type: 'line',
       id: 'b',
       relativeTo: 'a',
-      lineDash: [5,5],
-      points: [[0, '50%'], ['100%', '50%']]
+      lineDash: [5, 5],
+      points: [[0, '50%'], ['100%', '50%']],
     },
     {
       type: 'image',
       top: 200,
       left: 20,
       width: 100,
-      height: 100,
+      height: 140,
       src: '/avatar.png',
-      borderSize: 20,
-      borderColor: '#00ffff66',
-      borderRadius: 10,
+      borderSize: 5,
+      borderColor: '#00ffff',
+      borderRadius: 30,
       borderStyle: 'dashed',
-      // rotate: 45,
+      rotate: 45,
       mode: 'aspectFill',
-      // sourceX: '50%',
-      // sourceY: '50%',
-      // sourceWidth: '50%',
-      // sourceHeight: '50%',
-    }
+      sourceX: 0,
+      sourceY: 0,
+      sourceWidth: '50%',
+      sourceHeight: '50%',
+      flipX: true,
+      flipY: true,
+    },
   ], {
     node: canvas.value!,
     width: 400,
