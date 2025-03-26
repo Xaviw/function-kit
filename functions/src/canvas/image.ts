@@ -1,7 +1,7 @@
 import type { CanvasElementRenderFnOptions, CanvasImage } from '../../types/canvas'
 import type { NormalizedBox } from '../../utils/canvas/normalize'
+import { rotateCanvasElement, settingCanvasProps } from '../../utils/canvas/commonProperty'
 import { downloadImage } from '../../utils/canvas/downloadImage'
-import { rotateCanvasElement, settingCanvasProps } from '../../utils/canvas/instancePropertyStrategies'
 import { calcSize, standardStrategy } from '../../utils/canvas/normalize'
 import { isString } from '../is'
 import { roundRect } from './rect'

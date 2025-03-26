@@ -93,6 +93,45 @@ onMounted(() => {
       flipX: true,
       flipY: true,
     },
+    {
+      id: 't1',
+      type: 'text',
+      top: 200,
+      left: 200,
+      width: 80,
+      height: 80,
+      content: [
+        {
+          content: '一段测试文本一段测试文本一段测试文本一段测试文本',
+          color: '#ff0000',
+          fontSize: 8,
+          lineHeight: 8,
+        },
+        // {
+        //   content: 'this is a test text this is a test text',
+        //   fontSize: 12,
+        //   lineHeight: 20,
+        // },
+        // {
+        //   content: '1234567890!@#$%^&*()1234567890!@#$%^&*()1234567890!@#$%^&*()1234567890!@#$%^&*()',
+        //   color: '#0000ff',
+        //   fontSize: 16,
+        //   // lineHeight: 10,
+        // },
+      ],
+      textAlign: 'center',
+      // lineClamp: 3,
+    },
+    {
+      type: 'rect',
+      relativeTo: 't1',
+      left: -20,
+      top: -20,
+      right: -20,
+      bottom: -20,
+      borderSize: 2,
+      borderStyle: 'dashed',
+    },
   ], {
     node: canvas.value!,
     width: 400,
@@ -102,5 +141,5 @@ onMounted(() => {
 </script>
 
 <template>
-  <canvas ref="canvas" style="width: 400px;height: 400px;" />
+  <canvas ref="canvas" style="width: 400px;height: 400px;border: 2px solid #000000;" />
 </template>

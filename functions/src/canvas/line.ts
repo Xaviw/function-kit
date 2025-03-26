@@ -1,5 +1,5 @@
 import type { CanvasElementRenderFnOptions, CanvasLine } from '../../types/canvas'
-import { rotateCanvasElement, settingCanvasProps } from '../../utils/canvas/instancePropertyStrategies'
+import { rotateCanvasElement, settingCanvasProps } from '../../utils/canvas/commonProperty'
 import { lineStrategy } from '../../utils/canvas/normalize'
 
 /**

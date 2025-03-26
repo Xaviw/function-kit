@@ -1,5 +1,5 @@
 import type { CanvasElementRenderFnOptions, CanvasRect } from '../../types/canvas'
-import { rotateCanvasElement, settingCanvasProps } from '../../utils/canvas/instancePropertyStrategies'
+import { rotateCanvasElement, settingCanvasProps } from '../../utils/canvas/commonProperty'
 import { standardStrategy } from '../../utils/canvas/normalize'
 import { isString } from '../is'
 

@@ -55,10 +55,6 @@ const canvasPropsStrategies: Record<string, (val: any, ctx: CanvasRenderingConte
     if (isNumber(shadowOffsetY))
       ctx.shadowOffsetY = shadowOffsetY
   },
-  textAlign(textAlign: CanvasTextAlign, ctx: CanvasRenderingContext2D) {
-    if (textAlign && ['left', 'right', 'center'].includes(textAlign))
-      ctx.textAlign = textAlign
-  },
   wordSpacing(wordSpacing: number, ctx: CanvasRenderingContext2D) {
     if (isNumber(wordSpacing))
       ctx.wordSpacing = `${wordSpacing}px`

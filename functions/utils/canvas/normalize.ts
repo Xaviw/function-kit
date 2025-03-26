@@ -3,6 +3,7 @@ import type { Recordable } from '../../types/common'
 import { isArray, isFunction, isNil, isString } from '../../src/is'
 import { mapObject } from '../../src/mapObject'
 import { memo } from '../../src/memo'
+import { measureHeight } from './text'
 
 /**
  * 根据定位、尺寸属性计算标准盒子属性
@@ -131,12 +132,14 @@ export const lineStrategy = memo((props: CanvasLine, options: NormalizedBox): No
   lruMax: 20,
 })
 
-export const textStrategy = memo((props: CanvasText, options: NormalizedBox): NormalizedBox => {
+export const textStrategy = memo((props: CanvasText, options: NormalizedBox, canvasOptions: CanvasElementRenderFnOptions): NormalizedBox => {
   const box = standardStrategy(props, options)
   if (!box.width)
-    box.width = options.width
-  // if (box.height)
-  return box
+    box.width = canvasOptions.width - box.x
+  if (box.height)
+    return box
+  const height = measureHeight(props, { maxWidth: box.width, ctx: canvasOptions.ctx })
+  return { ...box, height }
 })
 
 const normalizeStrategies = {
@@ -153,16 +156,16 @@ export function normalizeElement<T extends PosterElement>(element: T, elements: 
   const { width, height } = options
   const strategy = normalizeStrategies[element.type]
   if (!element.relativeTo)
-    return strategy(element as any, { width, height, x: 0, y: 0 })
+    return strategy(element as any, { width, height, x: 0, y: 0 }, options)
 
   const relativeElement = elements.find(item => !isFunction(item) && item.id === element.relativeTo) as PosterElement | undefined
 
   if (!relativeElement)
-    return strategy(element as any, { width, height, x: 0, y: 0 })
+    return strategy(element as any, { width, height, x: 0, y: 0 }, options)
 
   const { x, y, width: containerWidth, height: containerHeight } = normalizeElement(relativeElement, elements, options)
 
-  return strategy(element as any, { width: containerWidth, height: containerHeight, x, y })
+  return strategy(element as any, { width: containerWidth, height: containerHeight, x, y }, options)
 }
 
 /**

@@ -5,6 +5,7 @@ import { isArray, isFunction, isObject } from '../is'
 import { renderImage } from './image'
 import { renderLine } from './line'
 import { renderRect } from './rect'
+import { renderText } from './text'
 
 /**
  * 配置式生成 Canvas 海报
@@ -80,6 +81,9 @@ export async function canvasPoster(elements: PosterElements, options: PosterOpti
         break
       case 'image':
         await renderImage({ ...element, ...normalized }, contextOptions)
+        break
+      case 'text':
+        renderText({ ...element, ...normalized }, contextOptions)
         break
     }
 

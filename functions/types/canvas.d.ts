@@ -144,7 +144,6 @@ export interface CanvasText extends CanvasTextCommonOptions, CanvasElementCommon
   content: string | CanvasTextCommonOptions[]
   /**
    * 最大行数，超出省略显示
-   * 需要能够计算出宽度（存在 left、right 或者 width）
    * height 小于实际高度时，会进行裁剪
    */
   lineClamp?: number
