@@ -63,6 +63,10 @@ const canvasPropsStrategies: Record<string, (val: any, ctx: CanvasRenderingConte
     if (isNumber(letterSpacing))
       ctx.letterSpacing = `${letterSpacing}px`
   },
+  textBaseLine(textBaseLine: CanvasTextBaseline, ctx: CanvasRenderingContext2D) {
+    if (isString(textBaseLine))
+      ctx.textBaseline = textBaseLine
+  },
 }
 
 canvasPropsStrategies.color = canvasPropsStrategies.backgroundColor = canvasPropsStrategies.fillStyle
@@ -78,12 +82,11 @@ canvasPropsStrategies.borderDashOffset = canvasPropsStrategies.lineDashOffset
 /**
  * 设置 canvas 实例属性
  * @param props 实例属性对象
- * @param options 上下文相关属性
  */
-export function settingCanvasProps(props: Recordable, options: CanvasElementRenderFnOptions) {
+export function settingCanvasProps(props: Recordable, ctx: CanvasRenderingContext2D) {
   for (const key in props) {
     if (Object.prototype.hasOwnProperty.call(props, key)) {
-      canvasPropsStrategies[key]?.(props[key], options.ctx)
+      canvasPropsStrategies[key]?.(props[key], ctx)
     }
   }
 }

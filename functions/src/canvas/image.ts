@@ -45,7 +45,7 @@ export async function renderImage(renderOptions: CanvasImage, contextOptions: Ca
     ctx.setLineDash([borderSize * 2, borderSize])
   }
   // 配置可能会覆盖默认 dashed
-  settingCanvasProps(renderOptions, contextOptions)
+  settingCanvasProps(renderOptions, ctx)
   // 避免未设置为虚线又设置了虚线参数的情况
   if (borderSize && borderStyle !== 'dashed') {
     ctx.setLineDash([])

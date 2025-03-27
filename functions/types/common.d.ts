@@ -32,3 +32,11 @@ export type DeepPartial<T> = {
 export type DeepRequired<T> = {
   [P in keyof T]-?: DeepRequired<T[P]>;
 }
+
+export type PartiallyRequired<T, K extends keyof T> = T & {
+  [P in K]-?: T[P]
+}
+
+export type PartiallyPartial<T, K extends keyof T> = T & {
+  [P in K]?: T[P]
+}

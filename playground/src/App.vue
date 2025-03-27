@@ -97,21 +97,30 @@ onMounted(() => {
       id: 't1',
       type: 'text',
       top: 200,
-      left: 200,
-      width: 80,
-      height: 80,
+      left: 100,
+      // width: 80,
+      // height: 80,
+      // rotate: 30,
       content: [
         {
-          content: '一段测试文本一段测试文本一段测试文本一段测试文本',
+          content: '一段测试文本',
           color: '#ff0000',
-          fontSize: 8,
-          lineHeight: 8,
+          fontWeight: 'bold',
+          textStyle: 'stroke',
+          fontSize: 20,
+          strokeProps: { lineWidth: 1, lineDash: [4, 1] },
+          letterSpacing: 5,
+          shadowColor: '#00000066',
+          shadowBlur: 5,
+          shadowOffsetX: 10,
+          shadowOffsetY: 10,
         },
-        // {
-        //   content: 'this is a test text this is a test text',
-        //   fontSize: 12,
-        //   lineHeight: 20,
-        // },
+        {
+          content: 'this is a test text',
+          fontSize: 12,
+          lineHeight: 20,
+          fontStyle: 'italic',
+        },
         // {
         //   content: '1234567890!@#$%^&*()1234567890!@#$%^&*()1234567890!@#$%^&*()1234567890!@#$%^&*()',
         //   color: '#0000ff',
@@ -122,16 +131,21 @@ onMounted(() => {
       textAlign: 'center',
       // lineClamp: 3,
     },
-    {
-      type: 'rect',
-      relativeTo: 't1',
-      left: -20,
-      top: -20,
-      right: -20,
-      bottom: -20,
-      borderSize: 2,
-      borderStyle: 'dashed',
-    },
+    // {
+    //   type: 'rect',
+    //   relativeTo: 't1',
+    //   left: -20,
+    //   top: -20,
+    //   right: -20,
+    //   bottom: -20,
+    //   borderSize: 2,
+    //   borderStyle: 'dashed',
+    // },
+    // (ctx) => {
+    //   ctx.font = 'italic 32px sans-serif'
+    //   ctx.textBaseline = 'top'
+    //   console.log(ctx.measureText('测试'))
+    // },
   ], {
     node: canvas.value!,
     width: 400,
@@ -142,4 +156,11 @@ onMounted(() => {
 
 <template>
   <canvas ref="canvas" style="width: 400px;height: 400px;border: 2px solid #000000;" />
+
+  <div style="line-height: 1;">
+    <span style="font-size: 16px;line-height: 20px;">这是一行文字</span>
+    <span style="font-size: 34px; line-height: 50px;vertical-align: bottom;">行高不同</span>
+    <span style="font-size: 12px;">对齐测试</span>
+  </div>
+  <div>这是一行文字</div>
 </template>

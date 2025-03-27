@@ -96,7 +96,7 @@ export interface CanvasElementCommonOptions {
 /**
  * poster 文字元素公共配置
  */
-export interface CanvasTextCommonOptions {
+export interface CanvasTextCommonOptions extends Pick<CanvasElementCommonOptions, 'shadowBlur' | 'shadowColor' | 'shadowOffsetX' | 'shadowOffsetY'> {
   content: string
   /**
    * 数值或百分比（相对于字体）
@@ -119,6 +119,11 @@ export interface CanvasTextCommonOptions {
    * @default '#000000'
    */
   color?: string
+  /**
+   * 基线位置为起点 Y 坐标加基线上方文字高度（含上方的lineHeight）
+   * @default 'alphabetic'
+   */
+  textBaseLine?: CanvasTextBaseline
   letterSpacing?: number
   wordSpacing?: number
   /**
@@ -126,17 +131,23 @@ export interface CanvasTextCommonOptions {
    */
   fontStyle?: 'normal' | 'italic'
   textDecoration?: 'underline' | 'overline' | 'line-through'
+  textDecorationProps?: Pick<CanvasLine, 'lineCap' | 'lineColor' | 'lineDash' | 'lineDashOffset' | 'lineJoin' | 'lineWidth' | 'miterLimit'>
   /**
    * 填充或镂空
    * @default 'fill'
    */
   textStyle?: 'fill' | 'stroke'
+  /**
+   * 仅 text=stroke 时生效
+   * @default 1
+   */
+  strokeProps?: Pick<CanvasLine, 'lineCap' | 'lineDash' | 'lineDashOffset' | 'lineJoin' | 'lineWidth' | 'miterLimit'>
 }
 
 /**
  * canvas 文本
  */
-export interface CanvasText extends CanvasTextCommonOptions, CanvasElementCommonOptions {
+export interface CanvasText extends CanvasTextCommonOptions, Omit<CanvasElementCommonOptions, 'shadowBlur' | 'shadowColor' | 'shadowOffsetX' | 'shadowOffsetY'> {
   type: 'text'
   /**
    * 文本内容，支持换行等控制字符；为数组时可以分别设置样式

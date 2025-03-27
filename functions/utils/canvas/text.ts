@@ -1,138 +1,255 @@
 import type { CanvasText, CanvasTextCommonOptions } from '../../types/canvas'
-import { isArray, isNil, isNumber, isString } from '../../src/is'
+import type { PartiallyRequired } from '../../types/common'
+import { renderLine } from '../../src/canvas/line'
+import { isArray, isNil, isString } from '../../src/is'
+import { settingCanvasProps } from './commonProperty'
 import { calcSize } from './normalize'
 
-type HeightEffectProps = Pick<CanvasTextCommonOptions, 'fontSize' | 'fontFamily' | 'fontWeight' | 'lineHeight' | 'letterSpacing' | 'wordSpacing' | 'color'>
+type TextProps = Omit<CanvasTextCommonOptions, 'content'>
+type NormalizeTextProps = PartiallyRequired<TextProps, 'fontFamily' | 'fontSize' | 'fontWeight'>
 
-export function measureHeight(text: CanvasText, options: { maxWidth: number, ctx: CanvasRenderingContext2D, x?: number, y?: number }): number {
-  const { maxWidth, ctx, x, y } = options
-  const baseProps = normalizeProps(ctx, text)
+/**
+ * 绘制全部段落
+ */
+export function enhancedDraw(text: CanvasText, options: {
+  ctx: CanvasRenderingContext2D
+  maxWidth: number
+  x: number
+  y: number
+}) {
+  const { ctx, maxWidth, x, y } = options
+  ctx.save()
+  const baseProps = settingProperty(text, { ctx })
+  let contents = isArray(text.content) ? text.content : [{ content: text.content }]
+  let yOffset = 0
+  while (contents.length) {
+    const { top, bottom, content } = measureRowHeight(contents, { ctx, maxWidth, baseProps })
 
-  let {
-    content,
-    ellipsisContent,
-    lineClamp,
-    textAlign,
-  } = text
-  ellipsisContent = isString(ellipsisContent) ? ellipsisContent : '...'
+    yOffset += top
+    content.forEach((item, index) => {
+      ctx.save()
+      settingProperty(item, { ctx, baseProps })
+      draw(item, { ctx, baseProps, x: x + item.xOffset, y: y + yOffset })
 
-  content = isString(content) ? [{ content }] : content
-  if (!isArray(content))
-    return 0
-
-  const isRender = !isNil(x) && !isNil(y)
-
-  const totalHeight: number[] = []
-  let rowHeights: number[] = []
-  let rowX = 0
-  let firstLineHeight: number
-
-  for (let ci = 0; ci < content.length; ci++) {
-    ctx.save()
-    const item = content[ci]
-    const { lineHeight } = normalizeProps(ctx, item, baseProps)
-    if (ci === 0)
-      firstLineHeight = lineHeight
-    rowHeights.push(lineHeight)
-
-    const textArr = item.content.split('')
-    let line = ''
-    const ellipsisWidth = ctx.measureText(ellipsisContent).width
-
-    for (let i = 0; i < textArr.length; i++) {
-      const text = line + textArr[i]
-      const width = ctx.measureText(text).width
-      const isEllipsis = lineClamp && totalHeight.length === lineClamp - 1 && rowX + width + ellipsisWidth > maxWidth
-      const currentY = firstLineHeight! + y! + totalHeight.reduce((p, c) => p += c, 0)
-      if ((rowX + width > maxWidth || isEllipsis) && i > 0) {
-        if (isRender) {
-          ctx.fillText(line, x + rowX, currentY)
-          if (isEllipsis) {
-            const thisWidth = ctx.measureText(textArr[i]).width
-            ctx.fillText(ellipsisContent, x + rowX + width - thisWidth, currentY)
-          }
-        }
-
-        rowX = 0
-        totalHeight.push(Math.max(...rowHeights))
-        rowHeights = rowHeights.slice(-1)
-        line = textArr[i]
-        if (isEllipsis)
-          return totalHeight.reduce((p, c) => p += c, 0)
+      if (['overline', 'line-through', 'underline'].includes(item.textDecoration!)) {
+        const offsetY = item.textDecoration === 'overline' ? item.overLineY : item.textDecoration === 'line-through' ? item.lineThroughY : item.underLineY
+        const nextOffsetX = content[index + 1]?.xOffset
+        renderLine({
+          type: 'line',
+          points: [[x + item.xOffset, y + offsetY], [nextOffsetX ? x + item.xOffset + nextOffsetX : x + maxWidth, y + offsetY]],
+          ...item.textDecorationProps,
+          lineColor: item.textDecorationProps?.lineColor || item.color,
+        }, {
+          ctx,
+          width: 100,
+          height: 100,
+          canvas: null as any,
+        })
       }
-      else {
-        if (isRender && i === textArr.length - 1) {
-          let start = x + rowX
-          const restWidth = calcRestWidth(content.slice(ci + 1), baseProps, ctx)
-          const isEnd = width + restWidth < maxWidth
-          if (isEnd) {
-            if (textAlign === 'center')
-              start = x + (maxWidth - width - restWidth) / 2
-            else if (textAlign === 'right')
-              start = x + maxWidth - width - restWidth
-          }
-          ctx.fillText(text, start, currentY)
-          isEnd && calcRestWidth(content.slice(ci + 1), baseProps, ctx, { x: start + width, y: currentY })
-          rowX += width
+    })
+    yOffset += bottom
+
+    const readyLength = content.length
+    const origin = contents[readyLength - 1]
+    const last = content[readyLength - 1]
+    const lastReady = last.content.length === origin.content.length
+    contents = contents.slice(lastReady ? readyLength : readyLength - 1)
+    if (!lastReady) {
+      contents[0].content = contents[0].content.slice(last.content.length)
+    }
+  }
+  ctx.restore()
+}
+
+/**
+ * 测量全部段落总高度
+ */
+export function enhancedMeasure(text: CanvasText, options: {
+  ctx: CanvasRenderingContext2D
+  maxWidth: number
+}) {
+  const { ctx, maxWidth } = options
+  ctx.save()
+  const baseProps = settingProperty(text, { ctx })
+  let contents = isArray(text.content) ? text.content : [{ content: text.content }]
+  let height = 0
+  while (contents.length) {
+    const { top, bottom, content } = measureRowHeight(contents, { ctx, maxWidth, baseProps })
+    height += (top + bottom)
+    const readyLength = content.length
+    const origin = contents[readyLength - 1]
+    const last = content[readyLength - 1]
+    const lastReady = last.content.length === origin.content.length
+    contents = contents.slice(lastReady ? readyLength : readyLength - 1)
+    if (!lastReady) {
+      contents[0].content = contents[0].content.slice(last.content.length)
+    }
+  }
+  ctx.restore()
+  return height
+}
+
+/**
+ * 计算文本首行基线上下部分高度（含行高）
+ */
+function measureRowHeight(contents: CanvasTextCommonOptions[], options: {
+  ctx: CanvasRenderingContext2D
+  maxWidth: number
+  baseProps?: NormalizeTextProps
+}) {
+  let { ctx, maxWidth, baseProps } = options
+  const top: number[] = []
+  const bottom: number[] = []
+  const renderable: (CanvasTextCommonOptions & { overLineY: number, lineThroughY: number, underLineY: number, xOffset: number })[] = []
+  let line = ''
+  let xOffset = 0
+
+  // 每一段
+  for (let pi = 0; pi < contents.length; pi++) {
+    const p = contents[pi]
+    ctx.save()
+    settingProperty(p, { ctx, baseProps })
+
+    // 每个字
+    for (let i = 0; i < p.content.length; i++) {
+      line += p.content[i]
+      const { width, actualBoundingBoxAscent, actualBoundingBoxDescent } = measure({ ...p, content: line }, { ctx, baseProps })
+      const isEnd = i === p.content.length - 1
+
+      // 满一行或一段结束
+      if (width > maxWidth || isEnd) {
+        // 文本高度
+        const height = actualBoundingBoxAscent + actualBoundingBoxDescent
+        // 默认百分比行高
+        const baseLineHeight = isString(baseProps?.lineHeight) && baseProps.lineHeight.endsWith('%') ? baseProps.lineHeight : '120%'
+        // 行高在基线上下平分
+        const halfLineHeight = (calcSize(p.lineHeight, height) || calcSize(baseLineHeight, height)) / 2
+        // 存储每一段文本的基线上下高度
+        top.push(actualBoundingBoxAscent + halfLineHeight)
+        bottom.push(actualBoundingBoxDescent + halfLineHeight)
+
+        const baseLine = p.textBaseLine || baseProps?.textBaseLine || 'alphabetic'
+        const overLineY = -actualBoundingBoxAscent
+        let lineThroughY = -(height / 2) + actualBoundingBoxDescent
+        const underLineY = actualBoundingBoxDescent
+
+        if (['top', 'hanging'].includes(baseLine)) {
+          lineThroughY = height / 2 - actualBoundingBoxAscent
+        }
+        else if (baseLine === 'middle') {
+          lineThroughY = 0
         }
 
-        line = text
+        if (isEnd) {
+          maxWidth -= width
+          xOffset += width
+        }
+
+        renderable.push({ ...p, content: isEnd ? line : line.slice(0, -1), overLineY, lineThroughY, underLineY, xOffset })
+
+        // 一段结束
+        if (isEnd) {
+          line = ''
+        }
+      }
+
+      // 满一行
+      if (width > maxWidth) {
+        return {
+          top: Math.max(...top),
+          bottom: Math.max(...bottom),
+          content: renderable,
+        }
       }
     }
+
     ctx.restore()
   }
-
-  return totalHeight.reduce((p, c) => p += c, 0)
-}
-
-function calcRestWidth(contents: CanvasTextCommonOptions[], baseProps: Required<Omit<HeightEffectProps, 'letterSpacing' | 'wordSpacing'> & { lineHeight: number }>, ctx: CanvasRenderingContext2D, position?: { x: number, y: number }): number {
-  return contents.reduce((p, c) => {
-    ctx.save()
-    normalizeProps(ctx, c, baseProps)
-    const width = ctx.measureText(c.content).width
-    position && ctx.fillText(c.content, position.x + p, position.y)
-    ctx.restore()
-    return p + width
-  }, 0)
-}
-
-function normalizeProps(ctx: CanvasRenderingContext2D, props: HeightEffectProps, defaultProps: HeightEffectProps & { lineHeight?: number } = {}): Required<Omit<HeightEffectProps, 'letterSpacing' | 'wordSpacing'> & { lineHeight: number }> {
-  let {
-    fontFamily,
-    fontSize,
-    fontWeight,
-    letterSpacing,
-    lineHeight,
-    wordSpacing,
-    color,
-  } = props
-
-  fontSize = Number.parseFloat(fontSize as any) || defaultProps.fontSize || 16
-
-  fontFamily = isString(fontFamily) ? fontFamily : defaultProps.fontFamily || 'sans-serif'
-
-  fontWeight = fontWeight && [100, 200, 300, 400, 500, 600, 700, 800, 900, 'normal', 'bold'].includes(fontWeight) ? fontWeight : defaultProps.fontWeight || 'normal'
-
-  lineHeight = calcSize(lineHeight, fontSize) || defaultProps.lineHeight || fontSize * 1.2
-
-  ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`
-
-  if (isString(color)) {
-    ctx.fillStyle = color
-    ctx.strokeStyle = color
-  }
-
-  if (isNumber(letterSpacing))
-    ctx.letterSpacing = `${letterSpacing}px`
-
-  if (isNumber(wordSpacing))
-    ctx.wordSpacing = `${wordSpacing}px`
 
   return {
+    top: Math.max(...top),
+    bottom: Math.max(...bottom),
+    content: renderable,
+  }
+}
+
+/**
+ * 绘制文本
+ */
+function draw(content: CanvasTextCommonOptions, options: {
+  ctx: CanvasRenderingContext2D
+  baseProps?: NormalizeTextProps
+  x: number
+  y: number
+}): void {
+  const { ctx, baseProps, x, y } = options
+  ctx.save()
+  settingProperty(content, { ctx, baseProps })
+  const draw = (content.textStyle === 'stroke' ? ctx.strokeText : ctx.fillText).bind(ctx)
+  if (!isNil(x) && !isNil(y)) {
+    draw(content.content, x, y)
+  }
+  ctx.restore()
+}
+
+/**
+ * 测量文本
+ */
+function measure(content: CanvasTextCommonOptions, options: {
+  ctx: CanvasRenderingContext2D
+  baseProps?: NormalizeTextProps
+}): TextMetrics {
+  const { ctx, baseProps } = options
+  ctx.save()
+  settingProperty(content, { ctx, baseProps })
+  const metrics = ctx.measureText(content.content)
+  ctx.restore()
+  return metrics
+}
+
+/**
+ * 设置字体相关属性，并返回标准化后的 baseProps 所需属性
+ */
+function settingProperty(props: TextProps, options: {
+  ctx: CanvasRenderingContext2D
+  baseProps?: NormalizeTextProps
+}): NormalizeTextProps {
+  let {
+    fontStyle,
+    fontFamily,
+    fontSize,
+    fontWeight,
+    strokeProps,
+    color,
+    // textDecoration,
+  } = props
+  let { ctx, baseProps } = options
+
+  baseProps = baseProps || {} as NormalizeTextProps
+
+  fontStyle = fontStyle === 'italic' ? 'italic' : 'normal'
+
+  fontSize = Number.parseFloat(fontSize as any) || baseProps.fontSize || 16
+
+  fontFamily = isString(fontFamily) ? fontFamily : baseProps.fontFamily || 'sans-serif'
+
+  fontWeight = fontWeight && [100, 200, 300, 400, 500, 600, 700, 800, 900, 'normal', 'bold'].includes(fontWeight) ? fontWeight : baseProps.fontWeight || 'normal'
+
+  ctx.font = `${fontStyle} ${fontWeight} ${fontSize}px ${fontFamily}`
+
+  // 设置 canvas 属性
+  settingCanvasProps({
+    ...props,
+    ...strokeProps,
+    fillStyle: color,
+    strokeStyle: color,
+  }, ctx)
+
+  return {
+    ...props,
+    fontStyle,
     fontSize,
     fontFamily,
     fontWeight,
-    lineHeight,
-    color: color!,
   }
 }

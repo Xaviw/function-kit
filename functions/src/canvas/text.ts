@@ -1,7 +1,7 @@
 import type { CanvasElementRenderFnOptions, CanvasText } from '../../types/canvas'
-import { rotateCanvasElement, settingCanvasProps } from '../../utils/canvas/commonProperty'
+import { rotateCanvasElement } from '../../utils/canvas/commonProperty'
 import { textStrategy } from '../../utils/canvas/normalize'
-import { measureHeight } from '../../utils/canvas/text'
+import { enhancedDraw } from '../../utils/canvas/text'
 
 /**
  * 绘制 Canvas 文字
@@ -14,9 +14,6 @@ export function renderText(renderOptions: CanvasText, contextOptions: CanvasElem
   // 参数标准化
   const { x, y, width, height } = textStrategy(renderOptions, { width: canvasWidth, height: canvasHeight, x: 0, y: 0 }, contextOptions)
 
-  // 设置 canvas 属性
-  settingCanvasProps(renderOptions, contextOptions)
-
   // 旋转
   if (renderOptions.rotate)
     rotateCanvasElement(renderOptions.rotate, { x, y, width, height }, contextOptions)
@@ -27,6 +24,6 @@ export function renderText(renderOptions: CanvasText, contextOptions: CanvasElem
   ctx.clip()
 
   // 绘制
-  measureHeight(renderOptions, { maxWidth: width, ctx, x, y })
+  enhancedDraw(renderOptions, { maxWidth: width, ctx, x, y })
   ctx.restore()
 }

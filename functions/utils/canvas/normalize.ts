@@ -3,7 +3,7 @@ import type { Recordable } from '../../types/common'
 import { isArray, isFunction, isNil, isString } from '../../src/is'
 import { mapObject } from '../../src/mapObject'
 import { memo } from '../../src/memo'
-import { measureHeight } from './text'
+import { enhancedMeasure } from './text'
 
 /**
  * 根据定位、尺寸属性计算标准盒子属性
@@ -138,7 +138,7 @@ export const textStrategy = memo((props: CanvasText, options: NormalizedBox, can
     box.width = canvasOptions.width - box.x
   if (box.height)
     return box
-  const height = measureHeight(props, { maxWidth: box.width, ctx: canvasOptions.ctx })
+  const height = enhancedMeasure(props, { maxWidth: box.width, ctx: canvasOptions.ctx })
   return { ...box, height }
 })
 

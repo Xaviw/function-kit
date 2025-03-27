@@ -17,7 +17,7 @@ export function renderLine(renderOptions: CanvasLine, contextOptions: CanvasElem
     return
 
   // 设置 canvas 属性
-  settingCanvasProps(renderOptions, contextOptions)
+  settingCanvasProps(renderOptions, ctx)
 
   // 旋转
   if (renderOptions.rotate)
