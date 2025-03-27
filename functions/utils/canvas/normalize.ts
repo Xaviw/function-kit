@@ -134,12 +134,9 @@ export const lineStrategy = memo((props: CanvasLine, options: NormalizedBox): No
 
 export const textStrategy = memo((props: CanvasText, options: NormalizedBox, canvasOptions: CanvasElementRenderFnOptions): NormalizedBox => {
   const box = standardStrategy(props, options)
-  if (!box.width)
-    box.width = canvasOptions.width - box.x
-  if (box.height)
-    return box
-  const height = enhancedMeasure(props, { maxWidth: box.width, ctx: canvasOptions.ctx })
-  return { ...box, height }
+  if (isNil(props.height) && isNil(props.bottom))
+    box.height = enhancedMeasure(props, { maxWidth: box.width, ctx: canvasOptions.ctx })
+  return box
 })
 
 const normalizeStrategies = {

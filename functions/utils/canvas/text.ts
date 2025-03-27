@@ -20,23 +20,22 @@ export function enhancedDraw(text: CanvasText, options: {
   const { ctx, maxWidth, x, y } = options
   ctx.save()
   const baseProps = settingProperty(text, { ctx })
-  let contents = isArray(text.content) ? text.content : [{ content: text.content }]
+  let contents = isArray(text.content) ? [...text.content] : [{ content: text.content }]
   let yOffset = 0
   while (contents.length) {
     const { top, bottom, content } = measureRowHeight(contents, { ctx, maxWidth, baseProps })
 
     yOffset += top
-    content.forEach((item, index) => {
+    content.forEach((item) => {
       ctx.save()
       settingProperty(item, { ctx, baseProps })
       draw(item, { ctx, baseProps, x: x + item.xOffset, y: y + yOffset })
 
       if (['overline', 'line-through', 'underline'].includes(item.textDecoration!)) {
         const offsetY = item.textDecoration === 'overline' ? item.overLineY : item.textDecoration === 'line-through' ? item.lineThroughY : item.underLineY
-        const nextOffsetX = content[index + 1]?.xOffset
         renderLine({
           type: 'line',
-          points: [[x + item.xOffset, y + offsetY], [nextOffsetX ? x + item.xOffset + nextOffsetX : x + maxWidth, y + offsetY]],
+          points: [[x + item.xOffset, y + yOffset + offsetY], [x + item.xOffset + item.width, y + yOffset + offsetY]],
           ...item.textDecorationProps,
           lineColor: item.textDecorationProps?.lineColor || item.color,
         }, {
@@ -46,6 +45,7 @@ export function enhancedDraw(text: CanvasText, options: {
           canvas: null as any,
         })
       }
+      ctx.restore()
     })
     yOffset += bottom
 
@@ -55,7 +55,7 @@ export function enhancedDraw(text: CanvasText, options: {
     const lastReady = last.content.length === origin.content.length
     contents = contents.slice(lastReady ? readyLength : readyLength - 1)
     if (!lastReady) {
-      contents[0].content = contents[0].content.slice(last.content.length)
+      contents[0] = { ...contents[0], content: contents[0].content.slice(last.content.length) }
     }
   }
   ctx.restore()
@@ -71,7 +71,7 @@ export function enhancedMeasure(text: CanvasText, options: {
   const { ctx, maxWidth } = options
   ctx.save()
   const baseProps = settingProperty(text, { ctx })
-  let contents = isArray(text.content) ? text.content : [{ content: text.content }]
+  let contents = isArray(text.content) ? [...text.content] : [{ content: text.content }]
   let height = 0
   while (contents.length) {
     const { top, bottom, content } = measureRowHeight(contents, { ctx, maxWidth, baseProps })
@@ -82,7 +82,7 @@ export function enhancedMeasure(text: CanvasText, options: {
     const lastReady = last.content.length === origin.content.length
     contents = contents.slice(lastReady ? readyLength : readyLength - 1)
     if (!lastReady) {
-      contents[0].content = contents[0].content.slice(last.content.length)
+      contents[0] = { ...contents[0], content: contents[0].content.slice(last.content.length) }
     }
   }
   ctx.restore()
@@ -97,10 +97,10 @@ function measureRowHeight(contents: CanvasTextCommonOptions[], options: {
   maxWidth: number
   baseProps?: NormalizeTextProps
 }) {
-  let { ctx, maxWidth, baseProps } = options
+  const { ctx, maxWidth, baseProps } = options
   const top: number[] = []
   const bottom: number[] = []
-  const renderable: (CanvasTextCommonOptions & { overLineY: number, lineThroughY: number, underLineY: number, xOffset: number })[] = []
+  const renderable: (CanvasTextCommonOptions & { overLineY: number, lineThroughY: number, underLineY: number, xOffset: number, width: number })[] = []
   let line = ''
   let xOffset = 0
 
@@ -117,13 +117,13 @@ function measureRowHeight(contents: CanvasTextCommonOptions[], options: {
       const isEnd = i === p.content.length - 1
 
       // 满一行或一段结束
-      if (width > maxWidth || isEnd) {
+      if (width + xOffset > maxWidth || isEnd) {
         // 文本高度
         const height = actualBoundingBoxAscent + actualBoundingBoxDescent
         // 默认百分比行高
         const baseLineHeight = isString(baseProps?.lineHeight) && baseProps.lineHeight.endsWith('%') ? baseProps.lineHeight : '120%'
         // 行高在基线上下平分
-        const halfLineHeight = (calcSize(p.lineHeight, height) || calcSize(baseLineHeight, height)) / 2
+        const halfLineHeight = ((calcSize(p.lineHeight, height) || calcSize(baseLineHeight, height)) - height) / 2
         // 存储每一段文本的基线上下高度
         top.push(actualBoundingBoxAscent + halfLineHeight)
         bottom.push(actualBoundingBoxDescent + halfLineHeight)
@@ -140,25 +140,21 @@ function measureRowHeight(contents: CanvasTextCommonOptions[], options: {
           lineThroughY = 0
         }
 
-        if (isEnd) {
-          maxWidth -= width
-          xOffset += width
+        renderable.push({ ...p, content: isEnd ? line : line.slice(0, -1), overLineY, lineThroughY, underLineY, xOffset, width })
+
+        // 满一行
+        if (width + xOffset > maxWidth) {
+          ctx.restore()
+          return {
+            top: Math.max(...top),
+            bottom: Math.max(...bottom),
+            content: renderable,
+          }
         }
-
-        renderable.push({ ...p, content: isEnd ? line : line.slice(0, -1), overLineY, lineThroughY, underLineY, xOffset })
-
         // 一段结束
         if (isEnd) {
+          xOffset += width
           line = ''
-        }
-      }
-
-      // 满一行
-      if (width > maxWidth) {
-        return {
-          top: Math.max(...top),
-          bottom: Math.max(...bottom),
-          content: renderable,
         }
       }
     }
@@ -221,7 +217,6 @@ function settingProperty(props: TextProps, options: {
     fontWeight,
     strokeProps,
     color,
-    // textDecoration,
   } = props
   let { ctx, baseProps } = options
 
