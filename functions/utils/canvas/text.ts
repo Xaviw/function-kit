@@ -155,6 +155,7 @@ function measureRowHeight(contents: CanvasTextCommonOptions[], options: {
     ctx.save()
     settingProperty(p, { ctx, baseProps })
     const suffix = isString(options.suffix) ? options.suffix : ''
+    const suffixWidth = isString(options.suffix) ? measure({ ...p, content: options.suffix }, { ctx, baseProps }).width : 0
 
     // 每个字
     for (let i = 0; i < p.content.length; i++) {
@@ -186,7 +187,7 @@ function measureRowHeight(contents: CanvasTextCommonOptions[], options: {
           lineThroughY = 0
         }
 
-        renderable.push({ ...p, content: isEnd ? line : line.slice(0, -1) + suffix, overLineY, lineThroughY, underLineY, xOffset, width })
+        renderable.push({ ...p, content: isEnd ? line : line.slice(0, -1) + suffix, overLineY, lineThroughY, underLineY, xOffset, width: isEnd ? width - suffixWidth : width })
 
         // 满一行
         if (width + xOffset > maxWidth) {
