@@ -28,7 +28,7 @@ export interface PosterOptions {
 /**
  * poster 配置式绘制项
  */
-export type PosterElement = (CanvasText | CanvasImage | CanvasRect | CanvasLine) & {
+export type PosterElement = (PosterText | PosterImage | PosterRect | PosterLine) & {
   /**
    * 用于相对定位
    */
@@ -47,42 +47,43 @@ export interface PosterRenderFunction {
    * 手动绘制或设置上下文属性，支持异步
    * @param ctx - canvas 上下文
    * @param canvas - canvas 节点
+   * @param dpr - 当前画布采用的 dpr
    */
-  (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement): MaybePromise<void>
+  (options: { ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, dpr: number }): MaybePromise<void>
 }
 
 /**
- * canvas 绘制公共配置
+ * poster 绘制公共配置
  */
-export interface CanvasElementCommonOptions {
+export interface PosterElementCommonOptions {
   /**
-   * 支持数字或百分比（相对于父容器）
+   * 支持数字或百分比（相对于父容器宽度）
    */
   width?: string | number
   /**
-   * 支持数字或百分比（相对于父容器）
+   * 支持数字或百分比（相对于父容器高度）
    */
   height?: string | number
   /**
-   * 支持数字或百分比（相对于父容器）
+   * 支持数字或百分比（相对于父容器高度）
    * 不存在 height 时，根据 top、bottom 计算高度
    * 存在 height 时，优先使用 top 定位
    */
   top?: string | number
   /**
-   * 支持数字或百分比（相对于父容器）
+   * 支持数字或百分比（相对于父容器宽度）
    * 不存在 width 时，根据 left、right 计算宽度
    * 存在 width 时，优先使用 left 定位
    */
   right?: string | number
   /**
-   * 支持数字或百分比（相对于父容器）
+   * 支持数字或百分比（相对于父容器高度）
    * 不存在 height 时，根据 top、bottom 计算高度
    * 存在 height 时，优先使用 top 定位
    */
   bottom?: string | number
   /**
-   * 支持数字或百分比（相对于父容器）
+   * 支持数字或百分比（相对于父容器宽度）
    * 不存在 width 时，根据 left、right 计算宽度
    * 存在 width 时，优先使用 left 定位
    */
@@ -100,10 +101,10 @@ export interface CanvasElementCommonOptions {
 /**
  * poster 文字元素公共配置
  */
-export interface CanvasTextCommonOptions extends Pick<CanvasElementCommonOptions, 'shadowBlur' | 'shadowColor' | 'shadowOffsetX' | 'shadowOffsetY'> {
+export interface PosterTextCommonOptions extends Pick<PosterElementCommonOptions, 'shadowBlur' | 'shadowColor' | 'shadowOffsetX' | 'shadowOffsetY'> {
   content: string
   /**
-   * 数值或百分比（相对于字体）
+   * 数值或百分比（相对于文字高度）
    * @default '120%'
    */
   lineHeight?: number | string
@@ -119,10 +120,7 @@ export interface CanvasTextCommonOptions extends Pick<CanvasElementCommonOptions
    * @default 'normal'
    */
   fontWeight?: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 'normal' | 'bold'
-  /**
-   * @default '#000000'
-   */
-  color?: string
+  color?: string | CanvasGradient | CanvasPattern
   /**
    * 基线位置为起点 Y 坐标加基线上方文字高度（含上方的lineHeight）
    * @default 'alphabetic'
@@ -135,7 +133,7 @@ export interface CanvasTextCommonOptions extends Pick<CanvasElementCommonOptions
    */
   fontStyle?: 'normal' | 'italic'
   textDecoration?: 'underline' | 'overline' | 'line-through'
-  textDecorationProps?: Pick<CanvasLine, 'lineCap' | 'lineColor' | 'lineDash' | 'lineDashOffset' | 'lineJoin' | 'lineWidth' | 'miterLimit'>
+  textDecorationProps?: Pick<PosterLine, 'lineCap' | 'lineColor' | 'lineDash' | 'lineDashOffset' | 'lineJoin' | 'lineWidth' | 'miterLimit'>
   /**
    * 填充或镂空
    * @default 'fill'
@@ -143,24 +141,26 @@ export interface CanvasTextCommonOptions extends Pick<CanvasElementCommonOptions
   textStyle?: 'fill' | 'stroke'
   /**
    * 仅 text=stroke 时生效
-   * @default 1
    */
-  strokeProps?: Pick<CanvasLine, 'lineCap' | 'lineDash' | 'lineDashOffset' | 'lineJoin' | 'lineWidth' | 'miterLimit'>
-  backgroundColor?: string
+  strokeProps?: Pick<PosterLine, 'lineCap' | 'lineDash' | 'lineDashOffset' | 'lineJoin' | 'lineWidth' | 'miterLimit'>
+  /**
+   * 文字底色
+   */
+  backgroundColor?: string | CanvasGradient | CanvasPattern
 }
 
 /**
- * canvas 文本
+ * poster 文本
  */
-export interface CanvasText extends CanvasTextCommonOptions, Omit<CanvasElementCommonOptions, 'shadowBlur' | 'shadowColor' | 'shadowOffsetX' | 'shadowOffsetY'> {
+export interface PosterText extends PosterTextCommonOptions, Omit<PosterElementCommonOptions, 'shadowBlur' | 'shadowColor' | 'shadowOffsetX' | 'shadowOffsetY'> {
   type: 'text'
   /**
-   * 文本内容，支持换行等控制字符；为数组时可以分别设置样式
+   * 文本内容，支持空格，不支持其他控制字符；为数组时可以分别设置样式
    */
-  content: string | CanvasTextCommonOptions[]
+  content: string | PosterTextCommonOptions[]
   /**
    * 最大行数，超出省略显示
-   * height 小于实际高度时，会进行裁剪
+   * height 小于内容高度时，会进行裁剪
    */
   lineClamp?: number
   /**
@@ -169,17 +169,20 @@ export interface CanvasText extends CanvasTextCommonOptions, Omit<CanvasElementC
    */
   ellipsisContent?: string
   /**
-   * 对齐方式，需要能够计算出宽度（存在 left、right 或者 width）
+   * 容器内的对齐方式
    * @default 'left'
    */
   textAlign?: 'left' | 'center' | 'right'
 }
 
 /**
- * canvas 图片
+ * poster 图片
  */
-export interface CanvasImage extends CanvasElementCommonOptions {
+export interface PosterImage extends PosterElementCommonOptions, Pick<PosterRect, 'borderColor' | 'borderDash' | 'borderDashOffset' | 'borderRadius' | 'borderSize' | 'borderStyle'> {
   type: 'image'
+  /**
+   * 图片链接或 base64
+   */
   src: string
   /**
    * 裁剪图片的起点 X 坐标
@@ -195,7 +198,7 @@ export interface CanvasImage extends CanvasElementCommonOptions {
   sourceY?: string | number
   /**
    * 裁剪图片宽度
-   * 支持数值或百分比（相对于图片高度）
+   * 支持数值或百分比（相对于图片宽度）
    * @default '100%'
    */
   sourceWidth?: string | number
@@ -208,31 +211,12 @@ export interface CanvasImage extends CanvasElementCommonOptions {
   /**
    * 仅容器有固定宽高时生效
    * @remarks
-   * - scaleToFill: 不保持比例填充
+   * - scaleToFill: 不保持比例拉伸填充
    * - aspectFit: 保持比例缩放，保证长边能完全显示
    * - aspectFill: 保持比例缩放，保证短边能完全显示
    * @default 'scaleToFill'
    */
   mode?: 'scaleToFill' | 'aspectFill' | 'aspectFit'
-  /**
-   * box-sizing: content-box
-   * borderStyle 为 dashed 时，此值不适合设置较大
-   */
-  borderSize?: number
-  /**
-   * @default 'solid'
-   */
-  borderStyle?: 'solid' | 'dashed'
-  /**
-   * @default '#000000'
-   */
-  borderColor?: string
-  /**
-   * 支持数字或百分比（相对于自身）
-   */
-  borderRadius?: number | string
-  borderDash?: number[]
-  borderDashOffset?: number
   /**
    * 沿 x 轴翻转
    */
@@ -244,27 +228,23 @@ export interface CanvasImage extends CanvasElementCommonOptions {
 }
 
 /**
- * canvas 矩形
+ * poster 矩形
  */
-export interface CanvasRect extends CanvasElementCommonOptions {
+export interface PosterRect extends PosterElementCommonOptions {
   type: 'rect'
-  backgroundColor?: string
+  backgroundColor?: string | CanvasGradient | CanvasPattern
   /**
-   * box-sizing: content-box
+   * box-sizing: content-box；
    * borderStyle 为 dashed 时，此值不适合设置较大
-   * @default 1
    */
   borderSize?: number
   /**
    * @default 'solid'
    */
   borderStyle?: 'solid' | 'dashed'
+  borderColor?: string | CanvasGradient | CanvasPattern
   /**
-   * @default '#000000'
-   */
-  borderColor?: string
-  /**
-   * 支持数字或百分比（相对于自身）
+   * 支持数字或百分比（相对于自身宽度）
    */
   borderRadius?: number | string
   borderDash?: number[]
@@ -272,20 +252,20 @@ export interface CanvasRect extends CanvasElementCommonOptions {
 }
 
 /**
- * canvas 直线（元素矩形盒子的左上角到右下角）
+ * poster 直线
  */
-export interface CanvasLine extends Omit<CanvasElementCommonOptions, 'top' | 'right' | 'bottom' | 'left' | 'width' | 'height'> {
+export interface PosterLine extends Omit<PosterElementCommonOptions, 'top' | 'right' | 'bottom' | 'left' | 'width' | 'height'> {
   type: 'line'
   /**
    * 线条顶点，可以为 2 个或多个
-   * 支持数字或百分比
+   * 支持数字或百分比(相对于容器宽高)
    */
   points: [number | string, number | string][]
   /**
    * @default 1
    */
   lineWidth?: number
-  lineColor?: string
+  lineColor?: string | CanvasGradient | CanvasPattern
   lineDash?: number[]
   lineDashOffset?: number
   /**
@@ -303,21 +283,16 @@ export interface CanvasLine extends Omit<CanvasElementCommonOptions, 'top' | 'ri
 }
 
 /**
- * canvas 绘制方法参数
+ * poster 绘制方法参数
  */
-export interface CanvasElementRenderFnOptions {
+export interface PosterElementRenderContext {
   ctx: CanvasRenderingContext2D
-  canvas: HTMLCanvasElement
   /**
-   * 容器宽度（用于计算百分比值）
+   * 画布宽度（用于计算百分比值）
    */
   width: number
   /**
-   * 容器高度（用于计算百分比值）
+   * 画布高度（用于计算百分比值）
    */
   height: number
-  /**
-   * 设备像素比
-   */
-  dpr?: number
 }

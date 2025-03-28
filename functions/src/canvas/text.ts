@@ -1,14 +1,14 @@
-import type { CanvasElementRenderFnOptions, CanvasText } from '../../types/canvas'
-import { rotateCanvasElement } from '../../utils/canvas/commonProperty'
+import type { PosterElementRenderContext, PosterText } from '../../types/canvas'
 import { textStrategy } from '../../utils/canvas/normalize'
 import { enhancedDraw } from '../../utils/canvas/text'
+import { rotateCanvasElement } from './common'
 
 /**
  * 绘制 Canvas 文字
  * @web
  * @miniprogram
  */
-export function renderText(renderOptions: CanvasText, contextOptions: CanvasElementRenderFnOptions): void {
+export function renderText(renderOptions: PosterText, contextOptions: PosterElementRenderContext): void {
   const { width: canvasWidth, height: canvasHeight, ctx } = contextOptions
   ctx.save()
 
@@ -17,7 +17,7 @@ export function renderText(renderOptions: CanvasText, contextOptions: CanvasElem
 
   // 旋转
   if (renderOptions.rotate)
-    rotateCanvasElement(renderOptions.rotate, { x, y, width, height }, contextOptions)
+    rotateCanvasElement(renderOptions.rotate, { x, y, width, height, ctx })
 
   // 裁剪区域
   ctx.save()
@@ -27,5 +27,6 @@ export function renderText(renderOptions: CanvasText, contextOptions: CanvasElem
   // 绘制
   enhancedDraw(renderOptions, { maxWidth: width, ctx, x, y })
   ctx.restore()
+
   ctx.restore()
 }

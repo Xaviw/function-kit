@@ -1,4 +1,4 @@
-import type { CanvasElementCommonOptions, CanvasElementRenderFnOptions, CanvasLine, CanvasText, PosterElement, PosterElements } from '../../types/canvas'
+import type { PosterElement, PosterElementCommonOptions, PosterElementRenderContext, PosterElements, PosterLine, PosterText } from '../../types/canvas'
 import type { Recordable } from '../../types/common'
 import { isArray, isFunction, isNil, isString } from '../../src/is'
 import { mapObject } from '../../src/mapObject'
@@ -18,7 +18,7 @@ export interface NormalizedBox {
 /**
  * 标准盒子元素参数规范化
  */
-export const standardStrategy = memo((props: CanvasElementCommonOptions, options: NormalizedBox): NormalizedBox & { top: number, left: number, bottom: undefined, right: undefined } => {
+export const standardStrategy = memo((props: PosterElementCommonOptions, options: NormalizedBox): NormalizedBox & { top: number, left: number, bottom: undefined, right: undefined } => {
   const { width: containerWidth, height: containerHeight, x: containerX, y: containerY } = options
 
   const normalizeOptions = mapObject(props, (key, value) => {
@@ -90,7 +90,7 @@ export const standardStrategy = memo((props: CanvasElementCommonOptions, options
 /**
  * 线条参数规范化
  */
-export const lineStrategy = memo((props: CanvasLine, options: NormalizedBox): NormalizedBox & { points: [number, number][] } => {
+export const lineStrategy = memo((props: PosterLine, options: NormalizedBox): NormalizedBox & { points: [number, number][] } => {
   const [first = [0, 0], ...points] = props?.points || []
   const { width, height, x, y } = options
   const [firstX, firstY] = first.map((item, index) => calcSize(item, [width, height][index]))
@@ -132,7 +132,7 @@ export const lineStrategy = memo((props: CanvasLine, options: NormalizedBox): No
   lruMax: 20,
 })
 
-export const textStrategy = memo((props: CanvasText, options: NormalizedBox, canvasOptions: CanvasElementRenderFnOptions): NormalizedBox => {
+export const textStrategy = memo((props: PosterText, options: NormalizedBox, canvasOptions: PosterElementRenderContext): NormalizedBox => {
   const box = standardStrategy(props, options)
   if (isNil(props.height) && isNil(props.bottom))
     box.height = enhancedMeasure(props, { maxWidth: box.width, ctx: canvasOptions.ctx })
@@ -149,7 +149,7 @@ const normalizeStrategies = {
 /**
  * 绘制参数标准化中间层
  */
-export function normalizeElement<T extends PosterElement>(element: T, elements: PosterElements, options: CanvasElementRenderFnOptions): NormalizedBox & Recordable {
+export function normalizeElement<T extends PosterElement>(element: T, elements: PosterElements, options: PosterElementRenderContext): NormalizedBox & Recordable {
   const { width, height } = options
   const strategy = normalizeStrategies[element.type]
   if (!element.relativeTo)

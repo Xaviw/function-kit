@@ -1,6 +1,4 @@
-import type { CanvasElementRenderFnOptions } from '../../types/canvas'
 import type { Recordable } from '../../types/common'
-import type { NormalizedBox } from './normalize'
 import { isArray, isNumber, isString } from '../../src/is'
 
 /**
@@ -31,12 +29,12 @@ const canvasPropsStrategies: Record<string, (val: any, ctx: CanvasRenderingConte
     if (isNumber(miterLimit))
       ctx.miterLimit = miterLimit
   },
-  fillStyle(fillStyle: string, ctx: CanvasRenderingContext2D) {
-    if (isString(fillStyle))
+  fillStyle(fillStyle: string | CanvasGradient | CanvasPattern, ctx: CanvasRenderingContext2D) {
+    if (fillStyle)
       ctx.fillStyle = fillStyle
   },
-  strokeStyle(strokeStyle: string, ctx: CanvasRenderingContext2D) {
-    if (isString(strokeStyle))
+  strokeStyle(strokeStyle: string | CanvasGradient | CanvasPattern, ctx: CanvasRenderingContext2D) {
+    if (strokeStyle)
       ctx.strokeStyle = strokeStyle
   },
   shadowColor(shadowColor: string, ctx: CanvasRenderingContext2D) {
@@ -89,35 +87,14 @@ export function settingCanvasProps(props: Recordable, ctx: CanvasRenderingContex
       canvasPropsStrategies[key]?.(props[key], ctx)
     }
   }
-}
 
-/**
- * 绘制元素旋转
- * @param rotate 旋转角度
- * @param sizeProps normalizeElementSize 返回值
- * @param options 上下文相关属性
- */
-export function rotateCanvasElement(rotate: number, sizeProps: NormalizedBox, options: CanvasElementRenderFnOptions): void {
-  if (isNumber(rotate)) {
-    const { x, y, width, height } = sizeProps
-    const { ctx } = options
-    const centerX = x + width / 2
-    const centerY = y + height / 2
-    ctx.translate(centerX, centerY)
-    ctx.rotate((rotate * Math.PI) / 180)
-    ctx.translate(-centerX, -centerY)
+  const borderSize = Math.max(Number.parseFloat(props.borderSize) || 0, 0)
+  if (borderSize) {
+    if (props.borderStyle === 'dashed' && !props.borderDash)
+      ctx.setLineDash([borderSize * 2, borderSize])
+    else if (props.borderStyle === 'solid' && props.borderDash)
+      ctx.setLineDash([])
   }
-}
 
-/**
- * 获取设备像素比
- */
-export function getDpr() {
-  if (PLATFORM === 'miniprogram') {
-    const { pixelRatio } = wx.getWindowInfo()
-    return pixelRatio
-  }
-  else {
-    return window.devicePixelRatio
-  }
+  return borderSize
 }

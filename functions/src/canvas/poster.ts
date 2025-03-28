@@ -1,8 +1,8 @@
 import type { PosterElements, PosterOptions } from '../../types/canvas'
-import { getDpr } from '../../utils/canvas/commonProperty'
 import { downloadImage } from '../../utils/canvas/downloadImage'
+import { getDpr } from '../../utils/canvas/help'
 import { normalizeElement } from '../../utils/canvas/normalize'
-import { isArray, isFunction, isNumber, isObject } from '../is'
+import { isArray, isFunction, isObject } from '../is'
 import { renderImage } from './image'
 import { renderLine } from './line'
 import { renderRect } from './rect'
@@ -17,6 +17,8 @@ export async function canvasPoster(elements: PosterElements, options: PosterOpti
   let { node: canvas, width, height, dpr } = options
   width = Number.parseFloat(width as any)
   height = Number.parseFloat(height as any)
+  dpr = getDpr(dpr)
+
   if (
     !isArray(elements) || !isFunction(canvas?.getContext) || !width || !height
   ) {
@@ -30,10 +32,6 @@ export async function canvasPoster(elements: PosterElements, options: PosterOpti
     return
   }
 
-  /** 设备像素比（1px 等于多少物理像素） */
-  if (!isNumber(dpr) || dpr < 0) {
-    dpr = getDpr()
-  }
   canvas.width = width * dpr
   canvas.height = height * dpr
   ctx.scale(dpr, dpr)
@@ -59,7 +57,7 @@ export async function canvasPoster(elements: PosterElements, options: PosterOpti
     // 优先使用自定义渲染函数
     if (isFunction(element)) {
       ctx.save()
-      await element(ctx, canvas)
+      await element({ ctx, canvas, dpr })
       ctx.restore()
       continue
     }

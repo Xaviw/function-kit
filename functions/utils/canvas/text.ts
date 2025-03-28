@@ -1,18 +1,18 @@
-import type { CanvasText, CanvasTextCommonOptions } from '../../types/canvas'
+import type { PosterText, PosterTextCommonOptions } from '../../types/canvas'
 import type { PartiallyRequired } from '../../types/common'
 import { renderLine } from '../../src/canvas/line'
 import { renderRect } from '../../src/canvas/rect'
 import { isArray, isNil, isNumber, isString } from '../../src/is'
-import { settingCanvasProps } from './commonProperty'
 import { calcSize } from './normalize'
+import { settingCanvasProps } from './propStrategies'
 
-type TextProps = Omit<CanvasTextCommonOptions, 'content'>
+type TextProps = Omit<PosterTextCommonOptions, 'content'>
 type NormalizeTextProps = PartiallyRequired<TextProps, 'fontFamily' | 'fontSize' | 'fontWeight'>
 
 /**
  * 绘制全部段落
  */
-export function enhancedDraw(text: CanvasText, options: {
+export function enhancedDraw(text: PosterText, options: {
   ctx: CanvasRenderingContext2D
   maxWidth: number
   x: number
@@ -56,7 +56,7 @@ export function enhancedDraw(text: CanvasText, options: {
           backgroundColor: item.backgroundColor || baseProps.backgroundColor,
           width: item.width,
           height: Math.abs(item.overLineY) + Math.abs(item.underLineY),
-        }, { ctx, canvas: null as any, width: 100, height: 100 })
+        }, { ctx, width: 100, height: 100 })
       }
 
       ctx.save()
@@ -66,7 +66,6 @@ export function enhancedDraw(text: CanvasText, options: {
       if (['overline', 'line-through', 'underline'].includes(item.textDecoration!)) {
         const offsetY = item.textDecoration === 'overline' ? item.overLineY : item.textDecoration === 'line-through' ? item.lineThroughY : item.underLineY
         renderLine({
-          type: 'line',
           points: [[x + item.xOffset + alignOffset, y + yOffset + offsetY], [x + item.xOffset + alignOffset + item.width, y + yOffset + offsetY]],
           ...item.textDecorationProps,
           lineColor: item.textDecorationProps?.lineColor || item.color,
@@ -74,7 +73,6 @@ export function enhancedDraw(text: CanvasText, options: {
           ctx,
           width: 100,
           height: 100,
-          canvas: null as any,
         })
       }
       ctx.restore()
@@ -99,7 +97,7 @@ export function enhancedDraw(text: CanvasText, options: {
 /**
  * 测量全部段落总高度
  */
-export function enhancedMeasure(text: CanvasText, options: {
+export function enhancedMeasure(text: PosterText, options: {
   ctx: CanvasRenderingContext2D
   maxWidth: number
 }) {
@@ -136,7 +134,7 @@ export function enhancedMeasure(text: CanvasText, options: {
 /**
  * 计算文本首行基线上下部分高度（含行高）
  */
-function measureRowHeight(contents: CanvasTextCommonOptions[], options: {
+function measureRowHeight(contents: PosterTextCommonOptions[], options: {
   ctx: CanvasRenderingContext2D
   maxWidth: number
   baseProps?: NormalizeTextProps
@@ -145,7 +143,7 @@ function measureRowHeight(contents: CanvasTextCommonOptions[], options: {
   const { ctx, maxWidth, baseProps } = options
   const top: number[] = []
   const bottom: number[] = []
-  const renderable: (CanvasTextCommonOptions & { overLineY: number, lineThroughY: number, underLineY: number, xOffset: number, width: number })[] = []
+  const renderable: (PosterTextCommonOptions & { overLineY: number, lineThroughY: number, underLineY: number, xOffset: number, width: number })[] = []
   let line = ''
   let xOffset = 0
 
@@ -219,7 +217,7 @@ function measureRowHeight(contents: CanvasTextCommonOptions[], options: {
 /**
  * 绘制文本
  */
-function draw(content: CanvasTextCommonOptions, options: {
+function draw(content: PosterTextCommonOptions, options: {
   ctx: CanvasRenderingContext2D
   baseProps?: NormalizeTextProps
   x: number
@@ -238,7 +236,7 @@ function draw(content: CanvasTextCommonOptions, options: {
 /**
  * 测量文本
  */
-function measure(content: CanvasTextCommonOptions, options: {
+function measure(content: PosterTextCommonOptions, options: {
   ctx: CanvasRenderingContext2D
   baseProps?: NormalizeTextProps
 }): TextMetrics {

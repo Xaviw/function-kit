@@ -1,28 +1,30 @@
-import type { CanvasElementRenderFnOptions, CanvasLine } from '../../types/canvas'
-import { rotateCanvasElement, settingCanvasProps } from '../../utils/canvas/commonProperty'
+import type { PosterElementRenderContext, PosterLine } from '../../types/canvas'
+import { rotateCanvasElement } from '../../src/canvas/common'
 import { lineStrategy } from '../../utils/canvas/normalize'
+import { settingCanvasProps } from '../../utils/canvas/propStrategies'
 
 /**
- * 绘制 Canvas 线条
+ * 绘制 canvas 线条
  * @web
  * @miniprogram
  */
-export function renderLine(renderOptions: CanvasLine, contextOptions: CanvasElementRenderFnOptions): void {
-  const { ctx, width: canvasWidth, height: canvasHeight } = contextOptions
+export function renderLine(configs: Omit<PosterLine, 'type'>, options: PosterElementRenderContext): void {
+  const { ctx, width: canvasWidth, height: canvasHeight } = options
+
   ctx.save()
 
   // 参数标准化
-  const { x, y, width, height, points } = lineStrategy(renderOptions, { width: canvasWidth, height: canvasHeight, x: 0, y: 0 })
+  const { x, y, width, height, points } = lineStrategy({ type: 'line', ...configs }, { width: canvasWidth, height: canvasHeight, x: 0, y: 0 })
 
   if (points.length < 2)
     return
 
   // 设置 canvas 属性
-  settingCanvasProps(renderOptions, ctx)
+  settingCanvasProps(configs, ctx)
 
   // 旋转
-  if (renderOptions.rotate)
-    rotateCanvasElement(renderOptions.rotate, { x, y, width, height }, contextOptions)
+  if (configs.rotate)
+    rotateCanvasElement(configs.rotate, { x, y, width, height, ctx })
 
   // 绘制
   const [first, ...rest] = points

@@ -5,11 +5,19 @@ import { canvasPoster } from '../../functions/src/canvas/poster'
 const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
 
 onMounted(() => {
+  const ctx = canvas.value!.getContext('2d')
+  const gradient1 = ctx!.createLinearGradient(0, 200, 400, 200)
+  gradient1.addColorStop(0, 'rgba(255, 0, 0, 1)') // 红色
+  gradient1.addColorStop(0.75, 'rgba(0, 255, 0, 1)') // 绿色
+
+  const gradient2 = ctx!.createLinearGradient(0, 200, 400, 200)
+  gradient2.addColorStop(0, 'rgba(0, 0, 255, 1)') // 红色
+  gradient2.addColorStop(0.75, 'rgba(255, 255, 0, 1)') // 绿色
+
   canvasPoster([
     {
       id: 'a',
       type: 'line',
-      lineColor: '#ff0000',
       lineWidth: 5,
       lineDash: [5, 10, 20],
       lineCap: 'round',
@@ -49,7 +57,7 @@ onMounted(() => {
       left: 230,
       width: 100,
       height: 100,
-      backgroundColor: '#0000ff',
+      backgroundColor: gradient1,
       borderSize: 5,
       borderColor: '#00ffff',
       borderRadius: 10,
@@ -104,7 +112,7 @@ onMounted(() => {
       content: [
         {
           content: '一段测试文本一段测试文本一段测试文本一段测试文本',
-          color: '#ff0000',
+          color: gradient2,
           fontWeight: 'bold',
           textStyle: 'stroke',
           fontSize: 20,

@@ -1,24 +1,24 @@
-import type { CanvasElementRenderFnOptions, CanvasImage } from '../../types/canvas'
+import type { PosterElementRenderContext, PosterImage } from '../../types/canvas'
 import type { NormalizedBox } from '../../utils/canvas/normalize'
-import { rotateCanvasElement, settingCanvasProps } from '../../utils/canvas/commonProperty'
 import { downloadImage } from '../../utils/canvas/downloadImage'
+import { radiusClipPath, renderBorder } from '../../utils/canvas/help'
 import { calcSize, standardStrategy } from '../../utils/canvas/normalize'
-import { isString } from '../is'
-import { roundRect } from './rect'
+import { settingCanvasProps } from '../../utils/canvas/propStrategies'
+import { rotateCanvasElement } from './common'
 
 /**
  * 绘制 Canvas 图片
  * @web
  * @miniprogram
  */
-export async function renderImage(renderOptions: Omit<CanvasImage, 'type'>, contextOptions: CanvasElementRenderFnOptions): Promise<void> {
+export async function renderImage(renderOptions: Omit<PosterImage, 'type'>, contextOptions: PosterElementRenderContext): Promise<void> {
   const { ctx, width: canvasWidth, height: canvasHeight } = contextOptions
   ctx.save()
 
   // 参数标准化
   const { x, y, width, height } = standardStrategy(renderOptions, { width: canvasWidth, height: canvasHeight, x: 0, y: 0 })
 
-  let { rotate, borderRadius, borderSize, borderStyle, src, flipX, flipY } = renderOptions
+  const { rotate, borderRadius, src, flipX, flipY } = renderOptions
 
   // 获取图片
   let image: CanvasImageSource
@@ -32,47 +32,25 @@ export async function renderImage(renderOptions: Omit<CanvasImage, 'type'>, cont
   }
   catch (err) {
     console.warn(`图片加载失败：`, err)
+    ctx.restore()
     return
   }
 
   // 旋转
   if (rotate)
-    rotateCanvasElement(rotate, { x, y, width, height }, contextOptions)
+    rotateCanvasElement(rotate, { x, y, width, height, ctx })
 
   // canvas 属性设置
-  borderSize = Math.max(Number.parseFloat(borderSize as any) || 0, 0)
-  // 默认的 dashed
-  if (borderSize && borderStyle === 'dashed') {
-    ctx.setLineDash([borderSize * 2, borderSize])
-  }
-  // 配置可能会覆盖默认 dashed
-  settingCanvasProps(renderOptions, ctx)
-  // 避免未设置为虚线又设置了虚线参数的情况
-  if (borderSize && borderStyle !== 'dashed') {
-    ctx.setLineDash([])
-  }
+  const borderSize = settingCanvasProps(renderOptions, ctx)
 
-  // 圆角半径标准化
-  let r = Number.parseFloat(borderRadius as any) || 0
-  if (isString(borderRadius) && borderRadius.endsWith('%'))
-    r = r * width / 100
-
-  // 圆角裁剪路径
   ctx.save()
-  roundRect({
-    x: x - borderSize,
-    y: y - borderSize,
-    w: width + 2 * borderSize,
-    h: height + 2 * borderSize,
-    r,
-    ctx,
-  })
-  ctx.clip()
+  const r = radiusClipPath({ x, y, width, height, borderRadius, ctx, borderSize })
 
   // 翻转
+  ctx.save()
+  const drawProps = calcDrawProps({ ...renderOptions, x, y, width, height, imageWidth, imageHeight })
   ctx.translate(flipX ? canvasWidth : 0, flipY ? canvasHeight : 0)
   ctx.scale(flipX ? -1 : 1, flipY ? -1 : 1)
-  const drawProps = calcDrawProps({ ...renderOptions, x, y, width, height, imageWidth, imageHeight })
   if (flipX || flipY) {
     const [dx, dy, dWidth, dHeight] = drawProps.slice(4)
     drawProps[4] = flipX ? canvasWidth - dx - dWidth : dx
@@ -84,36 +62,17 @@ export async function renderImage(renderOptions: Omit<CanvasImage, 'type'>, cont
   ctx.restore()
 
   // 绘制边框
-  if (borderSize) {
-    ctx.save()
-    roundRect({
-      x: x - borderSize,
-      y: y - borderSize,
-      w: width + 2 * borderSize,
-      h: height + 2 * borderSize,
-      r,
-      ctx,
-    })
-    ctx.clip()
-    ctx.lineWidth = borderSize * 2
-    roundRect({
-      x: x - borderSize,
-      y: y - borderSize,
-      w: width + 2 * borderSize,
-      h: height + 2 * borderSize,
-      r,
-      ctx,
-    })
-    ctx.stroke()
-    ctx.restore()
-  }
+  // border 较粗时，外边缘圆角会大于需要的圆角，所以采用裁剪
+  renderBorder({ x, y, width, height, r, borderSize, ctx })
+  ctx.restore()
+
   ctx.restore()
 }
 
 /**
  * 计算 drawImage 参数
  */
-function calcDrawProps(options: NormalizedBox & Pick<CanvasImage, 'sourceX' | 'sourceY' | 'sourceWidth' | 'sourceHeight' | 'mode' | 'flipX' | 'flipY'> & { imageWidth: number, imageHeight: number }): [number, number, number, number, number, number, number, number] {
+function calcDrawProps(options: NormalizedBox & Pick<PosterImage, 'sourceX' | 'sourceY' | 'sourceWidth' | 'sourceHeight' | 'mode' | 'flipX' | 'flipY'> & { imageWidth: number, imageHeight: number }): [number, number, number, number, number, number, number, number] {
   let {
     x,
     y,
