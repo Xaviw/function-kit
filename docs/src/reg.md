@@ -250,6 +250,30 @@ isMacAddress('00-0a-95-9d-68-16') // true
 
 ***
 
+## isPath()
+
+```ts
+function isPath(str: string): boolean
+```
+
+判断字符串是否为相对路径或绝对路径
+
+### 参数
+
+#### str
+
+`string`
+
+要检查的字符串
+
+### 返回
+
+`boolean`
+
+如果是相对路径或绝对路径则返回 true，否则返回 false
+
+***
+
 ## isPhone()
 
 ```ts
