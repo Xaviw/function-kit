@@ -41,7 +41,7 @@ export async function canvasPoster(elements: PosterElements, options: PosterOpti
   // 图片预加载
   elements.forEach((element) => {
     if (!isFunction(element) && element.type === 'image' && element.src) {
-      downloadImage(element.src)
+      downloadImage(element.src, canvas)
     }
   })
 
@@ -57,7 +57,7 @@ export async function canvasPoster(elements: PosterElements, options: PosterOpti
     // 优先使用自定义渲染函数
     if (isFunction(element)) {
       ctx.save()
-      await element({ ctx, canvas, dpr })
+      await element({ ctx: ctx as any, canvas: canvas as any, dpr })
       ctx.restore()
       continue
     }

@@ -1,5 +1,14 @@
 import { expect, it } from 'vitest'
-import { isBase64, isChinese, isChineseName, isDataUrl, isEmail, isIDCard, isIPV4, isMacAddress, isPhone, isPostalCode, isTelphone, isUrl, isVehiclePlate } from '../src/reg'
+import { isBase64, isChinese, isChineseName, isDataUrl, isEmail, isIDCard, isIPV4, isMacAddress, isPath, isPhone, isPostalCode, isTelphone, isUrl, isVehiclePlate } from '../src/reg'
+
+it('isPath', () => {
+  expect(isPath('/a/b/c')).toBe(true)
+  expect(isPath('./a/b/c')).toBe(true)
+  expect(isPath('../a/b/c')).toBe(true)
+  expect(isPath('../../a/b/c')).toBe(true)
+  expect(isPath('C:\\a\\b')).toBe(false)
+  expect(isPath(1 as any)).toBe(false)
+})
 
 it('isDataUrl', () => {
   expect(isDataUrl('data:,Hello%2C%20World!')).toBe(true)

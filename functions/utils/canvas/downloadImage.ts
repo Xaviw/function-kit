@@ -1,7 +1,8 @@
+import type { Canvas } from '../../types/canvas'
 import { memo } from '../../src/memo'
-import { isDataUrl, isUrl } from '../../src/reg'
+import { isDataUrl, isPath, isUrl } from '../../src/reg'
 
-export const downloadImage = memo((src: string): Promise<{ image: CanvasImageSource, width: number, height: number }> => {
+export const downloadImage = memo((src: string, canvas: Canvas | WechatMiniprogram.Canvas): Promise<{ image: CanvasImageSource, width: number, height: number }> => {
   return new Promise((resolve, reject) => {
     if (PLATFORM === 'web') {
       const image = new Image()
@@ -10,7 +11,15 @@ export const downloadImage = memo((src: string): Promise<{ image: CanvasImageSou
       image.src = src
     }
     else if (PLATFORM === 'miniprogram') {
-      if (isUrl(src)) {
+      if (isPath(src)) {
+        const image = (canvas as WechatMiniprogram.Canvas).createImage() as HTMLImageElement
+        image.onload = () => {
+          resolve({ image, width: image.width, height: image.height })
+        }
+        image.onerror = reject
+        image.src = src
+      }
+      else if (isUrl(src)) {
         const downloader = src.startsWith('cloud://') ? wx.cloud.downloadFile : wx.downloadFile
         downloader({
           url: src,
@@ -20,7 +29,7 @@ export const downloadImage = memo((src: string): Promise<{ image: CanvasImageSou
               reject(file)
               return
             }
-            const image = (wx as any).createImage()
+            const image = (canvas as WechatMiniprogram.Canvas).createImage() as HTMLImageElement
             image.onload = () => {
               resolve({ image, width: image.width, height: image.height })
             }
@@ -39,7 +48,7 @@ export const downloadImage = memo((src: string): Promise<{ image: CanvasImageSou
           data: buffer,
           encoding: 'binary',
           success: () => {
-            const image = (wx as any).createImage()
+            const image = (canvas as WechatMiniprogram.Canvas).createImage() as HTMLImageElement
             image.onload = () => {
               resolve({ image, width: image.width, height: image.height })
             }
@@ -56,4 +65,7 @@ export const downloadImage = memo((src: string): Promise<{ image: CanvasImageSou
   })
 }, {
   lruMax: 20,
+  key(src) {
+    return src
+  },
 })

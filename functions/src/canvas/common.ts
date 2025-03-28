@@ -1,3 +1,4 @@
+import type { CanvasContext } from '../../types/canvas'
 import type { NormalizedBox } from '../../utils/canvas/normalize'
 import { isNumber } from '../is'
 
@@ -12,7 +13,7 @@ import { isNumber } from '../is'
  * @web
  * @miniprogram
  */
-export function rotateCanvasElement(rotate: number, options: NormalizedBox & { ctx: CanvasRenderingContext2D }): void {
+export function rotateCanvasElement(rotate: number, options: NormalizedBox & { ctx: CanvasContext }): void {
   if (isNumber(rotate)) {
     const { x, y, width, height, ctx } = options
     const centerX = x + width / 2

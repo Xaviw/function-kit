@@ -1,67 +1,68 @@
+import type { CanvasContext } from '../../types/canvas'
 import type { Recordable } from '../../types/common'
 import { isArray, isNumber, isString } from '../../src/is'
 
 /**
  * canvas 实例属性绘制策略
  */
-const canvasPropsStrategies: Record<string, (val: any, ctx: CanvasRenderingContext2D) => void> = {
-  lineWidth(lineWidth: number, ctx: CanvasRenderingContext2D) {
+const canvasPropsStrategies: Record<string, (val: any, ctx: CanvasContext) => void> = {
+  lineWidth(lineWidth: number, ctx: CanvasContext) {
     if (isNumber(lineWidth))
       ctx.lineWidth = lineWidth
   },
-  lineDash(lineDash: number[], ctx: CanvasRenderingContext2D) {
+  lineDash(lineDash: number[], ctx: CanvasContext) {
     if (isArray(lineDash) && lineDash.every(isNumber))
       ctx.setLineDash(lineDash)
   },
-  lineDashOffset(lineDashOffset: number, ctx: CanvasRenderingContext2D) {
+  lineDashOffset(lineDashOffset: number, ctx: CanvasContext) {
     if (isNumber(lineDashOffset))
       ctx.lineDashOffset = lineDashOffset
   },
-  lineCap(lineCap: CanvasLineCap, ctx: CanvasRenderingContext2D) {
+  lineCap(lineCap: CanvasLineCap, ctx: CanvasContext) {
     if (lineCap && ['butt', 'round', 'square'].includes(lineCap))
       ctx.lineCap = lineCap
   },
-  lineJoin(lineJoin: CanvasLineJoin, ctx: CanvasRenderingContext2D) {
+  lineJoin(lineJoin: CanvasLineJoin, ctx: CanvasContext) {
     if (lineJoin && ['round', 'bevel', 'miter'].includes(lineJoin))
       ctx.lineJoin = lineJoin
   },
-  miterLimit(miterLimit: number, ctx: CanvasRenderingContext2D) {
+  miterLimit(miterLimit: number, ctx: CanvasContext) {
     if (isNumber(miterLimit))
       ctx.miterLimit = miterLimit
   },
-  fillStyle(fillStyle: string | CanvasGradient | CanvasPattern, ctx: CanvasRenderingContext2D) {
+  fillStyle(fillStyle: string | CanvasGradient | CanvasPattern, ctx: CanvasContext) {
     if (fillStyle)
       ctx.fillStyle = fillStyle
   },
-  strokeStyle(strokeStyle: string | CanvasGradient | CanvasPattern, ctx: CanvasRenderingContext2D) {
+  strokeStyle(strokeStyle: string | CanvasGradient | CanvasPattern, ctx: CanvasContext) {
     if (strokeStyle)
       ctx.strokeStyle = strokeStyle
   },
-  shadowColor(shadowColor: string, ctx: CanvasRenderingContext2D) {
+  shadowColor(shadowColor: string, ctx: CanvasContext) {
     if (isString(shadowColor))
       ctx.shadowColor = shadowColor
   },
-  shadowBlur(shadowBlur: number, ctx: CanvasRenderingContext2D) {
+  shadowBlur(shadowBlur: number, ctx: CanvasContext) {
     if (isNumber(shadowBlur))
       ctx.shadowBlur = shadowBlur
   },
-  shadowOffsetX(shadowOffsetX: number, ctx: CanvasRenderingContext2D) {
+  shadowOffsetX(shadowOffsetX: number, ctx: CanvasContext) {
     if (isNumber(shadowOffsetX))
       ctx.shadowOffsetX = shadowOffsetX
   },
-  shadowOffsetY(shadowOffsetY: number, ctx: CanvasRenderingContext2D) {
+  shadowOffsetY(shadowOffsetY: number, ctx: CanvasContext) {
     if (isNumber(shadowOffsetY))
       ctx.shadowOffsetY = shadowOffsetY
   },
-  wordSpacing(wordSpacing: number, ctx: CanvasRenderingContext2D) {
+  wordSpacing(wordSpacing: number, ctx: CanvasContext) {
     if (isNumber(wordSpacing))
       ctx.wordSpacing = `${wordSpacing}px`
   },
-  letterSpacing(letterSpacing: number, ctx: CanvasRenderingContext2D) {
+  letterSpacing(letterSpacing: number, ctx: CanvasContext) {
     if (isNumber(letterSpacing))
       ctx.letterSpacing = `${letterSpacing}px`
   },
-  textBaseLine(textBaseLine: CanvasTextBaseline, ctx: CanvasRenderingContext2D) {
+  textBaseLine(textBaseLine: CanvasTextBaseline, ctx: CanvasContext) {
     if (isString(textBaseLine))
       ctx.textBaseline = textBaseLine
   },
@@ -81,7 +82,7 @@ canvasPropsStrategies.borderDashOffset = canvasPropsStrategies.lineDashOffset
  * 设置 canvas 实例属性
  * @param props 实例属性对象
  */
-export function settingCanvasProps(props: Recordable, ctx: CanvasRenderingContext2D) {
+export function settingCanvasProps(props: Recordable, ctx: CanvasContext) {
   for (const key in props) {
     if (Object.prototype.hasOwnProperty.call(props, key)) {
       canvasPropsStrategies[key]?.(props[key], ctx)

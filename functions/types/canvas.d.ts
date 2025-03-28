@@ -1,3 +1,7 @@
+export type Canvas = HTMLCanvasElement
+
+export type CanvasContext = CanvasRenderingContext2D
+
 /**
  * poster 绘制项
  */
@@ -10,7 +14,7 @@ export interface PosterOptions {
   /**
    * canvas 节点
    */
-  node: HTMLCanvasElement
+  node: Canvas
   /**
    * 海报设计图宽度
    */
@@ -49,7 +53,7 @@ export interface PosterRenderFunction {
    * @param canvas - canvas 节点
    * @param dpr - 当前画布采用的 dpr
    */
-  (options: { ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, dpr: number }): MaybePromise<void>
+  (options: { ctx: CanvasContext, canvas: Canvas, dpr: number }): MaybePromise<void>
 }
 
 /**
@@ -286,7 +290,7 @@ export interface PosterLine extends Omit<PosterElementCommonOptions, 'top' | 'ri
  * poster 绘制方法参数
  */
 export interface PosterElementRenderContext {
-  ctx: CanvasRenderingContext2D
+  ctx: CanvasContext
   /**
    * 画布宽度（用于计算百分比值）
    */

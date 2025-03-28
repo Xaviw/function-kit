@@ -1,6 +1,17 @@
 import { isString } from './is'
 
 /**
+ * 判断字符串是否为相对路径或绝对路径
+ * @param str - 要检查的字符串
+ * @returns 如果是相对路径或绝对路径则返回 true，否则返回 false
+ */
+export function isPath(str: string): boolean {
+  if (!isString(str))
+    return false
+  return /^(?:\/|\.\/|\.\.\/)[\w/.-]*$/.test(str.trim())
+}
+
+/**
  * 判断字符串是否为有效的 Data URL
  * @param str - 要检查的字符串
  * @returns 如果是有效的 Data URL 则返回 true，否则返回 false

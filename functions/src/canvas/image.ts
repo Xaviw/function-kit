@@ -1,4 +1,4 @@
-import type { PosterElementRenderContext, PosterImage } from '../../types/canvas'
+import type { Canvas, PosterElementRenderContext, PosterImage } from '../../types/canvas'
 import type { NormalizedBox } from '../../utils/canvas/normalize'
 import { downloadImage } from '../../utils/canvas/downloadImage'
 import { radiusClipPath, renderBorder } from '../../utils/canvas/help'
@@ -11,8 +11,8 @@ import { rotateCanvasElement } from './common'
  * @web
  * @miniprogram
  */
-export async function renderImage(renderOptions: Omit<PosterImage, 'type'>, contextOptions: PosterElementRenderContext): Promise<void> {
-  const { ctx, width: canvasWidth, height: canvasHeight } = contextOptions
+export async function renderImage(renderOptions: Omit<PosterImage, 'type'>, contextOptions: PosterElementRenderContext & { canvas: Canvas }): Promise<void> {
+  const { ctx, canvas, width: canvasWidth, height: canvasHeight } = contextOptions
   ctx.save()
 
   // 参数标准化
@@ -25,7 +25,7 @@ export async function renderImage(renderOptions: Omit<PosterImage, 'type'>, cont
   let imageWidth: number
   let imageHeight: number
   try {
-    const res = await downloadImage(src)
+    const res = await downloadImage(src, canvas)
     image = res.image
     imageWidth = res.width
     imageHeight = res.height

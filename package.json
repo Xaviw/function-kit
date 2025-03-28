@@ -2,7 +2,7 @@
   "name": "function-kit",
   "type": "module",
   "version": "1.0.0",
-  "packageManager": "pnpm@10.6.5",
+  "packageManager": "pnpm@10.7.0",
   "description": "零依赖多端函数工具库",
   "engines": {
     "node": ">=18"

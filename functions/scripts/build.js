@@ -94,8 +94,8 @@ await Promise.all([
   rollup({
     input: 'dist/index.ts',
     plugins: [
-      inject(),
-      dts(),
+      dts(), // dts 是读取的源文件代码，其他插件无效
+      miniprogramTypes(),
     ],
   }).then(async (bundle) => {
     await bundle.write({
@@ -218,6 +218,30 @@ function inject() {
         return
 
       return { code: `const PLATFORM = '${platform}';\n${code}` }
+    },
+  }
+}
+
+/**
+ * 构建小程序平台包时，替换 Canvas 类型为小程序中的类型
+ * @returns {import("rollup").Plugin} rollup 插件
+ */
+function miniprogramTypes() {
+  return {
+    name: 'miniprogram-types',
+    generateBundle(options, bundle) {
+      // 遍历生成的文件
+      for (const fileName in bundle) {
+        if (fileName.endsWith('.d.ts')) {
+          const chunk = bundle[fileName]
+          if (chunk.type === 'chunk') {
+            // 修改 .d.ts 文件内容
+            chunk.code = chunk.code
+              .replace('Canvas = HTMLCanvasElement', 'Canvas = WechatMiniprogram.Canvas')
+              .replace('CanvasContext = CanvasRenderingContext2D', 'CanvasContext = WechatMiniprogram.CanvasRenderingContext.CanvasRenderingContext2D')
+          }
+        }
+      }
     },
   }
 }

@@ -1,7 +1,8 @@
+import type { CanvasContext } from '../../types/canvas'
 import { roundRect } from '../../src/canvas/rect'
 import { isNumber, isString } from '../../src/is'
 
-export function radiusClipPath(options: { x: number, y: number, width: number, height: number, borderRadius?: string | number, borderSize: number, ctx: CanvasRenderingContext2D }) {
+export function radiusClipPath(options: { x: number, y: number, width: number, height: number, borderRadius?: string | number, borderSize: number, ctx: CanvasContext }) {
   const { x, y, width, height, borderRadius, borderSize, ctx } = options
 
   // 圆角半径标准化
@@ -23,7 +24,7 @@ export function radiusClipPath(options: { x: number, y: number, width: number, h
   return r
 }
 
-export function renderBorder(options: { x: number, y: number, width: number, height: number, r: number, borderSize: number, ctx: CanvasRenderingContext2D }) {
+export function renderBorder(options: { x: number, y: number, width: number, height: number, r: number, borderSize: number, ctx: CanvasContext }) {
   const { x, y, width, height, r, borderSize, ctx } = options
 
   if (borderSize) {

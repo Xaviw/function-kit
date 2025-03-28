@@ -1,4 +1,4 @@
-import type { PosterElementRenderContext, PosterRect } from '../../types/canvas'
+import type { CanvasContext, PosterElementRenderContext, PosterRect } from '../../types/canvas'
 import { radiusClipPath, renderBorder } from '../../utils/canvas/help'
 import { standardStrategy } from '../../utils/canvas/normalize'
 import { settingCanvasProps } from '../../utils/canvas/propStrategies'
@@ -58,7 +58,7 @@ export interface CanvasRoundRectOptions {
   /** 圆角半径 */
   r: number
   /** canvas 绘制上下文 */
-  ctx: CanvasRenderingContext2D
+  ctx: CanvasContext
 }
 
 /**

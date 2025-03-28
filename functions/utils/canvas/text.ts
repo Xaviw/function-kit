@@ -1,4 +1,4 @@
-import type { PosterText, PosterTextCommonOptions } from '../../types/canvas'
+import type { CanvasContext, PosterText, PosterTextCommonOptions } from '../../types/canvas'
 import type { PartiallyRequired } from '../../types/common'
 import { renderLine } from '../../src/canvas/line'
 import { renderRect } from '../../src/canvas/rect'
@@ -13,7 +13,7 @@ type NormalizeTextProps = PartiallyRequired<TextProps, 'fontFamily' | 'fontSize'
  * 绘制全部段落
  */
 export function enhancedDraw(text: PosterText, options: {
-  ctx: CanvasRenderingContext2D
+  ctx: CanvasContext
   maxWidth: number
   x: number
   y: number
@@ -98,7 +98,7 @@ export function enhancedDraw(text: PosterText, options: {
  * 测量全部段落总高度
  */
 export function enhancedMeasure(text: PosterText, options: {
-  ctx: CanvasRenderingContext2D
+  ctx: CanvasContext
   maxWidth: number
 }) {
   let { lineClamp, content } = text
@@ -135,7 +135,7 @@ export function enhancedMeasure(text: PosterText, options: {
  * 计算文本首行基线上下部分高度（含行高）
  */
 function measureRowHeight(contents: PosterTextCommonOptions[], options: {
-  ctx: CanvasRenderingContext2D
+  ctx: CanvasContext
   maxWidth: number
   baseProps?: NormalizeTextProps
   suffix?: string
@@ -218,7 +218,7 @@ function measureRowHeight(contents: PosterTextCommonOptions[], options: {
  * 绘制文本
  */
 function draw(content: PosterTextCommonOptions, options: {
-  ctx: CanvasRenderingContext2D
+  ctx: CanvasContext
   baseProps?: NormalizeTextProps
   x: number
   y: number
@@ -237,7 +237,7 @@ function draw(content: PosterTextCommonOptions, options: {
  * 测量文本
  */
 function measure(content: PosterTextCommonOptions, options: {
-  ctx: CanvasRenderingContext2D
+  ctx: CanvasContext
   baseProps?: NormalizeTextProps
 }): TextMetrics {
   const { ctx, baseProps } = options
@@ -252,7 +252,7 @@ function measure(content: PosterTextCommonOptions, options: {
  * 设置字体相关属性，并返回标准化后的 baseProps 所需属性
  */
 function settingProperty(props: TextProps, options: {
-  ctx: CanvasRenderingContext2D
+  ctx: CanvasContext
   baseProps?: NormalizeTextProps
 }): NormalizeTextProps {
   let {
