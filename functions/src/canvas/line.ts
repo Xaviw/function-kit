@@ -9,6 +9,7 @@ import { lineStrategy } from '../../utils/canvas/normalize'
  */
 export function renderLine(renderOptions: CanvasLine, contextOptions: CanvasElementRenderFnOptions): void {
   const { ctx, width: canvasWidth, height: canvasHeight } = contextOptions
+  ctx.save()
 
   // 参数标准化
   const { x, y, width, height, points } = lineStrategy(renderOptions, { width: canvasWidth, height: canvasHeight, x: 0, y: 0 })
@@ -30,4 +31,5 @@ export function renderLine(renderOptions: CanvasLine, contextOptions: CanvasElem
   rest.forEach(item => ctx.lineTo(...item))
   ctx.stroke()
   ctx.closePath()
+  ctx.restore()
 }

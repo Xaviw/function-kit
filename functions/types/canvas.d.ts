@@ -12,13 +12,17 @@ export interface PosterOptions {
    */
   node: HTMLCanvasElement
   /**
-   * 画布宽度
+   * 海报设计图宽度
    */
   width: number
   /**
-   * 画布高度
+   * 海报设计图高度
    */
   height: number
+  /**
+   * 像素比，默认会自动获取设备 drp
+   */
+  dpr?: number
 }
 
 /**
@@ -142,6 +146,7 @@ export interface CanvasTextCommonOptions extends Pick<CanvasElementCommonOptions
    * @default 1
    */
   strokeProps?: Pick<CanvasLine, 'lineCap' | 'lineDash' | 'lineDashOffset' | 'lineJoin' | 'lineWidth' | 'miterLimit'>
+  backgroundColor?: string
 }
 
 /**
@@ -304,11 +309,15 @@ export interface CanvasElementRenderFnOptions {
   ctx: CanvasRenderingContext2D
   canvas: HTMLCanvasElement
   /**
-   * 设计图宽度（未乘以 dpr）
+   * 容器宽度（用于计算百分比值）
    */
   width: number
   /**
-   * 设计图高度（未乘以 dpr）
+   * 容器高度（用于计算百分比值）
    */
   height: number
+  /**
+   * 设备像素比
+   */
+  dpr?: number
 }

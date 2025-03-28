@@ -1,7 +1,8 @@
 import type { CanvasText, CanvasTextCommonOptions } from '../../types/canvas'
 import type { PartiallyRequired } from '../../types/common'
 import { renderLine } from '../../src/canvas/line'
-import { isArray, isNil, isString } from '../../src/is'
+import { renderRect } from '../../src/canvas/rect'
+import { isArray, isNil, isNumber, isString } from '../../src/is'
 import { settingCanvasProps } from './commonProperty'
 import { calcSize } from './normalize'
 
@@ -17,25 +18,56 @@ export function enhancedDraw(text: CanvasText, options: {
   x: number
   y: number
 }) {
+  let { content, textAlign, lineClamp, ellipsisContent } = text
+  lineClamp = isNumber(lineClamp) && lineClamp > 0 ? lineClamp : Infinity
+  ellipsisContent = isString(ellipsisContent) ? ellipsisContent : '...'
   const { ctx, maxWidth, x, y } = options
   ctx.save()
   const baseProps = settingProperty(text, { ctx })
-  let contents = isArray(text.content) ? [...text.content] : [{ content: text.content }]
+  let contents = isArray(content) ? [...content] : [{ content }]
   let yOffset = 0
+  let rowNum = 1
   while (contents.length) {
-    const { top, bottom, content } = measureRowHeight(contents, { ctx, maxWidth, baseProps })
+    const { top, bottom, content } = measureRowHeight(contents, { ctx, maxWidth, baseProps, suffix: rowNum === lineClamp ? ellipsisContent : '' })
+
+    const readyLength = content.length
+    const origin = contents[readyLength - 1]
+    const last = content[readyLength - 1]
+    const lastReady = last.content.length === origin.content.length
 
     yOffset += top
+
+    // 最后一行
+    let alignOffset = 0
+    if (content.length === contents.length && lastReady) {
+      const rowWidth = content.reduce((p, c) => p + c.width, 0)
+      if (textAlign === 'center')
+        alignOffset = (maxWidth - rowWidth) / 2
+      if (textAlign === 'right')
+        alignOffset = maxWidth - rowWidth
+    }
+
     content.forEach((item) => {
+      if (item.backgroundColor || baseProps.backgroundColor) {
+        renderRect({
+          type: 'rect',
+          top: y + yOffset + item.overLineY,
+          left: x + item.xOffset + alignOffset,
+          backgroundColor: item.backgroundColor || baseProps.backgroundColor,
+          width: item.width,
+          height: Math.abs(item.overLineY) + Math.abs(item.underLineY),
+        }, { ctx, canvas: null as any, width: 100, height: 100 })
+      }
+
       ctx.save()
       settingProperty(item, { ctx, baseProps })
-      draw(item, { ctx, baseProps, x: x + item.xOffset, y: y + yOffset })
+      draw(item, { ctx, baseProps, x: x + item.xOffset + alignOffset, y: y + yOffset })
 
       if (['overline', 'line-through', 'underline'].includes(item.textDecoration!)) {
         const offsetY = item.textDecoration === 'overline' ? item.overLineY : item.textDecoration === 'line-through' ? item.lineThroughY : item.underLineY
         renderLine({
           type: 'line',
-          points: [[x + item.xOffset, y + yOffset + offsetY], [x + item.xOffset + item.width, y + yOffset + offsetY]],
+          points: [[x + item.xOffset + alignOffset, y + yOffset + offsetY], [x + item.xOffset + alignOffset + item.width, y + yOffset + offsetY]],
           ...item.textDecorationProps,
           lineColor: item.textDecorationProps?.lineColor || item.color,
         }, {
@@ -47,16 +79,19 @@ export function enhancedDraw(text: CanvasText, options: {
       }
       ctx.restore()
     })
-    yOffset += bottom
 
-    const readyLength = content.length
-    const origin = contents[readyLength - 1]
-    const last = content[readyLength - 1]
-    const lastReady = last.content.length === origin.content.length
-    contents = contents.slice(lastReady ? readyLength : readyLength - 1)
-    if (!lastReady) {
-      contents[0] = { ...contents[0], content: contents[0].content.slice(last.content.length) }
+    if (rowNum === lineClamp) {
+      contents = []
     }
+    else {
+      yOffset += bottom
+      contents = contents.slice(lastReady ? readyLength : readyLength - 1)
+      if (!lastReady) {
+        contents[0] = { ...contents[0], content: contents[0].content.slice(last.content.length) }
+      }
+    }
+
+    rowNum++
   }
   ctx.restore()
 }
@@ -68,21 +103,30 @@ export function enhancedMeasure(text: CanvasText, options: {
   ctx: CanvasRenderingContext2D
   maxWidth: number
 }) {
+  let { lineClamp, content } = text
+  lineClamp = isNumber(lineClamp) && lineClamp > 0 ? lineClamp : Infinity
   const { ctx, maxWidth } = options
   ctx.save()
   const baseProps = settingProperty(text, { ctx })
-  let contents = isArray(text.content) ? [...text.content] : [{ content: text.content }]
+  let contents = isArray(content) ? [...content] : [{ content }]
   let height = 0
+  let rowNum = 1
   while (contents.length) {
     const { top, bottom, content } = measureRowHeight(contents, { ctx, maxWidth, baseProps })
     height += (top + bottom)
-    const readyLength = content.length
-    const origin = contents[readyLength - 1]
-    const last = content[readyLength - 1]
-    const lastReady = last.content.length === origin.content.length
-    contents = contents.slice(lastReady ? readyLength : readyLength - 1)
-    if (!lastReady) {
-      contents[0] = { ...contents[0], content: contents[0].content.slice(last.content.length) }
+    if (rowNum < lineClamp) {
+      rowNum++
+      const readyLength = content.length
+      const origin = contents[readyLength - 1]
+      const last = content[readyLength - 1]
+      const lastReady = last.content.length === origin.content.length
+      contents = contents.slice(lastReady ? readyLength : readyLength - 1)
+      if (!lastReady) {
+        contents[0] = { ...contents[0], content: contents[0].content.slice(last.content.length) }
+      }
+    }
+    else {
+      contents = []
     }
   }
   ctx.restore()
@@ -96,6 +140,7 @@ function measureRowHeight(contents: CanvasTextCommonOptions[], options: {
   ctx: CanvasRenderingContext2D
   maxWidth: number
   baseProps?: NormalizeTextProps
+  suffix?: string
 }) {
   const { ctx, maxWidth, baseProps } = options
   const top: number[] = []
@@ -109,11 +154,12 @@ function measureRowHeight(contents: CanvasTextCommonOptions[], options: {
     const p = contents[pi]
     ctx.save()
     settingProperty(p, { ctx, baseProps })
+    const suffix = isString(options.suffix) ? options.suffix : ''
 
     // 每个字
     for (let i = 0; i < p.content.length; i++) {
       line += p.content[i]
-      const { width, actualBoundingBoxAscent, actualBoundingBoxDescent } = measure({ ...p, content: line }, { ctx, baseProps })
+      const { width, actualBoundingBoxAscent, actualBoundingBoxDescent } = measure({ ...p, content: line + suffix }, { ctx, baseProps })
       const isEnd = i === p.content.length - 1
 
       // 满一行或一段结束
@@ -140,7 +186,7 @@ function measureRowHeight(contents: CanvasTextCommonOptions[], options: {
           lineThroughY = 0
         }
 
-        renderable.push({ ...p, content: isEnd ? line : line.slice(0, -1), overLineY, lineThroughY, underLineY, xOffset, width })
+        renderable.push({ ...p, content: isEnd ? line : line.slice(0, -1) + suffix, overLineY, lineThroughY, underLineY, xOffset, width })
 
         // 满一行
         if (width + xOffset > maxWidth) {
@@ -238,6 +284,7 @@ function settingProperty(props: TextProps, options: {
     ...strokeProps,
     fillStyle: color,
     strokeStyle: color,
+    backgroundColor: undefined,
   }, ctx)
 
   return {

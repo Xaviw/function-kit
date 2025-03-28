@@ -1,7 +1,8 @@
 import type { PosterElements, PosterOptions } from '../../types/canvas'
+import { getDpr } from '../../utils/canvas/commonProperty'
 import { downloadImage } from '../../utils/canvas/downloadImage'
 import { normalizeElement } from '../../utils/canvas/normalize'
-import { isArray, isFunction, isObject } from '../is'
+import { isArray, isFunction, isNumber, isObject } from '../is'
 import { renderImage } from './image'
 import { renderLine } from './line'
 import { renderRect } from './rect'
@@ -13,7 +14,7 @@ import { renderText } from './text'
  * @miniprogram
  */
 export async function canvasPoster(elements: PosterElements, options: PosterOptions): Promise<void> {
-  let { node: canvas, width, height } = options
+  let { node: canvas, width, height, dpr } = options
   width = Number.parseFloat(width as any)
   height = Number.parseFloat(height as any)
   if (
@@ -23,23 +24,16 @@ export async function canvasPoster(elements: PosterElements, options: PosterOpti
     return
   }
 
-  /** 设备像素比（1px 等于多少物理像素） */
-  let dpr: number
-  if (PLATFORM === 'miniprogram') {
-    const { pixelRatio } = wx.getWindowInfo()
-    dpr = pixelRatio
-  }
-  else {
-    dpr = window.devicePixelRatio
-  }
-
   const ctx = canvas.getContext('2d')
   if (!ctx) {
     console.error('获取 Canvas 上下文失败')
     return
   }
 
-  // 适配高清屏
+  /** 设备像素比（1px 等于多少物理像素） */
+  if (!isNumber(dpr) || dpr < 0) {
+    dpr = getDpr()
+  }
   canvas.width = width * dpr
   canvas.height = height * dpr
   ctx.scale(dpr, dpr)
@@ -62,11 +56,11 @@ export async function canvasPoster(elements: PosterElements, options: PosterOpti
       continue
     }
 
-    ctx.save()
-
     // 优先使用自定义渲染函数
     if (isFunction(element)) {
+      ctx.save()
       await element(ctx, canvas)
+      ctx.restore()
       continue
     }
 
@@ -86,7 +80,5 @@ export async function canvasPoster(elements: PosterElements, options: PosterOpti
         renderText({ ...element, ...normalized }, contextOptions)
         break
     }
-
-    ctx.restore()
   }
 }

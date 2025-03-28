@@ -11,8 +11,9 @@ import { roundRect } from './rect'
  * @web
  * @miniprogram
  */
-export async function renderImage(renderOptions: CanvasImage, contextOptions: CanvasElementRenderFnOptions): Promise<void> {
+export async function renderImage(renderOptions: Omit<CanvasImage, 'type'>, contextOptions: CanvasElementRenderFnOptions): Promise<void> {
   const { ctx, width: canvasWidth, height: canvasHeight } = contextOptions
+  ctx.save()
 
   // 参数标准化
   const { x, y, width, height } = standardStrategy(renderOptions, { width: canvasWidth, height: canvasHeight, x: 0, y: 0 })
@@ -106,6 +107,7 @@ export async function renderImage(renderOptions: CanvasImage, contextOptions: Ca
     ctx.stroke()
     ctx.restore()
   }
+  ctx.restore()
 }
 
 /**

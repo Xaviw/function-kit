@@ -10,6 +10,7 @@ import { isString } from '../is'
  */
 export function renderRect(renderOptions: CanvasRect, contextOptions: CanvasElementRenderFnOptions): void {
   const { ctx, width: canvasWidth, height: canvasHeight } = contextOptions
+  ctx.save()
 
   // 参数标准化
   const { x, y, width, height } = standardStrategy(renderOptions, { width: canvasWidth, height: canvasHeight, x: 0, y: 0 })
@@ -71,6 +72,7 @@ export function renderRect(renderOptions: CanvasRect, contextOptions: CanvasElem
     ctx.stroke()
   }
   ctx.restore()
+  ctx.restore()
 }
 
 /**
@@ -94,6 +96,8 @@ export interface CanvasRoundRectOptions {
 /**
  * canvas 圆角矩形
  * @param options
+ * @web
+ * @miniprogram
  */
 export function roundRect(options: CanvasRoundRectOptions) {
   let { x, y, w, h, r, ctx } = options

@@ -108,3 +108,16 @@ export function rotateCanvasElement(rotate: number, sizeProps: NormalizedBox, op
     ctx.translate(-centerX, -centerY)
   }
 }
+
+/**
+ * 获取设备像素比
+ */
+export function getDpr() {
+  if (PLATFORM === 'miniprogram') {
+    const { pixelRatio } = wx.getWindowInfo()
+    return pixelRatio
+  }
+  else {
+    return window.devicePixelRatio
+  }
+}
