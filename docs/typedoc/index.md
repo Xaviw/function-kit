@@ -2,12 +2,12 @@
 
 ## 模块
 
-- [canvas/common](canvas%5Ccommon.md)
-- [canvas/image](canvas%5Cimage.md)
-- [canvas/line](canvas%5Cline.md)
-- [canvas/poster](canvas%5Cposter.md)
-- [canvas/rect](canvas%5Crect.md)
-- [canvas/text](canvas%5Ctext.md)
+- [canvas/common](canvas/common.md)
+- [canvas/image](canvas/image.md)
+- [canvas/line](canvas/line.md)
+- [canvas/poster](canvas/poster.md)
+- [canvas/rect](canvas/rect.md)
+- [canvas/text](canvas/text.md)
 - [case](case.md)
 - [className](className.md)
 - [cloneDeep](cloneDeep.md)

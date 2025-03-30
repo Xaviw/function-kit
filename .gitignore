@@ -1,7 +1,10 @@
 node_modules
 dist
 docs/.vitepress/cache
+.vscode/launch.json
 
+**/.DS_Store
+*.log
 .idea
 .temp
 .history

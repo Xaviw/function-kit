@@ -1,4 +1,4 @@
-[function-kit](index.md) / canvas/poster
+[function-kit](../index.md) / canvas/poster
 
 # canvas/poster
 

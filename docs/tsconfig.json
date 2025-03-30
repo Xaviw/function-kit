@@ -1,4 +1,7 @@
 {
-  "extends": ["../tsconfig.json"],
-  "include": [".vitepress/config.ts"]
+  "extends": ["../tsconfig.json", "@vue/tsconfig/tsconfig.dom.json"],
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo"
+  },
+  "include": [".vitepress/config.ts", "poster/*"]
 }

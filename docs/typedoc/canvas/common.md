@@ -1,4 +1,4 @@
-[function-kit](index.md) / canvas/common
+[function-kit](../index.md) / canvas/common
 
 # canvas/common
 

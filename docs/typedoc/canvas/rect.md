@@ -1,4 +1,4 @@
-[function-kit](index.md) / canvas/rect
+[function-kit](../index.md) / canvas/rect
 
 # canvas/rect
 

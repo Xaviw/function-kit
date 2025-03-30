@@ -1,21 +1,41 @@
 import { defineConfig } from 'vitepress'
 import { description, name } from '../../package.json'
-import typedocSidebar from '../src/typedoc-sidebar.json'
+import typedocSidebar from '../typedoc/typedoc-sidebar.json'
 
 export default defineConfig({
   title: name,
   description,
   lang: 'zh-cn',
-  srcDir: './src',
   outDir: './dist',
   lastUpdated: true,
   themeConfig: {
-    sidebar: [
+    nav: [
       {
-        text: '目录',
-        items: typedocSidebar,
+        text: 'API 文档',
+        link: '/typedoc/',
+        activeMatch: '/typedoc/',
+      },
+      {
+        text: 'Canvas 海报',
+        link: '/poster/',
+        activeMatch: '/poster/',
       },
     ],
+    sidebar: {
+      '/typedoc/': [
+        {
+          text: 'API 文档',
+          items: typedocSidebar,
+          base: '/typedoc/',
+        },
+      ],
+      '/poster/': [
+        {
+          text: 'Canvas 海报',
+          link: '/poster',
+        },
+      ],
+    },
     outline: {
       level: 2,
       label: '大纲',
@@ -32,5 +52,10 @@ export default defineConfig({
     darkModeSwitchTitle: '深色模式',
     sidebarMenuLabel: '目录',
     returnToTopLabel: '返回顶部',
+  },
+  vite: {
+    define: {
+      PLATFORM: JSON.stringify('web'),
+    },
   },
 })

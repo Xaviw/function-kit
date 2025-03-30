@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { isLeapYear } from '../src/datetime'
+import { isLeapYear } from '../src/isLeapYear'
 
 it('isLeapYear', () => {
   expect(isLeapYear(2008)).toBe(true)
