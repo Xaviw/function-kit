@@ -69,8 +69,10 @@ export function enhancedDraw(text: PosterText, options: {
 
       if (['overline', 'line-through', 'underline'].includes(textDecoration!)) {
         const offsetY = textDecoration === 'overline' ? overLineY : textDecoration === 'line-through' ? lineThroughY : underLineY
+        const halfLine = textDecorationProps.lineWidth && textDecorationProps.lineWidth > 0 ? textDecorationProps.lineWidth / 2 : 0.5
+        const halfLineOffset = textDecoration === 'overline' ? -halfLine : textDecoration === 'underline' ? halfLine : 0
         renderLine({
-          points: [[x + xOffset + alignOffset, y + yOffset + offsetY], [x + xOffset + alignOffset + width, y + yOffset + offsetY]],
+          points: [[x + xOffset + alignOffset, y + yOffset + offsetY + halfLineOffset], [x + xOffset + alignOffset + width, y + yOffset + offsetY + halfLineOffset]],
           ...textDecorationProps,
           lineColor: textDecorationProps.lineColor || color,
         }, {
@@ -162,26 +164,26 @@ function measureRowHeight(contents: PosterTextCommonOptions[], options: {
     // 每个字
     for (let i = 0; i < p.content.length; i++) {
       line += p.content[i]
-      const { width, actualBoundingBoxAscent, actualBoundingBoxDescent } = measure({ ...p, content: line + suffix }, { ctx, baseProps })
+      const { width, fontBoundingBoxAscent, fontBoundingBoxDescent } = measure({ ...p, content: line + suffix }, { ctx, baseProps })
       const isEnd = i === p.content.length - 1
 
       // 满一行或一段结束
       if (width + xOffset > maxWidth || isEnd) {
         // 文本高度
-        const height = actualBoundingBoxAscent + actualBoundingBoxDescent
+        const height = fontBoundingBoxAscent + fontBoundingBoxDescent
         // 行高在基线上下平分
         const halfLineHeight = (calcSize(props.lineHeight, height) - height) / 2
         // 存储每一段文本的基线上下高度
-        top.push(actualBoundingBoxAscent + halfLineHeight)
-        bottom.push(actualBoundingBoxDescent + halfLineHeight)
+        top.push(fontBoundingBoxAscent + halfLineHeight)
+        bottom.push(fontBoundingBoxDescent + halfLineHeight)
 
         const baseLine = props.textBaseLine
-        const overLineY = -actualBoundingBoxAscent
-        let lineThroughY = -(height / 2) + actualBoundingBoxDescent
-        const underLineY = actualBoundingBoxDescent
+        const overLineY = -fontBoundingBoxAscent
+        let lineThroughY = -(height / 2) + fontBoundingBoxDescent
+        const underLineY = fontBoundingBoxDescent
 
         if (['top', 'hanging'].includes(baseLine)) {
-          lineThroughY = height / 2 - actualBoundingBoxAscent
+          lineThroughY = height / 2 - fontBoundingBoxAscent
         }
         else if (baseLine === 'middle') {
           lineThroughY = 0

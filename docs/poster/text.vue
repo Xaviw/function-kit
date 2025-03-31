@@ -4,21 +4,27 @@ import { canvasPoster } from '../../functions/src/canvas/poster'
 
 const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
 
+const Hanalei = new FontFace('Hanalei', 'url(https://fonts.gstatic.font.im/s/hanaleifill/v22/fC1mPYtObGbfyQznIaQzPQi8UAjAhFqtag.woff2)')
+document.fonts.add(Hanalei)
+
 onMounted(() => {
   const ctx = canvas.value!.getContext('2d')
-  const gradient = ctx!.createLinearGradient(0, 0, 300, 0)
-  gradient.addColorStop(0, '#ff0000')
-  gradient.addColorStop(1, '#00ff00')
+  const gradient = ctx!.createLinearGradient(0, 0, 280, 0)
+  gradient.addColorStop(0, '#cf1322')
+  gradient.addColorStop(1, '#389e0d')
 
   canvasPoster([
+    () => {
+      // 放在字体使用前，确保字体加载完成
+      return Hanalei.load()
+    },
     {
       type: 'text',
       content: '测试 test 1234 !@#$',
       color: gradient,
       fontSize: 22,
       fontStyle: 'italic',
-      fontWeight: 900,
-      fontFamily: 'Ma Shan Zheng',
+      fontFamily: 'Hanalei',
       letterSpacing: 6,
       shadowBlur: 2,
       shadowColor: '#00000033',
@@ -27,7 +33,7 @@ onMounted(() => {
       textDecoration: 'underline',
       textStyle: 'stroke',
       wordSpacing: 6,
-      backgroundColor: '#b5f5ecee',
+      backgroundColor: '#5cdbd348',
     },
     {
       type: 'text',
@@ -62,7 +68,7 @@ onMounted(() => {
     },
     {
       type: 'text',
-      top: 100,
+      top: 95,
       fontSize: 22,
       content: [
         {
@@ -70,6 +76,8 @@ onMounted(() => {
           textDecoration: 'underline',
           textDecorationProps: {
             lineColor: '#ff0000',
+            lineWidth: 5,
+            lineDash: [15, 5],
           },
         },
         {
@@ -84,14 +92,13 @@ onMounted(() => {
           textDecoration: 'overline',
           textDecorationProps: {
             lineColor: '#0000ff',
-            lineDash: [15, 5],
           },
         },
       ],
     },
     {
       type: 'text',
-      top: 150,
+      top: 145,
       fontSize: 22,
       content: 'textAlign: left',
       textAlign: 'left',
@@ -99,17 +106,17 @@ onMounted(() => {
     },
     {
       type: 'text',
-      top: 150,
+      top: 145,
       fontSize: 22,
-      content: 'textAlign: center',
+      content: 'center',
       textAlign: 'center',
       backgroundColor: '#00ff0044',
     },
     {
       type: 'text',
-      top: 150,
+      top: 145,
       fontSize: 22,
-      content: 'textAlign: right',
+      content: 'right',
       textAlign: 'right',
       backgroundColor: '#0000ff44',
     },
@@ -117,7 +124,7 @@ onMounted(() => {
       id: 'a',
       type: 'text',
       fontSize: 22,
-      top: 200,
+      top: 190,
       width: 220,
       content: '内容超出指定行数后省略显示，内容超出指定行数后省略显示，内容超出指定行数后省略显示',
       lineClamp: 3,
@@ -126,6 +133,7 @@ onMounted(() => {
       relativeTo: 'a',
       type: 'text',
       fontSize: 22,
+      fontFamily: 'Hanalei Fill',
       left: '120%',
       width: 220,
       content: '自定义超出省略内容，自定义超出省略内容，自定义超出省略内容，自定义超出省略内容',
@@ -143,7 +151,3 @@ onMounted(() => {
 <template>
   <canvas ref="canvas" style="width: 688px;height: 300px;border: 1px solid;" />
 </template>
-
-<style scoped>
-@import url('https://fonts.font.im/css2?family=Ma+Shan+Zheng:wght@100..900&display=swap');
-</style>
