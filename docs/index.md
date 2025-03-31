@@ -6,6 +6,9 @@ title: 前端函数库
 hero:
   name: function-kit
   text: 前端函数工具库
+  image:
+    src: /logo.png
+    alt: function-kit
   actions:
     - theme: brand
       text: API 文档

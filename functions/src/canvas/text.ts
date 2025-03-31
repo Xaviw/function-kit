@@ -10,7 +10,6 @@ import { rotateCanvasElement } from './common'
  */
 export function renderText(renderOptions: PosterText, contextOptions: PosterElementRenderContext): void {
   const { width: canvasWidth, height: canvasHeight, ctx } = contextOptions
-  ctx.save()
 
   // 参数标准化
   const { x, y, width, height } = textStrategy(renderOptions, { width: canvasWidth, height: canvasHeight, x: 0, y: 0 }, contextOptions)
@@ -26,7 +25,5 @@ export function renderText(renderOptions: PosterText, contextOptions: PosterElem
 
   // 绘制
   enhancedDraw(renderOptions, { maxWidth: width, ctx, x, y })
-  ctx.restore()
-
   ctx.restore()
 }

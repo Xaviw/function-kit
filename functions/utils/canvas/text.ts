@@ -1,13 +1,13 @@
 import type { CanvasContext, PosterText, PosterTextCommonOptions } from '../../types/canvas'
-import type { PartiallyRequired } from '../../types/common'
+import type { Fn, PartiallyRequired, Recordable } from '../../types/common'
 import { renderLine } from '../../src/canvas/line'
 import { renderRect } from '../../src/canvas/rect'
-import { isArray, isNil, isNumber, isString } from '../../src/is'
+import { isArray, isNil, isNumber, isObject, isString } from '../../src/is'
 import { calcSize } from './normalize'
 import { settingCanvasProps } from './propStrategies'
 
 type TextProps = Omit<PosterTextCommonOptions, 'content'>
-type NormalizeTextProps = PartiallyRequired<TextProps, 'fontFamily' | 'fontSize' | 'fontWeight'>
+type NormalizeTextProps = PartiallyRequired<TextProps, 'lineHeight' | 'fontFamily' | 'fontSize' | 'fontWeight' | 'textBaseLine' | 'fontStyle' | 'textStyle' | 'textDecorationProps' | 'strokeProps'>
 
 /**
  * 绘制全部段落
@@ -21,12 +21,14 @@ export function enhancedDraw(text: PosterText, options: {
   let { content, textAlign, lineClamp, ellipsisContent } = text
   lineClamp = isNumber(lineClamp) && lineClamp > 0 ? lineClamp : Infinity
   ellipsisContent = isString(ellipsisContent) ? ellipsisContent : '...'
+
   const { ctx, maxWidth, x, y } = options
   ctx.save()
   const baseProps = settingProperty(text, { ctx })
   let contents = isArray(content) ? [...content] : [{ content }]
   let yOffset = 0
   let rowNum = 1
+
   while (contents.length) {
     const { top, bottom, content } = measureRowHeight(contents, { ctx, maxWidth, baseProps, suffix: rowNum === lineClamp ? ellipsisContent : '' })
 
@@ -48,27 +50,29 @@ export function enhancedDraw(text: PosterText, options: {
     }
 
     content.forEach((item) => {
-      if (item.backgroundColor || baseProps.backgroundColor) {
+      const { backgroundColor, overLineY, xOffset, width, underLineY, textDecorationProps, textDecoration, color, lineThroughY } = item
+
+      if (backgroundColor) {
         renderRect({
           type: 'rect',
-          top: y + yOffset + item.overLineY,
-          left: x + item.xOffset + alignOffset,
-          backgroundColor: item.backgroundColor || baseProps.backgroundColor,
-          width: item.width,
-          height: Math.abs(item.overLineY) + Math.abs(item.underLineY),
+          top: y + yOffset + overLineY,
+          left: x + xOffset + alignOffset,
+          backgroundColor,
+          width,
+          height: Math.abs(overLineY) + Math.abs(underLineY),
         }, { ctx, width: 100, height: 100 })
       }
 
       ctx.save()
       settingProperty(item, { ctx, baseProps })
-      draw(item, { ctx, baseProps, x: x + item.xOffset + alignOffset, y: y + yOffset })
+      draw(item, { ctx, baseProps, x: x + xOffset + alignOffset, y: y + yOffset })
 
-      if (['overline', 'line-through', 'underline'].includes(item.textDecoration!)) {
-        const offsetY = item.textDecoration === 'overline' ? item.overLineY : item.textDecoration === 'line-through' ? item.lineThroughY : item.underLineY
+      if (['overline', 'line-through', 'underline'].includes(textDecoration!)) {
+        const offsetY = textDecoration === 'overline' ? overLineY : textDecoration === 'line-through' ? lineThroughY : underLineY
         renderLine({
-          points: [[x + item.xOffset + alignOffset, y + yOffset + offsetY], [x + item.xOffset + alignOffset + item.width, y + yOffset + offsetY]],
-          ...item.textDecorationProps,
-          lineColor: item.textDecorationProps?.lineColor || item.color,
+          points: [[x + xOffset + alignOffset, y + yOffset + offsetY], [x + xOffset + alignOffset + width, y + yOffset + offsetY]],
+          ...textDecorationProps,
+          lineColor: textDecorationProps.lineColor || color,
         }, {
           ctx,
           width: 100,
@@ -143,7 +147,7 @@ function measureRowHeight(contents: PosterTextCommonOptions[], options: {
   const { ctx, maxWidth, baseProps } = options
   const top: number[] = []
   const bottom: number[] = []
-  const renderable: (PosterTextCommonOptions & { overLineY: number, lineThroughY: number, underLineY: number, xOffset: number, width: number })[] = []
+  const renderable: (NormalizeTextProps & { content: string, overLineY: number, lineThroughY: number, underLineY: number, xOffset: number, width: number })[] = []
   let line = ''
   let xOffset = 0
 
@@ -151,9 +155,9 @@ function measureRowHeight(contents: PosterTextCommonOptions[], options: {
   for (let pi = 0; pi < contents.length; pi++) {
     const p = contents[pi]
     ctx.save()
-    settingProperty(p, { ctx, baseProps })
+    const props = settingProperty(p, { ctx, baseProps })
     const suffix = isString(options.suffix) ? options.suffix : ''
-    const suffixWidth = isString(options.suffix) ? measure({ ...p, content: options.suffix }, { ctx, baseProps }).width : 0
+    const suffixWidth = isString(options.suffix) ? measure({ ...props, content: options.suffix }, { ctx }).width : 0
 
     // 每个字
     for (let i = 0; i < p.content.length; i++) {
@@ -165,15 +169,13 @@ function measureRowHeight(contents: PosterTextCommonOptions[], options: {
       if (width + xOffset > maxWidth || isEnd) {
         // 文本高度
         const height = actualBoundingBoxAscent + actualBoundingBoxDescent
-        // 默认百分比行高
-        const baseLineHeight = isString(baseProps?.lineHeight) && baseProps.lineHeight.endsWith('%') ? baseProps.lineHeight : '120%'
         // 行高在基线上下平分
-        const halfLineHeight = ((calcSize(p.lineHeight, height) || calcSize(baseLineHeight, height)) - height) / 2
+        const halfLineHeight = (calcSize(props.lineHeight, height) - height) / 2
         // 存储每一段文本的基线上下高度
         top.push(actualBoundingBoxAscent + halfLineHeight)
         bottom.push(actualBoundingBoxDescent + halfLineHeight)
 
-        const baseLine = p.textBaseLine || baseProps?.textBaseLine || 'alphabetic'
+        const baseLine = props.textBaseLine
         const overLineY = -actualBoundingBoxAscent
         let lineThroughY = -(height / 2) + actualBoundingBoxDescent
         const underLineY = actualBoundingBoxDescent
@@ -185,7 +187,7 @@ function measureRowHeight(contents: PosterTextCommonOptions[], options: {
           lineThroughY = 0
         }
 
-        renderable.push({ ...p, content: isEnd ? line : line.slice(0, -1) + suffix, overLineY, lineThroughY, underLineY, xOffset, width: isEnd ? width - suffixWidth : width })
+        renderable.push({ ...props, content: isEnd ? line : line.slice(0, -1) + suffix, overLineY, lineThroughY, underLineY, xOffset, width: isEnd ? width - suffixWidth : width })
 
         // 满一行
         if (width + xOffset > maxWidth) {
@@ -225,8 +227,8 @@ function draw(content: PosterTextCommonOptions, options: {
 }): void {
   const { ctx, baseProps, x, y } = options
   ctx.save()
-  settingProperty(content, { ctx, baseProps })
-  const draw = (content.textStyle === 'stroke' ? ctx.strokeText : ctx.fillText).bind(ctx)
+  const props = settingProperty(content, { ctx, baseProps })
+  const draw = (props.textStyle === 'stroke' ? ctx.strokeText : ctx.fillText).bind(ctx)
   if (!isNil(x) && !isNil(y)) {
     draw(content.content, x, y)
   }
@@ -251,46 +253,91 @@ function measure(content: PosterTextCommonOptions, options: {
 /**
  * 设置字体相关属性，并返回标准化后的 baseProps 所需属性
  */
-function settingProperty(props: TextProps, options: {
+function settingProperty(properties: TextProps, options: {
   ctx: CanvasContext
   baseProps?: NormalizeTextProps
 }): NormalizeTextProps {
-  let {
-    fontStyle,
-    fontFamily,
-    fontSize,
-    fontWeight,
-    strokeProps,
-    color,
-  } = props
-  let { ctx, baseProps } = options
+  const props: Recordable = { ...properties }
+  const { ctx, baseProps = {} as NormalizeTextProps } = options
 
-  baseProps = baseProps || {} as NormalizeTextProps
+  const strategies: Record<keyof TextProps, [Fn] | [Fn, any]> = {
+    lineHeight: [
+      (v: any) => isNumber(v) || (isString(v) && v.endsWith('%')),
+      '120%',
+    ],
+    fontSize: [
+      isNumber,
+      'normal',
+    ],
+    fontFamily: [
+      isString,
+      'sans-serif',
+    ],
+    fontWeight: [
+      (v: any) => [100, 200, 300, 400, 500, 600, 700, 800, 900, 'normal', 'bold'].includes(v),
+      'normal',
+    ],
+    color: [
+      (v: any) => isString(v) || isObject(v),
+    ],
+    textBaseLine: [
+      (v: any) => ['alphabetic', 'bottom', 'hanging', 'ideographic', 'middle', 'top'].includes(v),
+      'alphabetic',
+    ],
+    letterSpacing: [
+      isNumber,
+    ],
+    wordSpacing: [
+      isNumber,
+    ],
+    fontStyle: [
+      (v: any) => ['italic', 'normal'].includes(v),
+      'normal',
+    ],
+    textDecoration: [
+      (v: any) => ['underline', 'overline', 'line-through'].includes(v),
+    ],
+    textDecorationProps: [
+      isObject,
+      {},
+    ],
+    textStyle: [
+      (v: any) => ['fill', 'stroke'].includes(v),
+      'fill',
+    ],
+    strokeProps: [
+      isObject,
+      {},
+    ],
+    backgroundColor: [
+      (v: any) => isString(v) || isObject(v),
+    ],
+    shadowBlur: [
+      isNumber,
+    ],
+    shadowColor: [isString],
+    shadowOffsetX: [
+      (v: any) => isNumber(v) || (isString(v) && v.endsWith('%')),
+    ],
+    shadowOffsetY: [
+      (v: any) => isNumber(v) || (isString(v) && v.endsWith('%')),
+    ],
+  }
 
-  fontStyle = fontStyle === 'italic' ? 'italic' : 'normal'
+  Object.entries(strategies).forEach(([key, value]) => {
+    if (!value[0](props[key])) {
+      props[key] = (baseProps as Recordable)[key] || value[1]
+    }
+  })
 
-  fontSize = Number.parseFloat(fontSize as any) || baseProps.fontSize || 16
-
-  fontFamily = isString(fontFamily) ? fontFamily : baseProps.fontFamily || 'sans-serif'
-
-  fontWeight = fontWeight && [100, 200, 300, 400, 500, 600, 700, 800, 900, 'normal', 'bold'].includes(fontWeight) ? fontWeight : baseProps.fontWeight || 'normal'
-
-  ctx.font = `${fontStyle} ${fontWeight} ${fontSize}px ${fontFamily}`
-
-  // 设置 canvas 属性
+  // // 设置 canvas 属性
   settingCanvasProps({
     ...props,
-    ...strokeProps,
-    fillStyle: color,
-    strokeStyle: color,
+    ...props.strokeProps,
+    fillStyle: props.color,
+    strokeStyle: props.color,
     backgroundColor: undefined,
   }, ctx)
 
-  return {
-    ...props,
-    fontStyle,
-    fontSize,
-    fontFamily,
-    fontWeight,
-  }
+  return props as NormalizeTextProps
 }

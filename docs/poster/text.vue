@@ -17,7 +17,8 @@ onMounted(() => {
       color: gradient,
       fontSize: 22,
       fontStyle: 'italic',
-      fontWeight: 'bold',
+      fontWeight: 900,
+      fontFamily: 'Ma Shan Zheng',
       letterSpacing: 6,
       shadowBlur: 2,
       shadowColor: '#00000033',
@@ -94,6 +95,7 @@ onMounted(() => {
       fontSize: 22,
       content: 'textAlign: left',
       textAlign: 'left',
+      backgroundColor: '#ff000044',
     },
     {
       type: 'text',
@@ -101,6 +103,7 @@ onMounted(() => {
       fontSize: 22,
       content: 'textAlign: center',
       textAlign: 'center',
+      backgroundColor: '#00ff0044',
     },
     {
       type: 'text',
@@ -108,6 +111,7 @@ onMounted(() => {
       fontSize: 22,
       content: 'textAlign: right',
       textAlign: 'right',
+      backgroundColor: '#0000ff44',
     },
     {
       id: 'a',
@@ -139,3 +143,7 @@ onMounted(() => {
 <template>
   <canvas ref="canvas" style="width: 688px;height: 300px;border: 1px solid;" />
 </template>
+
+<style scoped>
+@import url('https://fonts.font.im/css2?family=Ma+Shan+Zheng:wght@100..900&display=swap');
+</style>

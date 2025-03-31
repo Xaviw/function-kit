@@ -97,5 +97,9 @@ export function settingCanvasProps(props: Recordable, ctx: CanvasContext) {
       ctx.setLineDash([])
   }
 
+  if (props.fontStyle && props.fontWeight && props.fontSize && props.fontFamily
+  )
+    ctx.font = `${props.fontStyle} ${props.fontWeight} ${props.fontSize}px '${props.fontFamily}'`
+
   return borderSize
 }

@@ -1,8 +1,8 @@
-# 函数工具库
+# 工具函数库
 
-> 零依赖，支持 WEB、小程序、Node 三端条件编译
+> 零依赖，支持 WEB、小程序、Node 三端条件编译，按需构建
 
-TypeScript、Vitest、Rollup、Typedoc、Vitepress
+Rollup + Vitest + Typedoc
 
 ## 项目结构
 
@@ -10,13 +10,11 @@ TypeScript、Vitest、Rollup、Typedoc、Vitepress
 ├── src              # 函数入口文件（构建时只会以 src 目录下 ts 文件作为入口）
 ├── types            # 类型声明
 ├── test             # 函数单元测试
-├── dist             # 构建输出目录
-├── docs             # 文档目录
-|  └── dist          # 文档构建输出目录
+├── dist             # 构建输出
 ├── scripts          # 构建脚本
 ├── vitest.config.ts # vitest 配置
-├── tsconfig.json    # typescript 配置
-├── typedoc.json     # typedoc 配置
+├── tsconfig.json    # TS 配置
+├── typedoc.json     # typedoc 配置（用于生成 API 文档）
 ├── eslint.config.js # 代码格式化配置
 └── xxx              # src 下的代码可以根据需要拆分到其他位置
 ```
@@ -36,29 +34,11 @@ pnpm build:miniprogram
 # 构建支持 node 环境的函数
 pnpm build:node
 
-# 生成文档（docs/src）
+# 生成文档（docs/typedoc）
 pnpm docs:generate
 
-# 运行文档
-pnpm docs:dev
-
-# 构建文档
-pnpm docs:build
-
-# 预览文档构建产物
-pnpm docs:preview
-
-# 执行测试
+# 运行测试
 pnpm test
-
-# 代码格式化检查及自动修复
-pnpm lint
-
-# 更快的删除 node_modules 文件夹
-pnpm clean
-
-# 交互式升级项目依赖
-pnpm taze
 ```
 
 ## 贡献指南
@@ -92,7 +72,7 @@ export function example(): string {
 }
 ```
 
-对导出的函数添加 [TSDoc](https://tsdoc.org/) 说明，便于 typedoc 生成文档；`@web`、`@miniprogram`、`@node` 注解分别代表该函数支持 web 环境、小程序环境、node 环境，执行构建命令时，只有支持对应环境的函数会被构建，需要按实际情况添加注解。**（没有任何平台注解时，相当于支持所有平台）**
+对导出的函数添加 [TSDoc](https://tsdoc.org/) 说明，便于 typedoc 生成文档；`@web`、`@miniprogram`、`@node` 注解分别代表该函数支持 web 环境、小程序环境、node 环境，执行构建命令时，只有支持对应环境的函数会被构建，需要按实际情况添加注解。**（没有任何平台注解时，视为支持所有平台）**
 
 `PLATFORM` 为全局变量，值与注解一致，用于条件编译
 
@@ -153,7 +133,9 @@ export interface Y {
 export type * from './xxx'
 ```
 
-函数完成后，执行 `pnpm docs:generate` 重新生成文档
+函数完成后，在 test 目录下新建同名 `example.test.ts` 文件，使用 vitest 语法编写单元测试，请确保测试通过且代码覆盖率 100%
+
+测试无误后执行 `pnpm docs:generate` 生成 API 文档
 
 ## 动态编译原理
 
@@ -171,4 +153,4 @@ rollup 根据入口文件的依赖关系获取到全部需要构建的文件后�
 基于这样的原理，开发时需要注意：
 
 - 假设 `src/a.ts` 文件中的函数 `a` 引入了，`noneSrc/b.ts` 文件中的函数 `b` 时，需要确保函数 `b` 支持的平台与函数 `a` 一致，非 src 目录下的代码不会进行 TSDoc 平台注解校验
-- 假设 `src/a.ts` 文件中通过 `export * from 'noneSrc/b.ts'` 语句进行导出，构建结果不会包含 `noneSrc/b.ts` 文件中的任何导出（类型声明可以导出见后文）
+- 假设 `src/a.ts` 文件中通过 `export * from 'noneSrc/b.ts'` 语句进行导出，构建结果不会包含 `noneSrc/b.ts` 文件中的任何导出

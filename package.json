@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "eslint . --fix",
-    "clean": "npx -y rimraf node_modules docs/node_modules docs/dist functions/node_modules functions/dist playground/node_modules playground/dist",
+    "clean": "npx -y rimraf node_modules docs/node_modules docs/dist functions/node_modules functions/dist",
     "taze": "npx -y taze -I",
     "postinstall": "npx -y simple-git-hooks"
   },

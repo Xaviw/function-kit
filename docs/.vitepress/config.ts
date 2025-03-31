@@ -8,6 +8,7 @@ export default defineConfig({
   lang: 'zh-cn',
   outDir: './dist',
   lastUpdated: true,
+  srcExclude: ['README.md'],
   themeConfig: {
     nav: [
       {
