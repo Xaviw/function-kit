@@ -17,7 +17,6 @@ onMounted(() => {
       src: '/logo.png',
       width: 94,
       height: 150,
-      flipX: true,
     },
     {
       relativeTo: 'a',
@@ -26,6 +25,7 @@ onMounted(() => {
       left: '100%',
       width: 94,
       height: 150,
+      flipX: true,
     },
     {
       relativeTo: 'a',
@@ -34,7 +34,6 @@ onMounted(() => {
       top: '100%',
       width: 94,
       height: 150,
-      flipX: true,
       flipY: true,
     },
     {
@@ -45,6 +44,7 @@ onMounted(() => {
       left: '100%',
       width: 94,
       height: 150,
+      flipX: true,
       flipY: true,
     },
     {

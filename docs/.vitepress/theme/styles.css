@@ -1,15 +1,7 @@
 :root {
   --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: -webkit-linear-gradient(
-    120deg,
-    #ff8286 30%,
-    #3cdba9
-  );
-  --vp-home-hero-image-background-image: linear-gradient(
-    -75deg,
-    #f1a5a8 50%,
-    #77e9c5 50%
-  );
+  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #ff8286 30%, #3cdba9);
+  --vp-home-hero-image-background-image: linear-gradient(-75deg, #f1a5a8 50%, #77e9c5 50%);
   --vp-home-hero-image-filter: blur(44px);
 }
 
@@ -28,4 +20,5 @@
 .VPHero .VPImage {
   filter: drop-shadow(-2px 4px 6px rgba(0, 0, 0, 0.2));
   padding: 18px;
+  transform: translate(-50%, -50%) scaleX(-1);
 }
