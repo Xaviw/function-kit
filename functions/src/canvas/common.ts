@@ -1,6 +1,6 @@
-import type { CanvasContext } from '../../types/canvas'
+import type { Canvas, CanvasContext } from '../../types/canvas'
 import type { NormalizedBox } from '../../utils/canvas/normalize'
-import { isNumber } from '../is'
+import { isNumber, isObject, isString } from '../is'
 
 /**
  * 绘制元素旋转
@@ -22,4 +22,47 @@ export function rotateCanvasElement(rotate: number, options: NormalizedBox & { c
     ctx.rotate((rotate * Math.PI) / 180)
     ctx.translate(-centerX, -centerY)
   }
+}
+
+export function saveCanvasAsImage(canvas: Canvas, options?: { type?: string, quality?: number, fileName?: string }) {
+  let { type, quality, fileName } = isObject(options) ? options : {}
+  type = isString(type) && type.startsWith('image/') ? type : undefined
+  quality = isNumber(quality) && quality > 0 && quality <= 1 ? quality : 1
+
+  return new Promise((resolve, reject) => {
+    if (PLATFORM === 'web') {
+      canvas.toBlob((blob) => {
+        if (!blob)
+          return reject(new Error('canvas 导出失败！'))
+
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.download = isString(fileName) ? fileName : `${Date.now()}`
+        a.href = url
+        a.click()
+        resolve(url)
+      }, type, quality)
+    }
+    else {
+      wx.canvasToTempFilePath({
+        canvas,
+        fileType: type === 'image/jpeg' ? 'jpg' : 'png',
+        quality,
+        success({ tempFilePath }) {
+          wx.saveImageToPhotosAlbum({
+            filePath: tempFilePath,
+            success() {
+              resolve(tempFilePath)
+            },
+            fail(err) {
+              reject(err)
+            },
+          })
+        },
+        fail(err) {
+          reject(err)
+        },
+      })
+    }
+  })
 }

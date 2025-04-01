@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, useTemplateRef } from 'vue'
+import { saveCanvasAsImage } from '../../functions/src/canvas/common'
 import { canvasPoster } from '../../functions/src/canvas/poster'
 
 const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
@@ -124,8 +125,18 @@ onMounted(() => {
     height: 300,
   })
 })
+
+function onExport() {
+  if (!canvas.value)
+    return
+  saveCanvasAsImage(canvas.value)
+}
 </script>
 
 <template>
   <canvas ref="canvas" style="width: 688px;height: 300px;border: 1px solid;" />
+
+  <button style="margin-top: 8px; padding: 6px 12px; background-color: #69c0ff; color: white; border: none; border-radius: 5px; cursor: pointer;" @click="onExport">
+    导出
+  </button>
 </template>
