@@ -62,6 +62,8 @@ export async function renderImage(renderOptions: Omit<PosterImage, 'type'>, cont
   ctx.restore()
 
   // 绘制边框
+  // border 去掉 shadow
+  ctx.shadowColor = '#00000000'
   // border 较粗时，外边缘圆角会大于需要的圆角，所以采用裁剪
   renderBorder({ x, y, width, height, r, borderSize, ctx })
   ctx.restore()
@@ -92,21 +94,19 @@ function calcDrawProps(options: NormalizedBox & Pick<PosterImage, 'sourceX' | 's
   sourceWidth = calcSize(sourceWidth, imageWidth) || imageWidth
   sourceHeight = calcSize(sourceHeight, imageHeight) || imageHeight
 
-  // 默认的 scaleToFill 无需处理
   if (width && height) {
     const imageRatio = sourceWidth / sourceHeight
     const containerRatio = width / height
+    // 默认的 scaleToFill 无需处理
     if (mode === 'aspectFill') {
       if (containerRatio > imageRatio) {
         // 宽度填满，高度裁剪
         const newHeight = sourceWidth / containerRatio
-        sourceY += (sourceHeight - newHeight) / 2
         sourceHeight = newHeight
       }
       else {
         // 高度填满，宽度裁剪
         const newWidth = sourceHeight * containerRatio
-        sourceX += (sourceWidth - newWidth) / 2
         sourceWidth = newWidth
       }
     }

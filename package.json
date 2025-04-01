@@ -17,6 +17,7 @@
     "@antfu/eslint-config": "^4.11.0",
     "@types/node": "^22.13.14",
     "eslint": "^9.23.0",
+    "eslint-plugin-format": "^1.0.1",
     "lint-staged": "^15.5.0",
     "rimraf": "^6.0.1",
     "simple-git-hooks": "^2.12.1",

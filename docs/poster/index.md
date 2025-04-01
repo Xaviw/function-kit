@@ -1,5 +1,6 @@
 <script setup>
   import Text from './text.vue'
+  import Image from './image.vue'
 </script>
 
 # Canvas 海报
@@ -48,37 +49,37 @@ canvasPoster(
 
 ## 文本 text
 
-| 属性名                  | 说明                                                                 |
-|------------------------|--------------------------------------------------------------------|
-| `width`                | 宽度，支持数字或百分比（相对于父容器宽度）                                         |
-| `height`               | 高度，支持数字或百分比（相对于父容器高度）                                         |
-| `top`                  | 上边距，支持数字或百分比（相对于父容器高度）。不存在 `height` 时，根据 `top` 和 `bottom` 计算高度 |
-| `right`                | 右边距，支持数字或百分比（相对于父容器宽度）。不存在 `width` 时，根据 `left` 和 `right` 计算宽度  |
-| `bottom`               | 下边距，支持数字或百分比（相对于父容器高度）。不存在 `height` 时，根据 `top` 和 `bottom` 计算高度 |
-| `left`                 | 左边距，支持数字或百分比（相对于父容器宽度）。不存在 `width` 时，根据 `left` 和 `right` 计算宽度  |
-| `rotate`               | 旋转角度，注意旋转不会改变元素盒模型，不会影响子元素相对定位                                 |
-| `shadowOffsetX`        | 阴影水平偏移量                                                             |
-| `shadowOffsetY`        | 阴影垂直偏移量                                                             |
-| `shadowBlur`           | 阴影模糊半径                                                              |
-| `shadowColor`          | 阴影颜色                                                                |
-| `content`              | 文本内容，支持字符串或对象数组，设置为数组时支持大部分同名样式属性|
-| `lineHeight`           | 行高，数值或百分比（相对于文字高度），默认值为 `'120%'`                              |
-| `fontSize`             | 字体大小，默认值为 `16`                                                 |
-| `fontFamily`           | 字体，默认值为 `'sans-serif'`                                          |
-| `fontWeight`           | 字体粗细，默认值为 `'normal'`                                       |
-| `color`                | 文本颜色                                                              |
-| `textBaseLine`         | 基线位置，默认值为 `'alphabetic'`                                      |
-| `letterSpacing`        | 字母间距                                                              |
-| `wordSpacing`          | 单词间距                                                              |
-| `fontStyle`            | 字体样式，默认值为 `'normal'`                                          |
-| `textDecoration`       | 文本装饰线，支持 `'underline'`、`'overline'`、`'line-through'`                |
-| `textDecorationProps`  | 文本装饰线的属性，包括 `lineCap`、`lineColor` 等                              |
-| `textStyle`            | 文本样式，默认值为 `'fill'`，支持 `'fill'` 或 `'stroke'`                      |
-| `strokeProps`          | 仅当 `textStyle` 为 `'stroke'` 时生效，包括 `lineCap`、`lineDash` 等              |
-| `backgroundColor`      | 文字底色                                                              |
-| `lineClamp`            | 最大行数，超出省略显示。`height` 小于内容高度时，会进行裁剪                           |
-| `ellipsisContent`      | 超出省略时展示的字符，默认值为 `'...'`                                      |
-| `textAlign`            | 容器内的对齐方式，默认值为 `'left'`，支持 `'left'`、`'center'`、`'right'`            |
+| 属性名                | 说明                                                                                              |
+| --------------------- | ------------------------------------------------------------------------------------------------- |
+| `width`               | 宽度，支持数字或百分比（相对于父容器宽度）                                                        |
+| `height`              | 高度，支持数字或百分比（相对于父容器高度）                                                        |
+| `top`                 | 上边距，支持数字或百分比（相对于父容器高度）。不存在 `height` 时，根据 `top` 和 `bottom` 计算高度 |
+| `right`               | 右边距，支持数字或百分比（相对于父容器宽度）。不存在 `width` 时，根据 `left` 和 `right` 计算宽度  |
+| `bottom`              | 下边距，支持数字或百分比（相对于父容器高度）。不存在 `height` 时，根据 `top` 和 `bottom` 计算高度 |
+| `left`                | 左边距，支持数字或百分比（相对于父容器宽度）。不存在 `width` 时，根据 `left` 和 `right` 计算宽度  |
+| `rotate`              | 旋转角度，注意旋转不会改变元素盒模型，不会影响子元素相对定位                                      |
+| `shadowOffsetX`       | 阴影水平偏移量                                                                                    |
+| `shadowOffsetY`       | 阴影垂直偏移量                                                                                    |
+| `shadowBlur`          | 阴影模糊半径                                                                                      |
+| `shadowColor`         | 阴影颜色                                                                                          |
+| `content`             | 文本内容，支持字符串或对象数组，设置为数组时支持大部分同名样式属性                                |
+| `lineHeight`          | 行高，数值或百分比（相对于文字高度），默认值为 `'120%'`                                           |
+| `fontSize`            | 字体大小，默认值为 `16`                                                                           |
+| `fontFamily`          | 字体，默认值为 `'sans-serif'`                                                                     |
+| `fontWeight`          | 字体粗细，默认值为 `'normal'`                                                                     |
+| `color`               | 文本颜色                                                                                          |
+| `textBaseLine`        | 基线位置，默认值为 `'alphabetic'`                                                                 |
+| `letterSpacing`       | 字母间距                                                                                          |
+| `wordSpacing`         | 单词间距                                                                                          |
+| `fontStyle`           | 字体样式，默认值为 `'normal'`                                                                     |
+| `textDecoration`      | 文本装饰线，支持 `'underline'`、`'overline'`、`'line-through'`                                    |
+| `textDecorationProps` | 文本装饰线的属性，包括 `lineCap`、`lineColor` 等                                                  |
+| `textStyle`           | 文本样式，默认值为 `'fill'`，支持 `'fill'` 或 `'stroke'`                                          |
+| `strokeProps`         | 仅当 `textStyle` 为 `'stroke'` 时生效，包括 `lineCap`、`lineDash` 等                              |
+| `backgroundColor`     | 文字底色                                                                                          |
+| `lineClamp`           | 最大行数，超出省略显示。`height` 小于内容高度时，会进行裁剪                                       |
+| `ellipsisContent`     | 超出省略时展示的字符，默认值为 `'...'`                                                            |
+| `textAlign`           | 容器内的对齐方式，默认值为 `'left'`，支持 `'left'`、`'center'`、`'right'`                         |
 
 <Text />
 
@@ -91,6 +92,7 @@ Canvas 中使用自定义字体时需要确保字体加载完成再绘制，否�
 :::
 
 ::: details 代码
+
 ```ts
 import { onMounted, useTemplateRef } from 'vue'
 import { canvasPoster } from '../../functions/src/canvas/poster'
@@ -240,4 +242,175 @@ onMounted(() => {
   })
 })
 ```
+
+:::
+
+## 图片 image
+
+| 属性名           | 说明                                                              |
+| ---------------- | ----------------------------------------------------------------- |
+| src              | 图片链接或 base64                                                 |
+| sourceX          | 裁剪图片的起点 X 坐标，支持数值或百分比（相对于图片宽度），默认 0 |
+| sourceY          | 裁剪图片的起点 Y 坐标，支持数值或百分比（相对于图片高度），默认 0 |
+| sourceWidth      | 裁剪图片宽度，支持数值或百分比（相对于图片宽度），默认 '100%'     |
+| sourceHeight     | 裁剪图片高度，支持数值或百分比（相对于图片高度），默认 '100%'     |
+| mode             | 图片缩放模式，默认 'scaleToFill'                                  |
+| flipX            | 沿 x 轴翻转                                                       |
+| flipY            | 沿 y 轴翻转                                                       |
+| width            | 支持数字或百分比（相对于父容器宽度）                              |
+| height           | 支持数字或百分比（相对于父容器高度）                              |
+| top              | 支持数字或百分比（相对于父容器高度）                              |
+| right            | 支持数字或百分比（相对于父容器宽度）                              |
+| bottom           | 支持数字或百分比（相对于父容器高度）                              |
+| left             | 支持数字或百分比（相对于父容器宽度）                              |
+| rotate           | 旋转角度，注意旋转不会改变元素盒模型，不会影响子元素相对定位      |
+| shadowOffsetX    | 阴影的水平偏移量                                                  |
+| shadowOffsetY    | 阴影的垂直偏移量                                                  |
+| shadowBlur       | 阴影模糊半径                                                      |
+| shadowColor      | 阴影颜色                                                          |
+| borderColor      | 边框颜色                                                          |
+| borderDash       | 边框虚线样式                                                      |
+| borderDashOffset | 边框虚线偏移量                                                    |
+| borderRadius     | 边框圆角，支持数字或百分比（相对于自身宽度）                      |
+| borderSize       | 边框大小                                                          |
+| borderStyle      | 边框样式，默认 'solid'                                            |
+
+<Image />
+
+:::warning 注意
+如果无法从配置属性中计算出明确的宽高时，元素盒的宽高会扩展到最大可用尺寸（起点到父容器边界），而不是根据一边的尺寸按图片比例计算另一边尺寸
+
+这是因为相对定位逻辑需要提前得到元素盒尺寸信息，而这个过程是没有等待图片加载完成的
+:::
+
+:::details 代码
+
+```ts
+import { onMounted, useTemplateRef } from 'vue'
+import { canvasPoster } from '../../functions/src/canvas/poster'
+
+const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
+
+onMounted(() => {
+  const ctx = canvas.value!.getContext('2d')
+  const gradient = ctx!.createLinearGradient(200, 0, 600, 0)
+  gradient.addColorStop(0, '#cf1322')
+  gradient.addColorStop(1, '#389e0d')
+
+  canvasPoster([
+    {
+      id: 'a',
+      type: 'image',
+      src: '/logo.png',
+      width: 94,
+      height: 150,
+      flipX: true,
+    },
+    {
+      relativeTo: 'a',
+      type: 'image',
+      src: '/logo.png',
+      left: '100%',
+      width: 94,
+      height: 150,
+    },
+    {
+      relativeTo: 'a',
+      type: 'image',
+      src: '/logo.png',
+      top: '100%',
+      width: 94,
+      height: 150,
+      flipX: true,
+      flipY: true,
+    },
+    {
+      relativeTo: 'a',
+      type: 'image',
+      src: '/logo.png',
+      top: '100%',
+      left: '100%',
+      width: 94,
+      height: 150,
+      flipY: true,
+    },
+    {
+      type: 'image',
+      src: '/logo.png',
+      top: 103,
+      left: 200,
+      width: 94,
+      height: 94,
+      rotate: 90,
+      mode: 'aspectFit',
+      borderColor: gradient,
+      borderDash: [5, 5],
+      borderRadius: '100%',
+      shadowBlur: 2,
+      shadowColor: '#00000066',
+      shadowOffsetX: 20,
+      shadowOffsetY: 20,
+      borderStyle: 'dashed',
+      borderSize: 5,
+    },
+    {
+      type: 'image',
+      src: '/logo.png',
+      top: 103,
+      left: 315,
+      width: 94,
+      height: 94,
+      rotate: 180,
+      mode: 'scaleToFill',
+      borderColor: gradient,
+      borderDash: [5, 5],
+      borderRadius: '100%',
+      shadowBlur: 2,
+      shadowColor: '#00000066',
+      shadowOffsetX: 20,
+      shadowOffsetY: 20,
+      borderStyle: 'dashed',
+      borderSize: 5,
+    },
+    {
+      type: 'image',
+      src: '/logo.png',
+      top: 103,
+      left: 430,
+      width: 94,
+      height: 94,
+      rotate: 225,
+      mode: 'aspectFill',
+      borderColor: gradient,
+      borderDash: [5, 5],
+      borderRadius: '100%',
+      shadowBlur: 2,
+      shadowColor: '#00000066',
+      shadowOffsetX: 20,
+      shadowOffsetY: 20,
+      borderStyle: 'dashed',
+      borderSize: 5,
+    },
+    {
+      type: 'image',
+      src: '/logo.png',
+      top: 103,
+      left: 545,
+      width: 94,
+      height: 94,
+      sourceX: 0,
+      borderSize: 2,
+      borderColor: gradient,
+      sourceY: 640,
+      sourceWidth: 1080,
+      sourceHeight: 1080,
+    },
+  ], {
+    node: canvas.value!,
+    width: 688,
+    height: 300,
+  })
+})
+```
+
 :::

@@ -1,4 +1,5 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import terser from '@rollup/plugin-terser'
 import inquirer from 'inquirer'
 import { rimraf } from 'rimraf'
 import { rollup } from 'rollup'
@@ -76,12 +77,21 @@ await Promise.all([
     plugins: [
       inject(),
       typescript({ check: false }),
+      terser(),
     ],
     // 排除 node 内建模块
     external: [...builtinModules],
     treeshake: {
       // 所有依赖均视为无副作用（避免模块被 treeShake 后 import 仍被保留）
       moduleSideEffects: false,
+    },
+    onwarn(warning, warn) {
+      // 忽略循环依赖的警告
+      if (warning.code === 'CIRCULAR_DEPENDENCY') {
+        return
+      }
+      // 其他警告正常输出
+      warn(warning)
     },
   }).then(async (bundle) => {
     await bundle.write({
