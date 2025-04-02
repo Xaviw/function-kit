@@ -34,7 +34,7 @@ const exported = {}
 await Promise.all(files.map(traverseDeclarations))
 
 // 未传递平台参数时交互式选择构建范围
-let entries = Object.keys(exported)
+let entries = Object.keys(exported).sort()
 if (platform !== process.argv[2]) {
   const { entries: e } = await inquirer.prompt([
     {
@@ -75,9 +75,10 @@ await Promise.all([
   rollup({
     input: 'dist/index.ts',
     plugins: [
-      inject(),
+      injectPlatform(),
       typescript({ check: false }),
       terser(),
+      injectDisableLint(),
     ],
     // 排除 node 内建模块
     external: [...builtinModules],
@@ -220,7 +221,7 @@ function collectExport(id, name) {
  * 注入 PLATFORM 常量
  * @returns {import("rollup").Plugin} rollup 插件
  */
-function inject() {
+function injectPlatform() {
   return {
     name: 'inject',
     transform(code, id) {
@@ -233,23 +234,36 @@ function inject() {
 }
 
 /**
+ * 注入 eslint、prettier 禁用语句
+ * @returns {import("rollup").Plugin} rollup 插件
+ */
+function injectDisableLint() {
+  return {
+    name: 'inject',
+    generateBundle(_, bundle) {
+      for (const fileName in bundle) {
+        if (bundle[fileName].type === 'chunk' && fileName.endsWith('.js')) {
+          bundle[fileName].code = `/* eslint-disable */\n// prettier-ignore\n${bundle[fileName].code}`
+        }
+      }
+    },
+  }
+}
+
+/**
  * 构建小程序平台包时，替换 Canvas 类型为小程序中的类型
  * @returns {import("rollup").Plugin} rollup 插件
  */
 function miniprogramTypes() {
   return {
     name: 'miniprogram-types',
-    generateBundle(options, bundle) {
-      // 遍历生成的文件
+    generateBundle(_, bundle) {
       for (const fileName in bundle) {
-        if (fileName.endsWith('.d.ts')) {
-          const chunk = bundle[fileName]
-          if (chunk.type === 'chunk') {
-            // 修改 .d.ts 文件内容
-            chunk.code = chunk.code
-              .replace('Canvas = HTMLCanvasElement', 'Canvas = WechatMiniprogram.Canvas')
-              .replace('CanvasContext = CanvasRenderingContext2D', 'CanvasContext = WechatMiniprogram.CanvasRenderingContext.CanvasRenderingContext2D')
-          }
+        if (bundle[fileName].type === 'chunk' && fileName.endsWith('.d.ts')) {
+          // 修改 .d.ts 文件内容
+          bundle[fileName].code = `/* eslint-disable */\n// prettier-ignore\n${bundle[fileName].code
+            .replace('Canvas = HTMLCanvasElement', 'Canvas = WechatMiniprogram.Canvas')
+            .replace('CanvasContext = CanvasRenderingContext2D', 'CanvasContext = WechatMiniprogram.CanvasRenderingContext.CanvasRenderingContext2D')}`
         }
       }
     },
