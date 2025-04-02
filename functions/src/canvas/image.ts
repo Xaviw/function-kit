@@ -1,7 +1,7 @@
 import type { Canvas, PosterElementRenderContext, PosterImage } from '../../types/canvas'
 import type { NormalizedBox } from '../../utils/canvas/normalize'
 import { downloadImage } from '../../utils/canvas/downloadImage'
-import { radiusClipPath, renderBorder } from '../../utils/canvas/help'
+import { radiusPath, renderBorder } from '../../utils/canvas/help'
 import { calcSize, standardStrategy } from '../../utils/canvas/normalize'
 import { settingCanvasProps } from '../../utils/canvas/propStrategies'
 import { rotateCanvasElement } from './common'
@@ -44,7 +44,7 @@ export async function renderImage(renderOptions: Omit<PosterImage, 'type'>, cont
   const borderSize = settingCanvasProps(renderOptions, ctx)
 
   ctx.save()
-  const r = radiusClipPath({ x, y, width, height, borderRadius, ctx, borderSize })
+  const r = radiusPath({ x, y, width, height, borderRadius, ctx, borderSize })
 
   // 翻转
   ctx.save()
@@ -60,6 +60,7 @@ export async function renderImage(renderOptions: Omit<PosterImage, 'type'>, cont
   // 绘制图片
   ctx.drawImage(image, ...drawProps)
   ctx.restore()
+  ctx.clip()
 
   // 绘制边框
   // border 去掉 shadow

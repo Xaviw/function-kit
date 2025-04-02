@@ -1,5 +1,5 @@
 import type { CanvasContext, PosterElementRenderContext, PosterRect } from '../../types/canvas'
-import { radiusClipPath, renderBorder } from '../../utils/canvas/help'
+import { radiusPath, renderBorder } from '../../utils/canvas/help'
 import { standardStrategy } from '../../utils/canvas/normalize'
 import { settingCanvasProps } from '../../utils/canvas/propStrategies'
 import { rotateCanvasElement } from './common'
@@ -29,13 +29,17 @@ export function renderRect(renderOptions: PosterRect, contextOptions: PosterElem
   const borderSize = settingCanvasProps(renderOptions, ctx)
 
   ctx.save()
-  const r = radiusClipPath({ x, y, width, height, borderRadius, ctx, borderSize })
+  const r = radiusPath({ x, y, width, height, borderRadius, ctx, borderSize })
 
   // 填充
   if (backgroundColor)
     ctx.fill()
 
+  ctx.clip()
+
   // 绘制 border
+  // border 去掉 shadow
+  ctx.shadowColor = '#00000000'
   // border 较粗时，外边缘圆角会大于需要的圆角，所以采用裁剪
   renderBorder({ x, y, width, height, r, borderSize, ctx })
   ctx.restore()

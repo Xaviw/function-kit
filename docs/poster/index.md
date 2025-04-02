@@ -1,6 +1,7 @@
 <script setup>
   import Text from './text.vue'
   import Image from './image.vue'
+  import Rect from './rect.vue'
 </script>
 
 # Canvas 海报
@@ -414,3 +415,30 @@ onMounted(() => {
 ```
 
 :::
+
+## 矩形 Rect
+
+| 属性             | 说明                                                                                                                 |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------- |
+| width            | 支持数字或百分比（相对于父容器宽度）                                                                                 |
+| height           | 支持数字或百分比（相对于父容器高度）                                                                                 |
+| top              | 支持数字或百分比（相对于父容器高度），不存在 height 时，根据 top、bottom 计算高度；存在 height 时，优先使用 top 定位 |
+| right            | 支持数字或百分比（相对于父容器宽度），不存在 width 时，根据 left、right 计算宽度；存在 width 时，优先使用 left 定位  |
+| bottom           | 支持数字或百分比（相对于父容器高度），不存在 height 时，根据 top、bottom 计算高度；存在 height 时，优先使用 top 定位 |
+| left             | 支持数字或百分比（相对于父容器宽度），不存在 width 时，根据 left、right 计算宽度；存在 width 时，优先使用 left 定位  |
+| rotate           | 旋转角度，注意旋转不会改变元素盒模型，不会影响子元素相对定位                                                         |
+| backgroundColor  | 背景颜色，支持纯色、渐变或图案                                                                                       |
+| borderSize       | 边框大小，box-sizing: content-box；borderStyle 为 dashed 时，此值不适合设置较大                                      |
+| borderStyle      | 边框样式，支持 'solid' \| 'dashed'，默认为 'solid'                                                                   |
+| borderColor      | 边框颜色，支持纯色、渐变或图案                                                                                       |
+| borderRadius     | 边框圆角，支持数字或百分比（相对于自身宽度）                                                                         |
+| borderDash       | 虚线边框的间隔数组                                                                                                   |
+| borderDashOffset | 虚线边框的偏移量                                                                                                     |
+| shadowOffsetX    | 阴影 X 轴偏移量                                                                                                      |
+| shadowOffsetY    | 阴影 Y 轴偏移量                                                                                                      |
+| shadowBlur       | 阴影模糊半径                                                                                                         |
+| shadowColor      | 阴影颜色                                                                                                             |
+
+<Rect />
+
+## 线条 Line
