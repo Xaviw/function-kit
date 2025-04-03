@@ -2,6 +2,8 @@
   import Text from './text.vue'
   import Image from './image.vue'
   import Rect from './rect.vue'
+  import Line from './line.vue'
+  import Example from './example.vue'
 </script>
 
 # Canvas 海报
@@ -47,6 +49,91 @@ canvasPoster(
   }
 )
 ```
+
+## 案例
+
+<Example />
+
+:::details 代码
+
+```ts
+const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
+
+onMounted(() => {
+  const ctx = canvas.value!.getContext('2d')
+  const gradient = ctx!.createLinearGradient(0, 900, 0, 1006)
+  gradient.addColorStop(0, '#a55002')
+  gradient.addColorStop(1, '#ffb470')
+
+  canvasPoster([
+    {
+      type: 'image',
+      src: 'https://cdn-public-test.community-platform.qq.com/applet-public-img/certificate-bg-long.png',
+      width: '100%',
+      height: '100%',
+    },
+    {
+      type: 'image',
+      src: 'https://cdn-public-test.community-platform.qq.com/applet-public-img/logo.png',
+      top: 47.88,
+      left: 47.86,
+      height: 31.18,
+      mode: 'aspectFit',
+    },
+    {
+      type: 'text',
+      content: '姓名',
+      top: 236,
+      textAlign: 'center',
+      fontSize: 44,
+      fontWeight: 600,
+      color: '#5d4d4a',
+    },
+    {
+      type: 'text',
+      content: 'X月X日参加了',
+      top: 322,
+      textAlign: 'center',
+      fontSize: 32,
+      color: '#5b4c49',
+    },
+    {
+      type: 'text',
+      content: '某某某某某某组织的某某某某某某活动',
+      top: 396,
+      textAlign: 'center',
+      fontSize: 32,
+      color: '#5b4c49',
+      left: 72,
+      right: 72,
+      lineHeight: 48,
+    },
+    {
+      type: 'image',
+      src: 'https://cdn-public-test.community-platform.qq.com/applet-public-img/certificate-personal1.png',
+      bottom: 118,
+      left: 67,
+      right: 67,
+      height: 306,
+      mode: 'aspectFit',
+    },
+    {
+      type: 'text',
+      content: '- 每步志愿路，都在铸就美好未来 -',
+      top: 924,
+      textAlign: 'center',
+      fontSize: 32,
+      color: gradient,
+    },
+  ], {
+    node: canvas.value!,
+    width: 620,
+    height: 1006,
+  })
+})
+```
+
+:::
 
 ## 文本 text
 
@@ -441,4 +528,126 @@ onMounted(() => {
 
 <Rect />
 
+:::details 代码
+
+```ts
+const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
+
+onMounted(() => {
+  const ctx = canvas.value!.getContext('2d')
+  const gradient = ctx!.createLinearGradient(244, 0, 444, 0)
+  gradient.addColorStop(0, '#cf1322')
+  gradient.addColorStop(1, '#389e0d')
+
+  canvasPoster([
+    {
+      id: 'a',
+      type: 'rect',
+      left: 244,
+      top: 50,
+      width: 200,
+      height: 200,
+      backgroundColor: gradient,
+      borderSize: 5,
+      borderStyle: 'dashed',
+      borderRadius: '20%',
+      shadowBlur: 5,
+      shadowColor: '#0000ff33',
+      shadowOffsetX: 10,
+      shadowOffsetY: 10,
+    },
+    {
+      relativeTo: 'a',
+      type: 'rect',
+      left: '20%',
+      top: '20%',
+      width: '60%',
+      height: '60%',
+      rotate: 45,
+      backgroundColor: '#0000ff',
+      borderSize: 3,
+      borderColor: '#ff0000',
+      borderRadius: '50%',
+    },
+  ], {
+    node: canvas.value!,
+    width: 688,
+    height: 300,
+  })
+})
+```
+
+:::
+
 ## 线条 Line
+
+| 属性名           | 说明                                                          |
+| ---------------- | ------------------------------------------------------------- |
+| `points`         | 线条顶点，可以为 2 个或多个，支持数字或百分比(相对于容器宽高) |
+| `lineWidth`      | 线条宽度，默认值为 `1`                                        |
+| `lineColor`      | 线条颜色                                                      |
+| `lineDash`       | 虚线配置数组                                                  |
+| `lineDashOffset` | 虚线偏移量                                                    |
+| `lineCap`        | 线条端点样式，默认值为 `'butt'`                               |
+| `lineJoin`       | 线条连接处样式，默认值为 `'miter'`                            |
+| `miterLimit`     | 斜接长度限制，默认值为 `10`                                   |
+| `rotate`         | 旋转角度，注意旋转不会改变元素盒模型，不会影响子元素相对定位  |
+| `shadowOffsetX`  | 阴影水平偏移量                                                |
+| `shadowOffsetY`  | 阴影垂直偏移量                                                |
+| `shadowBlur`     | 阴影模糊半径                                                  |
+| `shadowColor`    | 阴影颜色                                                      |
+
+<Line />
+
+:::details 代码
+
+```ts
+const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
+
+onMounted(() => {
+  const ctx = canvas.value!.getContext('2d')
+  const gradient = ctx!.createLinearGradient(244, 0, 444, 0)
+  gradient.addColorStop(0, '#cf1322')
+  gradient.addColorStop(1, '#389e0d')
+
+  canvasPoster([
+    {
+      id: 'a',
+      type: 'line',
+      points: [
+        [244, 50],
+        [444, 50],
+        [244, 250],
+        [444, 250],
+      ],
+      lineWidth: 5,
+      lineColor: gradient,
+      lineDash: [10, 10],
+      lineDashOffset: 2,
+      lineCap: 'round',
+      lineJoin: 'round',
+      miterLimit: 5,
+      rotate: 15,
+      shadowBlur: 5,
+      shadowColor: '#0000ff33',
+      shadowOffsetX: 10,
+      shadowOffsetY: 10,
+    },
+    {
+      relativeTo: 'a',
+      type: 'line',
+      points: [
+        ['-50%%', '50%'],
+        ['150%', '50%'],
+      ],
+      lineWidth: 5,
+    },
+  ], {
+    node: canvas.value!,
+    width: 688,
+    height: 300,
+  })
+})
+```
+
+:::
