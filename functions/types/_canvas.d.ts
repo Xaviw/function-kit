@@ -1,18 +1,11 @@
-import type { Fn } from './common'
-
 export type Canvas = HTMLCanvasElement
 
 export type CanvasContext = CanvasRenderingContext2D
 
 /**
- * 根据定位、尺寸属性计算标准盒子属性
+ * poster 绘制项
  */
-interface NormalizedBox {
-  x: number
-  y: number
-  width: number
-  height: number
-}
+export type PosterElements = (PosterElement | PosterRenderFunction)[]
 
 /**
  * poster 基础配置
@@ -64,25 +57,41 @@ export interface PosterRenderFunction {
 }
 
 /**
- * 支持数字；或参数为父容器宽度、高度的对象，返回值为数字的函数
- * @example
- * ```ts
- * 10
- * ({ containerWidth, containerHeight }) => containerWidth * 0.5 + containerHeight * 0.5
- * ```
- */
-type NumberWithContainer = number | Fn<[{ containerWidth: number, containerHeight: number }], number>
-
-/**
  * poster 绘制公共配置
  */
 export interface PosterElementCommonOptions {
-  width?: NumberWithContainer
-  height?: NumberWithContainer
-  top?: NumberWithContainer
-  right?: NumberWithContainer
-  bottom?: NumberWithContainer
-  left?: NumberWithContainer
+  /**
+   * 支持数字或百分比（相对于父容器宽度）
+   */
+  width?: string | number
+  /**
+   * 支持数字或百分比（相对于父容器高度）
+   */
+  height?: string | number
+  /**
+   * 支持数字或百分比（相对于父容器高度）
+   * 不存在 height 时，根据 top、bottom 计算高度
+   * 存在 height 时，优先使用 top 定位
+   */
+  top?: string | number
+  /**
+   * 支持数字或百分比（相对于父容器宽度）
+   * 不存在 width 时，根据 left、right 计算宽度
+   * 存在 width 时，优先使用 left 定位
+   */
+  right?: string | number
+  /**
+   * 支持数字或百分比（相对于父容器高度）
+   * 不存在 height 时，根据 top、bottom 计算高度
+   * 存在 height 时，优先使用 top 定位
+   */
+  bottom?: string | number
+  /**
+   * 支持数字或百分比（相对于父容器宽度）
+   * 不存在 width 时，根据 left、right 计算宽度
+   * 存在 width 时，优先使用 left 定位
+   */
+  left?: string | number
   /**
    * 旋转角度，注意旋转不会改变元素盒模型，不会影响子元素相对定位
    */
@@ -99,11 +108,10 @@ export interface PosterElementCommonOptions {
 export interface PosterTextCommonOptions extends Pick<PosterElementCommonOptions, 'shadowBlur' | 'shadowColor' | 'shadowOffsetX' | 'shadowOffsetY'> {
   content: string
   /**
-   * 数值或参数为字体高度，返回值为数值的函数
-   * @default
-   * (h: number) => 1.2 * h
+   * 数值或百分比（相对于文字高度）
+   * @default '120%'
    */
-  lineHeight?: number | Fn<[number], number>
+  lineHeight?: number | string
   /**
    * @default 16
    */
@@ -172,53 +180,38 @@ export interface PosterText extends PosterTextCommonOptions, Omit<PosterElementC
 }
 
 /**
- * 支持数值或参数以容器宽、高，自身宽、高为参数，返回值为数值的函数
- * @example
- * ```ts
- * 10
- * ({ containerWidth, containerHeight, selfWidth, selfHeight }) => 10
- * ```
- */
-type NumberWithContainerAndSelf = number | Fn<[{ containerWidth: number, containerHeight: number, selfWidth: number, selfHeight: number }], number>
-
-/**
  * poster 图片
  */
-export interface PosterImage extends Omit<PosterElementCommonOptions, 'top' | 'right' | 'bottom' | 'left' | 'width' | 'height'>, Pick<PosterRect, 'border' | 'borderRadius'> {
+export interface PosterImage extends PosterElementCommonOptions, Pick<PosterRect, 'borderColor' | 'borderDash' | 'borderDashOffset' | 'borderRadius' | 'borderSize' | 'borderStyle'> {
   type: 'image'
   /**
    * 图片链接或 base64
    */
   src: string
-  width?: NumberWithContainerAndSelf
-  height?: NumberWithContainerAndSelf
-  top?: NumberWithContainerAndSelf
-  right?: NumberWithContainerAndSelf
-  bottom?: NumberWithContainerAndSelf
-  left?: NumberWithContainerAndSelf
   /**
    * 裁剪图片的起点 X 坐标
+   * 支持数值或百分比（相对于图片宽度）
    * @default 0
    */
-  sourceX?: NumberWithContainerAndSelf
+  sourceX?: string | number
   /**
    * 裁剪图片的起点 Y 坐标
+   * 支持数值或百分比（相对于图片高度）
    * @default 0
    */
-  sourceY?: NumberWithContainerAndSelf
+  sourceY?: string | number
   /**
    * 裁剪图片宽度
-   * @default
-   * ({ imageWidth }) => imageWidth
+   * 支持数值或百分比（相对于图片宽度）
+   * @default '100%'
    */
-  sourceWidth?: NumberWithContainerAndSelf
+  sourceWidth?: string | number
   /**
    * 裁剪图片高度
    * 支持数值或百分比（相对于图片高度）
-   * @default
-   * ({ imageHeight }) => imageHeight
+   * @default '100%'
    */
-  sourceHeight?: NumberWithContainerAndSelf
+  sourceHeight?: string | number
   /**
    * 仅容器有固定宽高时生效
    * @remarks
@@ -244,12 +237,22 @@ export interface PosterImage extends Omit<PosterElementCommonOptions, 'top' | 'r
 export interface PosterRect extends PosterElementCommonOptions {
   type: 'rect'
   backgroundColor?: string | CanvasGradient | CanvasPattern
-  border?: Pick<PosterLine, 'lineCap' | 'lineColor' | 'lineDash' | 'lineDashOffset' | 'lineJoin' | 'lineWidth' | 'miterLimit'>
   /**
-   * 圆角大小
-   * 支持数值或以自身宽、高对象为参数，返回数值的函数
+   * box-sizing: content-box；
+   * borderStyle 为 dashed 时，此值不适合设置较大
    */
-  borderRadius?: NumberWithContainerAndSelf
+  borderSize?: number
+  /**
+   * @default 'solid'
+   */
+  borderStyle?: 'solid' | 'dashed'
+  borderColor?: string | CanvasGradient | CanvasPattern
+  /**
+   * 支持数字或百分比（相对于自身宽度）
+   */
+  borderRadius?: number | string
+  borderDash?: number[]
+  borderDashOffset?: number
 }
 
 /**
@@ -259,8 +262,9 @@ export interface PosterLine extends Omit<PosterElementCommonOptions, 'top' | 'ri
   type: 'line'
   /**
    * 线条顶点，可以为 2 个或多个
+   * 支持数字或百分比(相对于容器宽高)
    */
-  points: [NumberWithContainer, NumberWithContainer][]
+  points: [number | string, number | string][]
   /**
    * @default 1
    */

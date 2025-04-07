@@ -1,7 +1,7 @@
-import type { CanvasContext, PosterElementRenderContext, PosterRect } from '../../types/canvas'
-import { radiusPath, renderBorder } from '../../utils/canvas/help'
-import { standardStrategy } from '../../utils/canvas/normalize'
-import { settingCanvasProps } from '../../utils/canvas/propStrategies'
+import type { CanvasContext, PosterElementRenderContext, PosterRect } from '../../types/_canvas'
+import { radiusPath, renderBorder } from '../../utils/_canvas/help'
+import { standardStrategy } from '../../utils/_canvas/normalize'
+import { settingCanvasProps } from '../../utils/_canvas/propStrategies'
 import { rotateCanvasElement } from './common'
 
 /**

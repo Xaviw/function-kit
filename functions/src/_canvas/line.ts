@@ -1,7 +1,7 @@
-import type { PosterElementRenderContext, PosterLine } from '../../types/canvas'
-import { rotateCanvasElement } from '../../src/canvas/common'
-import { lineStrategy } from '../../utils/canvas/normalize'
-import { settingCanvasProps } from '../../utils/canvas/propStrategies'
+import type { PosterElementRenderContext, PosterLine } from '../../types/_canvas'
+import { lineStrategy } from '../../utils/_canvas/normalize'
+import { settingCanvasProps } from '../../utils/_canvas/propStrategies'
+import { rotateCanvasElement } from './common'
 
 /**
  * 绘制 canvas 线条

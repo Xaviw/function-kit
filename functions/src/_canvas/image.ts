@@ -1,9 +1,9 @@
-import type { Canvas, PosterElementRenderContext, PosterImage } from '../../types/canvas'
-import type { NormalizedBox } from '../../utils/canvas/normalize'
-import { downloadImage } from '../../utils/canvas/downloadImage'
-import { radiusPath, renderBorder } from '../../utils/canvas/help'
-import { calcSize, standardStrategy } from '../../utils/canvas/normalize'
-import { settingCanvasProps } from '../../utils/canvas/propStrategies'
+import type { Canvas, PosterElementRenderContext, PosterImage } from '../../types/_canvas'
+import type { NormalizedBox } from '../../utils/_canvas/normalize'
+import { downloadImage } from '../../utils/_canvas/downloadImage'
+import { radiusPath, renderBorder } from '../../utils/_canvas/help'
+import { calcSize, standardStrategy } from '../../utils/_canvas/normalize'
+import { settingCanvasProps } from '../../utils/_canvas/propStrategies'
 import { rotateCanvasElement } from './common'
 
 /**

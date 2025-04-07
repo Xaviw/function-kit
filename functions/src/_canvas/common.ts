@@ -1,5 +1,5 @@
-import type { Canvas, CanvasContext } from '../../types/canvas'
-import type { NormalizedBox } from '../../utils/canvas/normalize'
+import type { Canvas, CanvasContext } from '../../types/_canvas'
+import type { NormalizedBox } from '../../utils/_canvas/normalize'
 import { isNumber, isObject, isString } from '../is'
 
 /**

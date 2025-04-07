@@ -1,6 +1,6 @@
-import type { PosterElementRenderContext, PosterText } from '../../types/canvas'
-import { textStrategy } from '../../utils/canvas/normalize'
-import { enhancedDraw } from '../../utils/canvas/text'
+import type { PosterElementRenderContext, PosterText } from '../../types/_canvas'
+import { textStrategy } from '../../utils/_canvas/normalize'
+import { enhancedDraw } from '../../utils/_canvas/text'
 import { rotateCanvasElement } from './common'
 
 /**

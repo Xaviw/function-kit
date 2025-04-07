@@ -1,5 +1,5 @@
-import type { CanvasContext } from '../../types/canvas'
-import { roundRect } from '../../src/canvas/rect'
+import type { CanvasContext } from '../../types/_canvas'
+import { roundRect } from '../../src/_canvas/rect'
 import { isNumber, isString } from '../../src/is'
 
 export function radiusPath(options: { x: number, y: number, width: number, height: number, borderRadius?: string | number, borderSize: number, ctx: CanvasContext }) {

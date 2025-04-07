@@ -1,4 +1,4 @@
-import type { PosterElement, PosterElementCommonOptions, PosterElementRenderContext, PosterElements, PosterLine, PosterText } from '../../types/canvas'
+import type { PosterElement, PosterElementCommonOptions, PosterElementRenderContext, PosterElements, PosterLine, PosterText } from '../../types/_canvas'
 import type { Recordable } from '../../types/common'
 import { isArray, isFunction, isNil, isString } from '../../src/is'
 import { mapObject } from '../../src/mapObject'
