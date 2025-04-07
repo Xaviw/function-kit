@@ -1,24 +1,21 @@
 <script lang="ts" setup>
 import { onMounted, useTemplateRef } from 'vue'
-import { saveCanvasAsImage } from '../../functions/src/canvas/common'
-import { canvasPoster } from '../../functions/src/canvas/poster'
+import { CanvasPoster, saveCanvasAsImage } from '../../functions/src/canvasPoster'
 
 const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
-
-const Hanalei = new FontFace('Hanalei', 'url(https://fonts.gstatic.font.im/s/hanaleifill/v22/fC1mPYtObGbfyQznIaQzPQi8UAjAhFqtag.woff2)')
-document.fonts.add(Hanalei)
 
 onMounted(() => {
   const ctx = canvas.value!.getContext('2d')
   const gradient = ctx!.createLinearGradient(0, 0, 280, 0)
   gradient.addColorStop(0, '#cf1322')
   gradient.addColorStop(1, '#389e0d')
+  const poster = new CanvasPoster({
+    node: canvas.value!,
+    width: 688,
+    height: 300,
+  })
 
-  canvasPoster([
-    () => {
-      // 放在字体使用前，确保字体加载完成
-      return Hanalei.load()
-    },
+  poster.draw([
     {
       type: 'text',
       content: '测试 test 1234 !@#$',
@@ -26,6 +23,7 @@ onMounted(() => {
       fontSize: 22,
       fontStyle: 'italic',
       fontFamily: 'Hanalei',
+      fontFamilySrc: 'https://fonts.gstatic.font.im/s/hanaleifill/v22/fC1mPYtObGbfyQznIaQzPQi8UAjAhFqtag.woff2',
       letterSpacing: 6,
       shadowBlur: 2,
       shadowColor: '#00000033',
@@ -134,18 +132,13 @@ onMounted(() => {
       relativeTo: 'a',
       type: 'text',
       fontSize: 22,
-      fontFamily: 'Hanalei Fill',
-      left: '120%',
+      left: ({ containerWidth }) => containerWidth * 1.2,
       width: 220,
       content: '自定义超出省略内容，自定义超出省略内容，自定义超出省略内容，自定义超出省略内容',
       lineClamp: 3,
       ellipsisContent: '~~~',
     },
-  ], {
-    node: canvas.value!,
-    width: 688,
-    height: 300,
-  })
+  ])
 })
 
 function onExport() {

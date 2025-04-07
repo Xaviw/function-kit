@@ -112,6 +112,7 @@ export interface PosterTextCommonOptions extends Pick<PosterElementCommonOptions
    * @default 'sans-serif'
    */
   fontFamily?: string
+  fontFamilySrc?: string
   /**
    * @default 'normal'
    */
@@ -148,7 +149,7 @@ export interface PosterTextCommonOptions extends Pick<PosterElementCommonOptions
 /**
  * poster 文本
  */
-export interface PosterText extends PosterTextCommonOptions, Omit<PosterElementCommonOptions, 'shadowBlur' | 'shadowColor' | 'shadowOffsetX' | 'shadowOffsetY'> {
+export interface PosterText extends PosterTextCommonOptions, PosterElementCommonOptions {
   type: 'text'
   /**
    * 文本内容，支持空格，不支持其他控制字符；为数组时可以分别设置样式

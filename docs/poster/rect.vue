@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, useTemplateRef } from 'vue'
-import { saveCanvasAsImage } from '../../functions/src/canvas/common'
-import { canvasPoster } from '../../functions/src/canvas/poster'
+import { CanvasPoster, saveCanvasAsImage } from '../../functions/src/canvasPoster'
 
 const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
 
@@ -10,8 +9,13 @@ onMounted(() => {
   const gradient = ctx!.createLinearGradient(244, 0, 444, 0)
   gradient.addColorStop(0, '#cf1322')
   gradient.addColorStop(1, '#389e0d')
+  const poster = new CanvasPoster({
+    node: canvas.value!,
+    width: 688,
+    height: 300,
+  })
 
-  canvasPoster([
+  poster.draw([
     {
       id: 'a',
       type: 'rect',
@@ -20,9 +24,11 @@ onMounted(() => {
       width: 200,
       height: 200,
       backgroundColor: gradient,
-      borderSize: 5,
-      borderStyle: 'dashed',
-      borderRadius: '20%',
+      border: {
+        lineWidth: 5,
+        lineDash: [5, 5],
+      },
+      borderRadius: ({ selfWidth }) => selfWidth * 0.5,
       shadowBlur: 5,
       shadowColor: '#0000ff33',
       shadowOffsetX: 10,
@@ -31,21 +37,19 @@ onMounted(() => {
     {
       relativeTo: 'a',
       type: 'rect',
-      left: '20%',
-      top: '20%',
-      width: '60%',
-      height: '60%',
+      left: ({ containerWidth }) => containerWidth * 0.2,
+      top: ({ containerHeight }) => containerHeight * 0.2,
+      width: ({ containerWidth }) => containerWidth * 0.6,
+      height: ({ containerHeight }) => containerHeight * 0.6,
       rotate: 45,
       backgroundColor: '#0000ff',
-      borderSize: 3,
-      borderColor: '#ff0000',
-      borderRadius: '50%',
+      border: {
+        lineWidth: 3,
+        lineColor: '#ff0000',
+      },
+      borderRadius: ({ selfWidth }) => selfWidth * 0.5,
     },
-  ], {
-    node: canvas.value!,
-    width: 688,
-    height: 300,
-  })
+  ])
 })
 
 function onExport() {

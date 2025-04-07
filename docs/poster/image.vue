@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, useTemplateRef } from 'vue'
-import { saveCanvasAsImage } from '../../functions/src/canvas/common'
-import { canvasPoster } from '../../functions/src/canvas/poster'
+import { CanvasPoster, saveCanvasAsImage } from '../../functions/src/canvasPoster'
 
 const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
 
@@ -10,8 +9,13 @@ onMounted(() => {
   const gradient = ctx!.createLinearGradient(200, 0, 600, 0)
   gradient.addColorStop(0, '#cf1322')
   gradient.addColorStop(1, '#389e0d')
+  const poster = new CanvasPoster({
+    node: canvas.value!,
+    width: 688,
+    height: 300,
+  })
 
-  canvasPoster([
+  poster.draw([
     {
       id: 'a',
       type: 'image',
@@ -23,7 +27,7 @@ onMounted(() => {
       relativeTo: 'a',
       type: 'image',
       src: '/logo.png',
-      left: '100%',
+      left: ({ containerWidth }) => containerWidth,
       width: 94,
       height: 150,
       flipX: true,
@@ -32,7 +36,7 @@ onMounted(() => {
       relativeTo: 'a',
       type: 'image',
       src: '/logo.png',
-      top: '100%',
+      top: ({ containerHeight }) => containerHeight,
       width: 94,
       height: 150,
       flipY: true,
@@ -41,8 +45,8 @@ onMounted(() => {
       relativeTo: 'a',
       type: 'image',
       src: '/logo.png',
-      top: '100%',
-      left: '100%',
+      top: ({ containerHeight }) => containerHeight,
+      left: ({ containerWidth }) => containerWidth,
       width: 94,
       height: 150,
       flipX: true,
@@ -57,15 +61,16 @@ onMounted(() => {
       height: 94,
       rotate: 90,
       mode: 'aspectFit',
-      borderColor: gradient,
-      borderDash: [5, 5],
-      borderRadius: '100%',
+      border: {
+        lineColor: gradient,
+        lineDash: [5, 5],
+        lineWidth: 5,
+      },
+      borderRadius: ({ selfWidth }) => selfWidth,
       shadowBlur: 2,
       shadowColor: '#00000066',
       shadowOffsetX: 20,
       shadowOffsetY: 20,
-      borderStyle: 'dashed',
-      borderSize: 5,
     },
     {
       type: 'image',
@@ -76,15 +81,16 @@ onMounted(() => {
       height: 94,
       rotate: 180,
       mode: 'scaleToFill',
-      borderColor: gradient,
-      borderDash: [5, 5],
-      borderRadius: '100%',
+      border: {
+        lineColor: gradient,
+        lineDash: [5, 5],
+        lineWidth: 5,
+      },
+      borderRadius: ({ selfWidth }) => selfWidth,
       shadowBlur: 2,
       shadowColor: '#00000066',
       shadowOffsetX: 20,
       shadowOffsetY: 20,
-      borderStyle: 'dashed',
-      borderSize: 5,
     },
     {
       type: 'image',
@@ -95,15 +101,16 @@ onMounted(() => {
       height: 94,
       rotate: 225,
       mode: 'aspectFill',
-      borderColor: gradient,
-      borderDash: [5, 5],
-      borderRadius: '100%',
+      border: {
+        lineColor: gradient,
+        lineDash: [5, 5],
+        lineWidth: 5,
+      },
+      borderRadius: ({ selfWidth }) => selfWidth,
       shadowBlur: 2,
       shadowColor: '#00000066',
       shadowOffsetX: 20,
       shadowOffsetY: 20,
-      borderStyle: 'dashed',
-      borderSize: 5,
     },
     {
       type: 'image',
@@ -113,17 +120,16 @@ onMounted(() => {
       width: 94,
       height: 94,
       sourceX: 0,
-      borderSize: 2,
-      borderColor: gradient,
+      border: {
+        lineColor: gradient,
+        lineWidth: 2,
+      },
+      borderRadius: ({ selfWidth }) => selfWidth,
       sourceY: 640,
       sourceWidth: 1080,
       sourceHeight: 1080,
     },
-  ], {
-    node: canvas.value!,
-    width: 688,
-    height: 300,
-  })
+  ])
 })
 
 function onExport() {

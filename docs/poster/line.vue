@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, useTemplateRef } from 'vue'
-import { saveCanvasAsImage } from '../../functions/src/canvas/common'
-import { canvasPoster } from '../../functions/src/canvas/poster'
+import { CanvasPoster, saveCanvasAsImage } from '../../functions/src/canvasPoster'
 
 const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
 
@@ -10,8 +9,13 @@ onMounted(() => {
   const gradient = ctx!.createLinearGradient(244, 0, 444, 0)
   gradient.addColorStop(0, '#cf1322')
   gradient.addColorStop(1, '#389e0d')
+  const poster = new CanvasPoster({
+    node: canvas.value!,
+    width: 688,
+    height: 300,
+  })
 
-  canvasPoster([
+  poster.draw([
     {
       id: 'a',
       type: 'line',
@@ -38,16 +42,12 @@ onMounted(() => {
       relativeTo: 'a',
       type: 'line',
       points: [
-        ['-50%%', '50%'],
-        ['150%', '50%'],
+        [({ containerWidth }) => containerWidth * -0.5, ({ containerHeight }) => containerHeight * 0.5],
+        [({ containerWidth }) => containerWidth * 1.5, ({ containerHeight }) => containerHeight * 0.5],
       ],
       lineWidth: 5,
     },
-  ], {
-    node: canvas.value!,
-    width: 688,
-    height: 300,
-  })
+  ])
 })
 
 function onExport() {

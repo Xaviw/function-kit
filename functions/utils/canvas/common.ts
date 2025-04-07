@@ -1,5 +1,6 @@
 import type { CanvasContext, NormalizedBox } from '../../types/canvas'
-import { isNumber } from '../../src/is'
+import { isNumber, isString } from '../../src/is'
+import { isPath, isUrl } from '../../src/reg'
 
 /*
  * 接收 dpr 判断是否可用，不可用则获取设备 dpr
@@ -30,23 +31,6 @@ export function rotateCanvas(rotate: number, options: NormalizedBox & { ctx: Can
     ctx.translate(-centerX, -centerY)
   }
 }
-
-// export function radiusPath(options: NormalizedBox & { borderRadius?: number, borderSize: number, ctx: CanvasContext }) {
-//   const { x, y, width, height, borderRadius, borderSize, ctx } = options
-
-//   // 圆角裁剪路径
-//   roundRect({
-//     x: x - borderSize,
-//     y: y - borderSize,
-//     w: width + 2 * borderSize,
-//     h: height + 2 * borderSize,
-//     r,
-//     ctx,
-//   })
-//   // ctx.clip()
-
-//   return r
-// }
 
 interface CanvasRoundRectOptions {
   /** 左上角 x */
@@ -80,4 +64,35 @@ export function roundRect(options: CanvasRoundRectOptions) {
   ctx.arcTo(x, y + h, x, y, r)
   ctx.arcTo(x, y, x + w, y, r)
   ctx.closePath()
+}
+
+/**
+ * 加载字体
+ */
+export function loadFont(name: string, src: string) {
+  if (!isString(name) || (!isUrl(src) && !isPath(src))) {
+    return Promise.reject(new Error('字体文件链接错误！'))
+  }
+
+  if (PLATFORM === 'miniprogram') {
+    return new Promise((resolve, reject) => {
+      wx.loadFontFace({
+        family: name,
+        source: `url("${src}")`,
+        global: true,
+        scopes: ['webview', 'native', 'skyline'],
+        success() {
+          resolve(true)
+        },
+        fail(err) {
+          reject(err)
+        },
+      })
+    })
+  }
+  else {
+    const font = new FontFace(name, `url("${src}")`)
+    document.fonts.add(font)
+    return font.load()
+  }
 }

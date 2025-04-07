@@ -1,10 +1,11 @@
-import type { CanvasContext, NormalizedBox, PosterElement, PosterOptions, PosterRenderFunction } from '../types/canvas'
+import type { Canvas, CanvasContext, NormalizedBox, PosterElement, PosterOptions, PosterRenderFunction } from '../types/canvas'
 import type { Recordable } from '../types/common'
 import { getDpr, rotateCanvas } from '../utils/canvas/common'
 import { image } from '../utils/canvas/image'
 import { line } from '../utils/canvas/line'
 import { rect } from '../utils/canvas/rect'
-import { isArray, isFunction, isNumber } from './is'
+import { text } from '../utils/canvas/text'
+import { isArray, isFunction, isNumber, isObject, isString } from './is'
 
 type PosterElements = (PosterElement | PosterRenderFunction)[]
 
@@ -29,7 +30,7 @@ export class CanvasPoster {
     line,
     rect,
     image,
-    text: {} as any,
+    text,
   }
 
   /**
@@ -126,14 +127,61 @@ export class CanvasPoster {
     const cache = this.cache[index] || {}
     const plugin = this.plugins[config.type]
 
+    // TODO
     let preparedProps = cache.prepare
     if (!preparedProps)
-      preparedProps = await plugin.prepare(config, { canvas: this.options.node })
+      preparedProps = await plugin.prepare(config as any, { canvas: this.options.node })
 
     let calculatedProps = cache.calculate
     if (!calculatedProps)
-      calculatedProps = plugin.calculate(preparedProps, parent)
+      calculatedProps = plugin.calculate(preparedProps as any, parent, { ctx: this.ctx })
 
     return calculatedProps
   }
+}
+
+/**
+ * 导出 canvas
+ */
+export function saveCanvasAsImage(canvas: Canvas, options?: { type?: string, quality?: number, fileName?: string }) {
+  let { type, quality, fileName } = isObject(options) ? options : {}
+  type = isString(type) && type.startsWith('image/') ? type : undefined
+  quality = isNumber(quality) && quality > 0 && quality <= 1 ? quality : 1
+
+  return new Promise((resolve, reject) => {
+    if (PLATFORM === 'web') {
+      canvas.toBlob((blob) => {
+        if (!blob)
+          return reject(new Error('canvas 导出失败！'))
+
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.download = isString(fileName) ? fileName : `${Date.now()}`
+        a.href = url
+        a.click()
+        resolve(url)
+      }, type, quality)
+    }
+    else {
+      wx.canvasToTempFilePath({
+        canvas,
+        fileType: type === 'image/jpeg' ? 'jpg' : 'png',
+        quality,
+        success({ tempFilePath }) {
+          wx.saveImageToPhotosAlbum({
+            filePath: tempFilePath,
+            success() {
+              resolve(tempFilePath)
+            },
+            fail(err) {
+              reject(err)
+            },
+          })
+        },
+        fail(err) {
+          reject(err)
+        },
+      })
+    }
+  })
 }
