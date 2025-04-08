@@ -1,10 +1,11 @@
-import type { CanvasContext, NormalizedBox, PosterRect, PosterText, PosterTextCommonOptions } from '../../types/canvas'
+import type { CanvasContext, NormalizedBox, PosterText, PosterTextCommonOptions } from '../../types/canvas'
 import type { Fn, PartiallyRequired, Recordable } from '../../types/common'
 import { isArray, isFunction, isNil, isNumber, isObject, isString } from '../../src/is'
+import { mapObject } from '../../src/mapObject'
+import { pick } from '../../src/pick'
 import { loadFont } from './common'
 import { line } from './line'
 import { settingCanvasProps } from './propStrategies'
-import { rect } from './rect'
 
 interface NormalizedText extends PosterText {
   x: number
@@ -23,12 +24,75 @@ export const text = {
   },
   // 容器尺寸相关的属性标准化
   calculate(preparedProps: PosterText, parentContainer: NormalizedBox, { ctx }: { ctx: CanvasContext }): NormalizedText {
-    const box = rect.calculate(preparedProps as unknown as PosterRect, parentContainer) as unknown as NormalizedText
+    const { width: containerWidth, height: containerHeight } = parentContainer
 
-    if (!box.height)
-      box.height = enhancedMeasure(preparedProps, { maxWidth: box.width, ctx })
+    const {
+      top,
+      right,
+      bottom,
+      left,
+      width: elementWidth,
+      height: elementHeight,
+    } = mapObject(
+      pick(
+        preparedProps,
+        ['top', 'right', 'bottom', 'left', 'width', 'height'],
+      ),
+      (key, value) => {
+        const newValue = isNumber(value)
+          ? value
+          : isFunction(value)
+            // TODO
+            ? value({ containerWidth, containerHeight } as any)
+            : undefined
+        return [key, newValue]
+      },
+    ) as Record<'width' | 'height' | 'top' | 'right' | 'bottom' | 'left', number | undefined>
 
-    return box
+    let x = 0
+    let y = 0
+    let width = 0
+    let height = 0
+
+    if (elementWidth) {
+      width = elementWidth
+
+      if (!isNil(left))
+        x = left
+      else if (!isNil(right))
+        x = containerWidth - right - width
+    }
+    else if (!isNil(left) && !isNil(right)) {
+      width = containerWidth - left - right
+    }
+    else {
+      x = isNil(left) ? 0 : left
+    }
+
+    if (!isNil(elementHeight)) {
+      height = elementHeight
+
+      if (!isNil(top))
+        y = top
+      else if (!isNil(bottom))
+        y = containerHeight - bottom - height
+    }
+    else if (!isNil(top) && !isNil(bottom)) {
+      height = containerHeight - top - bottom
+    }
+    else {
+      y = isNil(top) ? 0 : top
+    }
+
+    const { width: fullWidth, height: fullHeight } = enhancedMeasure(preparedProps, { maxWidth: width, ctx })
+
+    if (!width)
+      width = Math.min(fullWidth, containerWidth)
+
+    if (!height)
+      height = fullHeight
+
+    return { ...preparedProps, x, y, width, height }
   },
   // 绘制
   render(calculatedProps: NormalizedText, { ctx }: { ctx: CanvasContext }) {
@@ -44,7 +108,7 @@ type NormalizeTextProps = PartiallyRequired<TextProps, 'lineHeight' | 'fontFamil
 /**
  * 绘制全部段落
  */
-export function enhancedDraw(text: PosterText, options: {
+function enhancedDraw(text: PosterText, options: {
   ctx: CanvasContext
   maxWidth: number
   x: number
@@ -86,14 +150,13 @@ export function enhancedDraw(text: PosterText, options: {
 
       if (backgroundColor) {
         ctx.save()
-        ctx.rect(
+        ctx.fillStyle = backgroundColor
+        ctx.fillRect(
           x + xOffset + alignOffset,
           y + yOffset + overLineY,
           width,
           Math.abs(overLineY) + Math.abs(underLineY),
         )
-        ctx.fillStyle = backgroundColor
-        ctx.fill()
         ctx.restore()
       }
 
@@ -134,7 +197,7 @@ export function enhancedDraw(text: PosterText, options: {
 }
 
 /**
- * 测量全部段落总高度
+ * 测量全部段落总高度，以及不换行的总宽度
  */
 export function enhancedMeasure(text: PosterText, options: {
   ctx: CanvasContext
@@ -147,10 +210,12 @@ export function enhancedMeasure(text: PosterText, options: {
   const baseProps = settingProperty(text, { ctx })
   let contents = isArray(content) ? [...content] : [{ content }]
   let height = 0
+  let width = 0
   let rowNum = 1
   while (contents.length) {
     const { top, bottom, content } = measureRowHeight(contents, { ctx, maxWidth, baseProps })
     height += (top + bottom)
+    width += content.reduce((p, c) => p + c.width, 0)
     if (rowNum < lineClamp) {
       rowNum++
       const readyLength = content.length
@@ -167,7 +232,7 @@ export function enhancedMeasure(text: PosterText, options: {
     }
   }
   ctx.restore()
-  return height
+  return { width, height }
 }
 
 /**
@@ -193,11 +258,13 @@ function measureRowHeight(contents: PosterTextCommonOptions[], options: {
     const props = settingProperty(p, { ctx, baseProps })
     const suffix = isString(options.suffix) ? options.suffix : ''
     const suffixWidth = isString(options.suffix) ? measure({ ...props, content: options.suffix }, { ctx }).width : 0
+    let lastWidth: number
 
     // 每个字
     for (let i = 0; i < p.content.length; i++) {
       line += p.content[i]
       const { width, fontBoundingBoxAscent, fontBoundingBoxDescent } = measure({ ...p, content: line + suffix }, { ctx, baseProps })
+      lastWidth = width
       const isEnd = i === p.content.length - 1
 
       // 满一行或一段结束
@@ -205,12 +272,13 @@ function measureRowHeight(contents: PosterTextCommonOptions[], options: {
         // 文本高度
         const height = fontBoundingBoxAscent + fontBoundingBoxDescent
         // 行高在文字上下平分
-        const { lineHeight } = props
-        const halfLineHeight = isNumber(lineHeight)
-          ? lineHeight / 2
+        let { lineHeight } = props
+        lineHeight = isNumber(lineHeight)
+          ? lineHeight
           : isFunction(lineHeight)
-            ? lineHeight(height) / 2
-            : height * 1.2 / 2
+            ? lineHeight(height)
+            : height * 1.2
+        const halfLineHeight = Math.max((lineHeight - height) / 2, 0)
         // 存储每一段文本的基线上下高度
         top.push(fontBoundingBoxAscent + halfLineHeight)
         bottom.push(fontBoundingBoxDescent + halfLineHeight)
@@ -227,7 +295,7 @@ function measureRowHeight(contents: PosterTextCommonOptions[], options: {
           lineThroughY = 0
         }
 
-        renderable.push({ ...props, content: isEnd ? line : line.slice(0, -1) + suffix, overLineY, lineThroughY, underLineY, xOffset, width: isEnd ? width - suffixWidth : width })
+        renderable.push({ ...props, content: isEnd ? line : line.slice(0, -1) + suffix, overLineY, lineThroughY, underLineY, xOffset, width: isEnd ? width - suffixWidth : lastWidth })
 
         // 满一行
         if (width + xOffset > maxWidth) {
@@ -278,7 +346,7 @@ function draw(content: PosterTextCommonOptions, options: {
 /**
  * 测量文本
  */
-function measure(content: PosterTextCommonOptions, options: {
+export function measure(content: PosterTextCommonOptions, options: {
   ctx: CanvasContext
   baseProps?: NormalizeTextProps
 }): TextMetrics {
@@ -302,7 +370,7 @@ function settingProperty(properties: Omit<TextProps, 'fontFamilySrc'>, options: 
 
   const strategies: Record<keyof Omit<TextProps, 'fontFamilySrc'>, [Fn] | [Fn, any]> = {
     lineHeight: [
-      (v: any) => isNumber(v) || (isString(v) && v.endsWith('%')),
+      (v: any) => isNumber(v) || isFunction(v),
       '120%',
     ],
     fontSize: [

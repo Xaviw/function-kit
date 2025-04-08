@@ -1,6 +1,7 @@
 import type { Canvas, CanvasContext, NormalizedBox, PosterImage } from '../../types/canvas'
 import { isFunction, isNil, isNumber, isString } from '../../src/is'
 import { mapObject } from '../../src/mapObject'
+import { pick } from '../../src/pick'
 import { roundRect } from './common'
 import { downloadImage } from './downloadImage'
 import { settingCanvasProps } from './propStrategies'
@@ -9,6 +10,10 @@ interface PreparedImage extends PosterImage {
   image: CanvasImageSource
   imageWidth: number
   imageHeight: number
+  shadowOffsetX: number
+  shadowOffsetY: number
+  shadowBlur: number
+  shadowColor: string
 }
 
 interface NormalizedImage extends PreparedImage {
@@ -21,6 +26,8 @@ interface NormalizedImage extends PreparedImage {
   sourceWidth: number
   sourceHeight: number
   borderRadius: number
+  borderOffsetX: number
+  borderOffsetY: number
 }
 
 export const image = {
@@ -38,6 +45,10 @@ export const image = {
       image,
       imageWidth: width,
       imageHeight: height,
+      shadowBlur: isNumber(props.shadowBlur) ? props.shadowBlur : 0,
+      shadowColor: isString(props.shadowColor) ? props.shadowColor : '#00000000',
+      shadowOffsetX: isNumber(props.shadowOffsetX) ? props.shadowOffsetX : 0,
+      shadowOffsetY: isNumber(props.shadowOffsetY) ? props.shadowOffsetY : 0,
     }
   },
   // 容器尺寸相关的属性标准化
@@ -45,19 +56,9 @@ export const image = {
     const { width: containerWidth, height: containerHeight } = parentContainer
 
     let {
-      width: configWidth,
-      height: configHeight,
-      top: configTop,
-      right: configRight,
-      bottom: configBottom,
-      left: configLeft,
       imageWidth,
       imageHeight,
       borderRadius,
-      sourceHeight: configSourceHeight,
-      sourceWidth: configSourceWidth,
-      sourceX: configSourceX,
-      sourceY: configSourceY,
       mode,
     } = preparedProps
 
@@ -69,7 +70,10 @@ export const image = {
       width: elementWidth,
       height: elementHeight,
     } = mapObject(
-      { width: configWidth, height: configHeight, top: configTop, right: configRight, bottom: configBottom, left: configLeft },
+      pick(
+        preparedProps,
+        ['width', 'height', 'top', 'right', 'bottom', 'left'],
+      ),
       (key, value) => {
         const newValue = isNumber(value)
           ? value
@@ -85,13 +89,18 @@ export const image = {
       },
     ) as Record<'width' | 'height' | 'top' | 'right' | 'bottom' | 'left', number | undefined>
 
-    const {
+    let {
       sourceHeight,
       sourceWidth,
       sourceX,
       sourceY,
     } = mapObject(
-      { sourceHeight: configSourceHeight, sourceWidth: configSourceWidth, sourceX: configSourceX, sourceY: configSourceY },
+      {
+        sourceHeight: preparedProps.sourceHeight,
+        sourceWidth: preparedProps.sourceWidth,
+        sourceX: preparedProps.sourceX,
+        sourceY: preparedProps.sourceY,
+      },
       (key, value) => {
         const newValue = isNumber(value)
           ? value
@@ -103,9 +112,9 @@ export const image = {
                 selfHeight: imageHeight,
               })
             : key === 'sourceHeight'
-              ? configHeight
+              ? imageHeight
               : key === 'sourceWidth'
-                ? configWidth
+                ? imageWidth
                 : 0
         return [key, newValue]
       },
@@ -119,69 +128,66 @@ export const image = {
 
     if (elementWidth) {
       width = elementWidth
-
-      if (!isNil(left))
-        x = left
-      else if (!isNil(right))
-        x = containerWidth - right - width
+      const ratio = width / sourceWidth
 
       if (!elementHeight) {
-        height = sourceWidth / imageRatio
+        height = sourceHeight * ratio
       }
     }
 
     if (elementHeight) {
       height = elementHeight
-
-      if (!isNil(top))
-        y = top
-      else if (!isNil(bottom))
-        y = containerHeight - bottom - height
+      const ratio = height / sourceHeight
 
       if (!elementWidth) {
-        width = sourceHeight * imageRatio
+        width = sourceWidth * ratio
       }
     }
 
     if (!elementWidth && !elementHeight) {
       width = sourceWidth
       height = sourceHeight
-
-      if (!isNil(left))
-        x = left
-      else if (!isNil(right))
-        x = containerWidth - right - width
-
-      if (!isNil(top))
-        y = top
-      else if (!isNil(bottom))
-        y = containerHeight - bottom - height
     }
 
+    if (!isNil(left))
+      x = left
+    else if (!isNil(right))
+      x = containerWidth - right - width
+
+    if (!isNil(top))
+      y = top
+    else if (!isNil(bottom))
+      y = containerHeight - bottom - height
+
+    let borderOffsetX = 0
+    let borderOffsetY = 0
+
     if (elementWidth && elementHeight) {
-      const containerRatio = width / height
       // 默认的 scaleToFill 无需处理
       if (mode === 'aspectFill') {
-        if (containerRatio > imageRatio) {
-        // 宽度填满，高度裁剪
-          height = sourceWidth / containerRatio
+        const ratio = width / height
+        if (imageRatio < 1) {
+          // 高为长边，裁剪
+          sourceHeight = sourceWidth / ratio
         }
         else {
-        // 高度填满，宽度裁剪
-          width = sourceHeight * containerRatio
+          // 宽为长边，裁剪
+          sourceWidth = sourceHeight * ratio
         }
       }
       else if (mode === 'aspectFit') {
-        if (containerRatio > imageRatio) {
-          // 高度填满，宽度留白
+        if (imageRatio < 1) {
+          // 高为长边，撑满；宽按比例缩小，左右留白
           const newWidth = height * imageRatio
-          x += (width - newWidth) / 2
+          borderOffsetX = (width - newWidth) / 2
+          x += borderOffsetX
           width = newWidth
         }
         else {
-          // 宽度填满，高度留白
+          // 宽为长边，撑满；高按比例缩小，上下留白
           const newHeight = width / imageRatio
-          y += (height - newHeight) / 2
+          borderOffsetY = (height - newHeight) / 2
+          y += borderOffsetY
           height = newHeight
         }
       }
@@ -210,6 +216,8 @@ export const image = {
       width,
       height,
       borderRadius,
+      borderOffsetX,
+      borderOffsetY,
     }
   },
   // 绘制
@@ -232,6 +240,8 @@ export const image = {
       sourceY,
       flipX,
       flipY,
+      borderOffsetX,
+      borderOffsetY,
     } = calculatedProps
 
     // 翻转
@@ -242,42 +252,58 @@ export const image = {
     if (flipY)
       y = posterHeight - y - height
 
-    // 绘制阴影
-    settingCanvasProps({
-      shadowBlur,
-      shadowColor,
-      shadowOffsetX,
-      shadowOffsetY,
-      fillStyle: '#00000000',
-    }, ctx)
-
     let { lineWidth } = border || {}
     lineWidth = isNumber(lineWidth) ? lineWidth : 0
 
-    roundRect({
-      x: x - lineWidth / 2,
-      y: y - lineWidth / 2,
-      w: width + lineWidth,
-      h: height + lineWidth,
-      r: borderRadius,
-      ctx,
-    })
+    // 有边框或圆角时需要裁剪图片，并模拟阴影
+    if (borderRadius || (border && lineWidth)) {
+      ctx.save()
+      roundRect({
+        x: x - lineWidth / 2 - borderOffsetX + shadowOffsetX,
+        y: y - lineWidth / 2 - borderOffsetY + shadowOffsetY,
+        w: width + lineWidth + 2 * borderOffsetX,
+        h: height + lineWidth + 2 * borderOffsetY,
+        r: borderRadius,
+        ctx,
+      })
+      settingCanvasProps({
+        filter: `blur(${shadowBlur}px)`,
+        fillStyle: shadowColor,
+      }, ctx)
+      ctx.fill()
+      ctx.restore()
 
-    ctx.fill()
-
-    // 裁剪图片和阴影
-    ctx.save()
-    ctx.clip()
+      roundRect({
+        x: x - lineWidth / 2 - borderOffsetX,
+        y: y - lineWidth / 2 - borderOffsetY,
+        w: width + lineWidth + 2 * borderOffsetX,
+        h: height + lineWidth + 2 * borderOffsetY,
+        r: borderRadius,
+        ctx,
+      })
+      ctx.clip()
+    }
+    // 无边框或圆角时，保留图片阴影
+    else {
+      settingCanvasProps({
+        shadowBlur,
+        shadowColor,
+        shadowOffsetX,
+        shadowOffsetY,
+      }, ctx)
+    }
 
     // 绘制图片
     ctx.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, x, y, width, height)
 
     // 绘制边框
     if (border && lineWidth) {
-      settingCanvasProps({ ...border, strokeStyle: border.lineColor }, ctx)
+      settingCanvasProps({
+        ...border,
+        strokeStyle: border.lineColor,
+        shadowColor: '#00000000',
+      }, ctx)
       ctx.stroke()
     }
-
-    ctx.restore()
   },
 }

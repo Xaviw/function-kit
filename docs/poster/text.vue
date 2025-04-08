@@ -18,9 +18,9 @@ onMounted(() => {
   poster.draw([
     {
       type: 'text',
-      content: '测试 test 1234 !@#$',
+      content: 'FontFamily 1234 !@#$',
       color: gradient,
-      fontSize: 22,
+      fontSize: 26,
       fontStyle: 'italic',
       fontFamily: 'Hanalei',
       fontFamilySrc: 'https://fonts.gstatic.font.im/s/hanaleifill/v22/fC1mPYtObGbfyQznIaQzPQi8UAjAhFqtag.woff2',
@@ -33,6 +33,7 @@ onMounted(() => {
       textStyle: 'stroke',
       wordSpacing: 6,
       backgroundColor: '#5cdbd348',
+      lineHeight: h => h,
     },
     {
       type: 'text',
@@ -84,6 +85,7 @@ onMounted(() => {
           textDecoration: 'line-through',
           textDecorationProps: {
             lineColor: '#00ff00',
+            lineWidth: 5,
           },
         },
         {
@@ -91,6 +93,7 @@ onMounted(() => {
           textDecoration: 'overline',
           textDecorationProps: {
             lineColor: '#0000ff',
+            lineWidth: 5,
           },
         },
       ],

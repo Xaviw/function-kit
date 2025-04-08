@@ -66,6 +66,10 @@ const canvasPropsStrategies: Record<string, (val: any, ctx: CanvasContext) => vo
     if (textBaseLine && ['alphabetic', 'bottom', 'hanging', 'ideographic', 'middle', 'top'].includes(textBaseLine))
       ctx.textBaseline = textBaseLine
   },
+  filter(filter, ctx) {
+    if (isString(filter))
+      ctx.filter = filter
+  },
 }
 
 type CanavsProp = keyof typeof canvasPropsStrategies

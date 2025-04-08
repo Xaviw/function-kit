@@ -1,32 +1,32 @@
-import type { Canvas, CanvasContext, NormalizedBox, PosterElement, PosterOptions, PosterRenderFunction } from '../types/canvas'
+import type { Canvas, CanvasContext, NormalizedBox, PosterElement, PosterOptions, PosterRenderFunction, PosterText, PosterTextCommonOptions } from '../types/canvas'
 import type { Recordable } from '../types/common'
 import { getDpr, rotateCanvas } from '../utils/canvas/common'
 import { image } from '../utils/canvas/image'
 import { line } from '../utils/canvas/line'
 import { rect } from '../utils/canvas/rect'
-import { text } from '../utils/canvas/text'
+import { enhancedMeasure, measure, text } from '../utils/canvas/text'
 import { isArray, isFunction, isNumber, isObject, isString } from './is'
 
 type PosterElements = (PosterElement | PosterRenderFunction)[]
 
 export class CanvasPoster {
   /** 画布配置 */
-  options: PosterOptions
+  private options: PosterOptions
 
   /** 绘制项数组 */
-  configs: PosterElements = []
+  private configs: PosterElements = []
 
   /** 绘制项缓存 */
-  cache: { prepare: Recordable, calculate: NormalizedBox & Recordable }[] = []
+  private cache: { prepare: Recordable, calculate: NormalizedBox & Recordable }[] = []
 
   /** 绘制上下文 */
-  ctx: CanvasContext = null!
+  private ctx: CanvasContext = null!
 
   /** 画布使用的像素比 */
-  dpr: number = 1
+  private dpr: number = 1
 
   /** 全部绘制项 */
-  plugins = {
+  private plugins = {
     line,
     rect,
     image,
@@ -74,25 +74,25 @@ export class CanvasPoster {
       const config = configs[index]
       if (isFunction(config)) {
         const renderOptions = { ctx: this.ctx, canvas: this.options.node, dpr: this.dpr }
-        await (config as PosterRenderFunction)(renderOptions)
+        await config(renderOptions)
       }
-      else if (config.type in this.plugins) {
+      else if (isObject(config) && config.type in this.plugins) {
         const plugin = this.plugins[config.type]
         const elements = await this.travelContainer(index)
         const props = elements[elements.length - 1]
-        const container = elements.reduce((p, c) => {
+        const { x, y } = elements.slice(0, -1).reduce((p, c) => {
           p.x += c.x
           p.y += c.y
           return p
-        }, { x: 0, y: 0, width: props.width, height: props.height })
+        }, { x: 0, y: 0 })
 
         this.ctx.save()
 
+        this.ctx.translate(x, y)
+
         const rotate = Number.parseFloat(props.rotate)
         if (rotate)
-          rotateCanvas(rotate, { ...container, ctx: this.ctx })
-
-        this.ctx.translate(container.x, container.y)
+          rotateCanvas(rotate, { x: props.x, y: props.y, width: props.width, height: props.height, ctx: this.ctx })
 
         plugin.render(props as any, { ...this.options, ctx: this.ctx })
 
@@ -102,7 +102,7 @@ export class CanvasPoster {
   }
 
   /** 递归绘制项，获取相对定位元素盒模型并调用 normalize */
-  async travelContainer(
+  private async travelContainer(
     index: number,
     containers: (NormalizedBox & Recordable)[] = [{
       x: 0,
@@ -122,21 +122,36 @@ export class CanvasPoster {
   }
 
   /** 标准化参数，扩展盒模型等参数 */
-  async normalize(index: number, parent: NormalizedBox) {
+  private async normalize(index: number, parent: NormalizedBox) {
     const config = this.configs[index] as PosterElement
-    const cache = this.cache[index] || {}
+    if (!this.cache[index])
+      this.cache[index] = {} as any
+    const cache = this.cache[index]
     const plugin = this.plugins[config.type]
 
     // TODO
     let preparedProps = cache.prepare
-    if (!preparedProps)
+    if (!preparedProps) {
       preparedProps = await plugin.prepare(config as any, { canvas: this.options.node })
+      cache.prepare = preparedProps
+    }
 
     let calculatedProps = cache.calculate
-    if (!calculatedProps)
+    if (!calculatedProps) {
       calculatedProps = plugin.calculate(preparedProps as any, parent, { ctx: this.ctx })
+      cache.calculate = calculatedProps
+    }
 
     return calculatedProps
+  }
+
+  measure(content: PosterTextCommonOptions) {
+    return measure(content, { ctx: this.ctx })
+  }
+
+  async measureHeight(content: PosterText, maxWidth?: number) {
+    await text.prepare(content)
+    return enhancedMeasure(content, { ctx: this.ctx, maxWidth: maxWidth || this.options.width })
   }
 }
 

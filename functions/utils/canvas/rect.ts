@@ -1,5 +1,5 @@
 import type { CanvasContext, NormalizedBox, PosterRect } from '../../types/canvas'
-import { isFunction, isNil, isNumber, isString } from '../../src/is'
+import { isFunction, isNil, isNumber, isObject, isString } from '../../src/is'
 import { mapObject } from '../../src/mapObject'
 import { pick } from '../../src/pick'
 import { roundRect } from './common'
@@ -138,7 +138,7 @@ export const rect = {
       ctx,
     })
 
-    if (isString(backgroundColor))
+    if (isString(backgroundColor) || isObject(backgroundColor))
       ctx.fill()
 
     ctx.restore()

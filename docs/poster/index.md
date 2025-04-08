@@ -169,7 +169,7 @@ onMounted(() => {
 | `ellipsisContent`     | 超出省略时展示的字符，默认值为 `'...'`                                                            |
 | `textAlign`           | 容器内的对齐方式，默认值为 `'left'`，支持 `'left'`、`'center'`、`'right'`                         |
 
-<Text />
+<!-- <Text /> -->
 
 ::: tip 提示
 Canvas 中使用自定义字体时需要确保字体加载完成再绘制，否则渲染会回退到使用默认字体
@@ -363,7 +363,7 @@ onMounted(() => {
 | borderSize       | 边框大小                                                          |
 | borderStyle      | 边框样式，默认 'solid'                                            |
 
-<Image />
+<!-- <Image /> -->
 
 :::warning 注意
 如果无法从配置属性中计算出明确的宽高时，元素盒的宽高会扩展到最大可用尺寸（起点到父容器边界），而不是根据一边的尺寸按图片比例计算另一边尺寸
@@ -526,7 +526,7 @@ onMounted(() => {
 | shadowBlur       | 阴影模糊半径                                                                                                         |
 | shadowColor      | 阴影颜色                                                                                                             |
 
-<Rect />
+<!-- <Rect /> -->
 
 :::details 代码
 
@@ -597,7 +597,7 @@ onMounted(() => {
 | `shadowBlur`     | 阴影模糊半径                                                  |
 | `shadowColor`    | 阴影颜色                                                      |
 
-<Line />
+<!-- <Line /> -->
 
 :::details 代码
 

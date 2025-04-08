@@ -19,14 +19,15 @@ onMounted(() => {
     {
       id: 'a',
       type: 'rect',
-      left: 244,
-      top: 50,
       width: 200,
       height: 200,
+      left: ({ containerWidth }) => containerWidth * 0.5 - 100,
+      top: ({ containerHeight }) => containerHeight * 0.5 - 100,
       backgroundColor: gradient,
       border: {
         lineWidth: 5,
         lineDash: [5, 5],
+        lineColor: '#0000ff',
       },
       borderRadius: ({ selfWidth }) => selfWidth * 0.5,
       shadowBlur: 5,
@@ -47,7 +48,6 @@ onMounted(() => {
         lineWidth: 3,
         lineColor: '#ff0000',
       },
-      borderRadius: ({ selfWidth }) => selfWidth * 0.5,
     },
   ])
 })
