@@ -17,40 +17,36 @@ onMounted(() => {
     height: 1006,
   })
 
-  let nameWidth: number = 0
-  let nameHeight: number = 0
+  const metrics = poster.measure({
+    content: '姓名',
+    fontSize: 44,
+    fontWeight: 600,
+    color: '#5d4d4a',
+  })
+  const nameWidth = metrics.width
+  const nameHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
 
   poster.draw([
-    // {
-    //   type: 'image',
-    //   src: 'https://cdn-public-test.community-platform.qq.com/applet-public-img/certificate-bg-long.png',
-    //   width: ({ containerWidth }) => containerWidth,
-    //   height: ({ containerHeight }) => containerHeight,
-    // },
-    // {
-    //   id: 'a',
-    //   type: 'image',
-    //   src: 'https://cdn-public-test.community-platform.qq.com/applet-public-img/logo.png',
-    //   top: 47.88,
-    //   left: 47.86,
-    //   height: 31.18,
-    // },
-    // {
-    //   relativeTo: 'a',
-    //   type: 'image',
-    //   src: 'https://cdn-public-test.community-platform.qq.com/applet-public-img/logo.png',
-    //   left: ({ containerWidth }) => containerWidth + 30,
-    //   height: 31.18,
-    // },
-    () => {
-      const metrics = poster.measure({
-        content: '姓名',
-        fontSize: 44,
-        fontWeight: 600,
-        color: '#5d4d4a',
-      })
-      nameWidth = metrics.width
-      nameHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
+    {
+      type: 'image',
+      src: 'https://cdn-public-test.community-platform.qq.com/applet-public-img/certificate-bg-long.png',
+      width: ({ containerWidth }) => containerWidth,
+      height: ({ containerHeight }) => containerHeight,
+    },
+    {
+      id: 'a',
+      type: 'image',
+      src: 'https://cdn-public-test.community-platform.qq.com/applet-public-img/logo.png',
+      top: 47.88,
+      left: 47.86,
+      height: 31.18,
+    },
+    {
+      relativeTo: 'a',
+      type: 'image',
+      src: 'https://cdn-public-test.community-platform.qq.com/applet-public-img/logo.png',
+      left: ({ containerWidth }) => containerWidth + 30,
+      height: 31.18,
     },
     {
       id: 'b',
@@ -66,47 +62,48 @@ onMounted(() => {
       type: 'text',
       content: '姓名',
       top: ({ containerHeight }) => (containerHeight - nameHeight) / 2,
-      left: 20,
+      left: ({ containerWidth }) => containerWidth + 20,
       fontSize: 44,
       fontWeight: 600,
       color: '#5d4d4a',
+      lineHeight: h => h,
     },
-    // {
-    //   type: 'text',
-    //   content: 'X月X日参加了',
-    //   top: 322,
-    //   textAlign: 'center',
-    //   fontSize: 32,
-    //   color: '#5b4c49',
-    // },
-    // {
-    //   type: 'text',
-    //   content: '某某某某某某组织的某某某某某某活动',
-    //   top: 396,
-    //   textAlign: 'center',
-    //   fontSize: 32,
-    //   color: '#5b4c49',
-    //   left: 72,
-    //   right: 72,
-    //   lineHeight: 48,
-    // },
-    // {
-    //   type: 'image',
-    //   src: 'https://cdn-public-test.community-platform.qq.com/applet-public-img/certificate-personal1.png',
-    //   bottom: 118,
-    //   left: 67,
-    //   right: 67,
-    //   height: 306,
-    //   mode: 'aspectFit',
-    // },
-    // {
-    //   type: 'text',
-    //   content: '- 每步志愿路，都在铸就美好未来 -',
-    //   top: 924,
-    //   textAlign: 'center',
-    //   fontSize: 32,
-    //   color: gradient,
-    // },
+    {
+      type: 'text',
+      content: 'X月X日参加了',
+      top: 322,
+      textAlign: 'center',
+      fontSize: 32,
+      color: '#5b4c49',
+    },
+    {
+      type: 'text',
+      content: '某某某某某某组织的某某某某某某活动',
+      top: 396,
+      textAlign: 'center',
+      fontSize: 32,
+      color: '#5b4c49',
+      left: 72,
+      right: 72,
+      lineHeight: 48,
+    },
+    {
+      type: 'image',
+      src: 'https://cdn-public-test.community-platform.qq.com/applet-public-img/certificate-personal1.png',
+      bottom: 118,
+      left: 67,
+      right: 67,
+      height: 306,
+      mode: 'aspectFit',
+    },
+    {
+      type: 'text',
+      content: '- 每步志愿路，都在铸就美好未来 -',
+      top: 924,
+      textAlign: 'center',
+      fontSize: 32,
+      color: gradient,
+    },
   ])
 })
 

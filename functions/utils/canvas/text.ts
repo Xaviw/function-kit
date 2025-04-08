@@ -23,7 +23,7 @@ export const text = {
     return props
   },
   // 容器尺寸相关的属性标准化
-  calculate(preparedProps: PosterText, parentContainer: NormalizedBox, { ctx }: { ctx: CanvasContext }): NormalizedText {
+  calculate(preparedProps: PosterText, parentContainer: NormalizedBox, { ctx, maxWidth }: { ctx: CanvasContext, maxWidth: number }): NormalizedText {
     const { width: containerWidth, height: containerHeight } = parentContainer
 
     const {
@@ -63,6 +63,7 @@ export const text = {
         x = containerWidth - right - width
     }
     else if (!isNil(left) && !isNil(right)) {
+      x = left
       width = containerWidth - left - right
     }
     else {
@@ -78,16 +79,17 @@ export const text = {
         y = containerHeight - bottom - height
     }
     else if (!isNil(top) && !isNil(bottom)) {
+      y = top
       height = containerHeight - top - bottom
     }
     else {
       y = isNil(top) ? 0 : top
     }
 
-    const { width: fullWidth, height: fullHeight } = enhancedMeasure(preparedProps, { maxWidth: width, ctx })
+    const { height: fullHeight } = enhancedMeasure(preparedProps, { maxWidth: width || maxWidth, ctx })
 
     if (!width)
-      width = Math.min(fullWidth, containerWidth)
+      width = maxWidth
 
     if (!height)
       height = fullHeight
@@ -248,7 +250,7 @@ function measureRowHeight(contents: PosterTextCommonOptions[], options: {
   const top: number[] = []
   const bottom: number[] = []
   const renderable: (NormalizeTextProps & { content: string, overLineY: number, lineThroughY: number, underLineY: number, xOffset: number, width: number })[] = []
-  let line = ''
+  let row = ''
   let xOffset = 0
 
   // 每一段
@@ -262,8 +264,8 @@ function measureRowHeight(contents: PosterTextCommonOptions[], options: {
 
     // 每个字
     for (let i = 0; i < p.content.length; i++) {
-      line += p.content[i]
-      const { width, fontBoundingBoxAscent, fontBoundingBoxDescent } = measure({ ...p, content: line + suffix }, { ctx, baseProps })
+      row += p.content[i]
+      const { width, fontBoundingBoxAscent, fontBoundingBoxDescent } = measure({ ...p, content: row + suffix }, { ctx, baseProps })
       lastWidth = width
       const isEnd = i === p.content.length - 1
 
@@ -295,7 +297,15 @@ function measureRowHeight(contents: PosterTextCommonOptions[], options: {
           lineThroughY = 0
         }
 
-        renderable.push({ ...props, content: isEnd ? line : line.slice(0, -1) + suffix, overLineY, lineThroughY, underLineY, xOffset, width: isEnd ? width - suffixWidth : lastWidth })
+        renderable.push({
+          ...props,
+          content: isEnd ? row : row.slice(0, -1) + suffix,
+          overLineY,
+          lineThroughY,
+          underLineY,
+          xOffset,
+          width: isEnd ? width - suffixWidth : lastWidth,
+        })
 
         // 满一行
         if (width + xOffset > maxWidth) {
@@ -309,7 +319,7 @@ function measureRowHeight(contents: PosterTextCommonOptions[], options: {
         // 一段结束
         if (isEnd) {
           xOffset += width
-          line = ''
+          row = ''
         }
       }
     }

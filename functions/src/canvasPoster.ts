@@ -117,17 +117,19 @@ export class CanvasPoster {
     if (isNumber(parentIndex) && parentIndex > -1)
       containers = await this.travelContainer(parentIndex, containers)
 
-    const container = await this.normalize(index, containers[containers.length - 1])
+    const container = await this.normalize(index, containers)
     return [...containers, container]
   }
 
   /** 标准化参数，扩展盒模型等参数 */
-  private async normalize(index: number, parent: NormalizedBox) {
+  private async normalize(index: number, parents: NormalizedBox[]) {
     const config = this.configs[index] as PosterElement
     if (!this.cache[index])
       this.cache[index] = {} as any
     const cache = this.cache[index]
     const plugin = this.plugins[config.type]
+    const parent = parents[parents.length - 1]
+    const maxWidth = this.options.width - parents.reduce((p, c) => p + c.x, 0)
 
     // TODO
     let preparedProps = cache.prepare
@@ -138,7 +140,7 @@ export class CanvasPoster {
 
     let calculatedProps = cache.calculate
     if (!calculatedProps) {
-      calculatedProps = plugin.calculate(preparedProps as any, parent, { ctx: this.ctx })
+      calculatedProps = plugin.calculate(preparedProps as any, parent, { ctx: this.ctx, maxWidth })
       cache.calculate = calculatedProps
     }
 
