@@ -114,9 +114,7 @@ export const text = {
   },
   // 绘制
   render(calculatedProps: NormalizedText, { ctx }: { ctx: CanvasContext }) {
-    const { x, y, width, height } = calculatedProps
-    ctx.rect(x, y, width, height)
-    ctx.clip()
+    const { x, y, width } = calculatedProps
     enhancedDraw(calculatedProps, { maxWidth: width, ctx, x, y })
   },
 }

@@ -8,7 +8,7 @@
 
 # Canvas 海报
 
-类 CSS 规则配置式生成 Canvas 海报，支持相对定位、百分比尺寸，提供文字、图片、线条、矩形等配置式元素
+类 CSS 规则配置式生成 Canvas 海报，支持相对定位、相对尺寸。提供文字、图片、线条、矩形等配置式元素
 
 ## 使用方式
 
@@ -29,20 +29,20 @@ poster.draw(
     // 函数式
     ({ ctx, canvas, dpr }) => {
       // 自定义渲染
-      // 或设置实例属性（注意理解实例状态的栈结构）
+      // 或设置实例属性（注意理解实例状态的栈结构，使用不当会影响后续渲染）
     },
     // 配置式
     {
       // 基础属性
       type, // 元素类型
-      id, // 可选的元素 id，用于其他元素相对于本元素定位
+      id, // 可选的元素 id，用于其他元素相对于本元素定位以及设置相对尺寸
       relativeTo, // 可选的相对定位元素 id，默认相对于画布
 
-      // 布局属性
+      // 布局属性（line 例外）
       left: 0,
       top: 0,
-      width: ({ containerWidth, containerHeight }) => containerWidth * 0.5,
-      height: ({ containerWidth, containerHeight }) => containerHeight * 0.5,
+      width: ({ containerWidth }) => containerWidth * 0.5,
+      height: ({ containerHeight }) => containerHeight * 0.5,
 
       // 更多属性
       backgroundColor: gradient, // 渐变色示例
@@ -183,39 +183,41 @@ onMounted(() => {
 
 ## 文本 text
 
-| 属性名                | 说明                                                                                                       |
-| --------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `type`                | 元素类型，固定为 'text'                                                                                    |
-| `content`             | 文本内容，支持字符串或对象数组，设置为数组时支持大部分同名样式属性                                         |
-| `lineClamp`           | 最大行数，超出省略显示。height 小于内容高度时，会进行裁剪                                                  |
-| `ellipsisContent`     | 超出省略时展示的字符，默认为 '...'                                                                         |
-| `textAlign`           | 容器内的对齐方式，默认为 'left'，支持 'left'、'center'、'right'                                            |
-| `width`               | 宽度，支持数字或返回数字的函数                                                                             |
-| `height`              | 高度，支持数字或返回数字的函数                                                                             |
-| `top`                 | 上边距，支持数字或返回数字的函数                                                                           |
-| `right`               | 右边距，支持数字或返回数字的函数                                                                           |
-| `bottom`              | 下边距，支持数字或返回数字的函数                                                                           |
-| `left`                | 左边距，支持数字或返回数字的函数                                                                           |
-| `rotate`              | 旋转角度，旋转不会改变元素盒模型，不会影响子元素相对定位                                                   |
-| `lineHeight`          | 行高，数值或参数为字体高度返回数值的函数，默认为 1.2 倍行高                                                |
-| `fontSize`            | 字体大小，默认值为 16                                                                                      |
-| `fontFamily`          | 字体，默认值为 'sans-serif'                                                                                |
-| `fontFamilySrc`       | 字体源文件地址                                                                                             |
-| `fontWeight`          | 字体粗细，默认值为 'normal'，支持 100-900 或 'normal'/'bold'                                               |
-| `color`               | 文本颜色，支持纯色、渐变或图案                                                                             |
-| `textBaseLine`        | 基线位置，默认值为 'alphabetic'                                                                            |
-| `letterSpacing`       | 字母间距                                                                                                   |
-| `wordSpacing`         | 单词间距                                                                                                   |
-| `fontStyle`           | 字体样式，默认值为 'normal'，支持 'normal' 或 'italic'                                                     |
-| `textDecoration`      | 文本装饰线，支持 'underline'、'overline'、'line-through'                                                   |
-| `textDecorationProps` | 文本装饰线的属性，包括 lineCap、lineColor、lineDash、lineDashOffset、lineJoin、lineWidth、miterLimit       |
-| `textStyle`           | 文本样式，默认值为 'fill'，支持 'fill' 或 'stroke'                                                         |
-| `strokeProps`         | 仅当 textStyle 为 'stroke' 时生效，包括 lineCap、lineDash、lineDashOffset、lineJoin、lineWidth、miterLimit |
-| `backgroundColor`     | 文字底色，支持纯色、渐变或图案                                                                             |
-| `shadowOffsetX`       | 阴影水平偏移量                                                                                             |
-| `shadowOffsetY`       | 阴影垂直偏移量                                                                                             |
-| `shadowBlur`          | 阴影模糊半径                                                                                               |
-| `shadowColor`         | 阴影颜色                                                                                                   |
+| 属性名                | 说明                                                                                                                                                 | 默认值                   |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| \*`type`              | 固定为 `text`                                                                                                                                        | -                        |
+| \*`content`           | 文本内容，支持空格，不支持其他控制字符；为数组时可以分别设置样式                                                                                     | -                        |
+| `width`               | 宽度，支持数值或基于容器尺寸的函数                                                                                                                   | -                        |
+| `height`              | 高度，支持数值或基于容器尺寸的函数                                                                                                                   | -                        |
+| `top`                 | 顶部偏移，支持数值或基于容器尺寸的函数                                                                                                               | -                        |
+| `right`               | 右侧偏移，支持数值或基于容器尺寸的函数                                                                                                               | -                        |
+| `bottom`              | 底部偏移，支持数值或基于容器尺寸的函数                                                                                                               | -                        |
+| `left`                | 左侧偏移，支持数值或基于容器尺寸的函数                                                                                                               | -                        |
+| `rotate`              | 旋转角度，不会改变元素盒模型，不影响子元素相对定位                                                                                                   | -                        |
+| `id`                  | 用于相对定位的标识符                                                                                                                                 | -                        |
+| `relativeTo`          | 相对于某个 id 对应的元素进行定位（注意避免循环依赖）                                                                                                 | -                        |
+| `fontSize`            | 文字大小                                                                                                                                             | `16`                     |
+| `fontFamily`          | 字体                                                                                                                                                 | `'sans-serif'`           |
+| `fontFamilySrc`       | 字体资源地址                                                                                                                                         | -                        |
+| `fontWeight`          | 字体粗细，可选值：`100`、`200`、`300`、`400`、`500`、`600`、`700`、`800`、`900`、`'normal'`、`'bold'`                                                | `'normal'`               |
+| `fontStyle`           | 字体样式，可选值：`'normal'`、`'italic'`                                                                                                             | `'normal'`               |
+| `color`               | 文字颜色，支持渐变和图案                                                                                                                             | -                        |
+| `lineHeight`          | 文本行高，支持数值或接收文本高度返回数值的函数                                                                                                       | `(h: number) => 1.2 * h` |
+| `textAlign`           | 容器内的对齐方式，可选值：`'left'`、`'center'`、`'right'`                                                                                            | `'left'`                 |
+| `textBaseLine`        | 基线位置为起点 Y 坐标加基线上方文字高度（含上方的lineHeight），可选值：`'top'`、`'hanging'`、`'middle'`、`'alphabetic'`、`'ideographic'`、`'bottom'` | `'alphabetic'`           |
+| `letterSpacing`       | 字母间距                                                                                                                                             | -                        |
+| `wordSpacing`         | 词间距                                                                                                                                               | -                        |
+| `lineClamp`           | 最大行数，超出省略显示                                                                                                                               | -                        |
+| `ellipsisContent`     | 超出省略时展示的字符                                                                                                                                 | `'...'`                  |
+| `textDecoration`      | 文本装饰线，可选值：`'underline'`、`'overline'`、`'line-through'`                                                                                    | -                        |
+| `textDecorationProps` | 文本装饰线属性，可包含：`'lineCap'`、`'lineColor'`、`'lineDash'`、`'lineDashOffset'`、`'lineJoin'`、`'lineWidth'`、`'miterLimit'`                    | -                        |
+| `textStyle`           | 填充或镂空，可选值：`'fill'`、`'stroke'`                                                                                                             | `'fill'`                 |
+| `strokeProps`         | 仅 textStyle='stroke' 时生效的线条属性，可包含：`'lineCap'`、`'lineDash'`、`'lineDashOffset'`、`'lineJoin'`、`'lineWidth'`、`'miterLimit'`           | -                        |
+| `backgroundColor`     | 文字底色                                                                                                                                             | -                        |
+| `shadowOffsetX`       | 阴影 X 轴偏移                                                                                                                                        | -                        |
+| `shadowOffsetY`       | 阴影 Y 轴偏移                                                                                                                                        | -                        |
+| `shadowBlur`          | 阴影模糊程度                                                                                                                                         | -                        |
+| `shadowColor`         | 阴影颜色                                                                                                                                             | -                        |
 
 <Text />
 
@@ -225,6 +227,10 @@ Canvas 中使用自定义字体时需要确保字体加载完成再绘制，否�
 使用 `fontFamilySrc` 属性时，会在浏览器环境通过 [FontFace](https://developer.mozilla.org/zh-CN/docs/Web/API/CSS_Font_Loading_API) API、小程序环境中可以通过 [wx.loadFontFace](https://developers.weixin.qq.com/miniprogram/dev/api/ui/font/wx.loadFontFace.html) API 加载字体
 :::
 
+`CanvasPoster` 实例对象上还提供了 `measure` 方法，用于接收单个文本段配置对象后（`content` 属性为数组时可接收的对象），返回文本的 `Metrics` 对象（不会换行）
+
+以及 `measureHeight` 方法，用于接收与完整配置一致的配置对象及可选的最大宽度（默认为画布宽度）后，返回文本换行后的总高度和全部文本累计的总宽度
+
 ::: details 代码
 
 ```ts
@@ -232,7 +238,7 @@ const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
 
 onMounted(() => {
   const ctx = canvas.value!.getContext('2d')
-  const gradient = ctx!.createLinearGradient(0, 0, 280, 0)
+  const gradient = ctx!.createLinearGradient(0, 0, 500, 0)
   gradient.addColorStop(0, '#cf1322')
   gradient.addColorStop(1, '#389e0d')
   const poster = new CanvasPoster({
@@ -244,19 +250,28 @@ onMounted(() => {
   poster.draw([
     {
       type: 'text',
-      content: 'FontFamily 1234 !@#$',
+      content: [
+        {
+          content: '测试',
+          fontFamily: 'ZCOOL KuaiLe',
+          fontFamilySrc: 'https://fonts.gstatic.com/s/zcoolkuaile/v19/tssqApdaRQokwFjFJjvM6h2Wo-Tpo2MpsrpYU3EJjXfOiTrBdUtGm0PGsPHkbHZzpr3G.116.woff2',
+        },
+        {
+          content: ' Font Family',
+          fontFamily: 'Underdog',
+          fontFamilySrc: 'https://gstatic.loli.net/s/underdog/v23/CHygV-jCElj7diMroWSlWV8.woff2',
+          textStyle: 'stroke',
+        },
+      ],
       color: gradient,
       fontSize: 26,
       fontStyle: 'italic',
-      fontFamily: 'Hanalei',
-      fontFamilySrc: 'https://fonts.gstatic.font.im/s/hanaleifill/v22/fC1mPYtObGbfyQznIaQzPQi8UAjAhFqtag.woff2',
-      letterSpacing: 6,
+      letterSpacing: 4,
       shadowBlur: 2,
       shadowColor: '#00000033',
       shadowOffsetX: 6,
       shadowOffsetY: 6,
       textDecoration: 'underline',
-      textStyle: 'stroke',
       wordSpacing: 6,
       backgroundColor: '#5cdbd348',
       lineHeight: h => h,
@@ -375,29 +390,32 @@ onMounted(() => {
 
 ## 图片 image
 
-| 属性名          | 说明                                                                                         |
-| --------------- | -------------------------------------------------------------------------------------------- |
-| `src`           | 图片链接或 base64                                                                            |
-| `sourceX`       | 裁剪图片的起点 X 坐标，支持数值或百分比（相对于图片宽度），默认 0                            |
-| `sourceY`       | 裁剪图片的起点 Y 坐标，支持数值或百分比（相对于图片高度），默认 0                            |
-| `sourceWidth`   | 裁剪图片宽度，支持数值或百分比（相对于图片宽度），默认值为图片宽度                           |
-| `sourceHeight`  | 裁剪图片高度，支持数值或百分比（相对于图片高度），默认值为图片高度                           |
-| `mode`          | 图片缩放模式，默认 'scaleToFill'，支持 'scaleToFill'、'aspectFit'、'aspectFill'              |
-| `flipX`         | 沿 x 轴翻转                                                                                  |
-| `flipY`         | 沿 y 轴翻转                                                                                  |
-| `width`         | 支持数字或参数为父容器宽度、高度，自身宽度、高度的函数                                       |
-| `height`        | 支持数字或参数为父容器宽度、高度，自身宽度、高度的函数                                       |
-| `top`           | 支持数字或参数为父容器宽度、高度，自身宽度、高度的函数                                       |
-| `right`         | 支持数字或参数为父容器宽度、高度，自身宽度、高度的函数                                       |
-| `bottom`        | 支持数字或参数为父容器宽度、高度，自身宽度、高度的函数                                       |
-| `left`          | 支持数字或参数为父容器宽度、高度，自身宽度、高度的函数                                       |
-| `rotate`        | 旋转角度，旋转不会改变元素盒模型，不会影响子元素相对定位                                     |
-| `shadowOffsetX` | 阴影水平偏移量                                                                               |
-| `shadowOffsetY` | 阴影垂直偏移量                                                                               |
-| `shadowBlur`    | 阴影模糊半径                                                                                 |
-| `shadowColor`   | 阴影颜色                                                                                     |
-| `border`        | 边框配置，包括 lineCap、lineColor、lineDash、lineDashOffset、lineJoin、lineWidth、miterLimit |
-| `borderRadius`  | 圆角大小，支持数值或以自身宽、高对象为参数，返回数值的函数                                   |
+| 属性名          | 说明                                                                                                                        | 默认值                             |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| \*`type`        | 固定为 `image`                                                                                                              | -                                  |
+| \*`src`         | 图片链接或 base64                                                                                                           | -                                  |
+| `width`         | 宽度，支持数值或基于容器尺寸和自身尺寸的函数                                                                                | -                                  |
+| `height`        | 高度，支持数值或基于容器尺寸和自身尺寸的函数                                                                                | -                                  |
+| `top`           | 顶部偏移，支持数值或基于容器尺寸和自身尺寸的函数                                                                            | -                                  |
+| `right`         | 右侧偏移，支持数值或基于容器尺寸和自身尺寸的函数                                                                            | -                                  |
+| `bottom`        | 底部偏移，支持数值或基于容器尺寸和自身尺寸的函数                                                                            | -                                  |
+| `left`          | 左侧偏移，支持数值或基于容器尺寸和自身尺寸的函数                                                                            | -                                  |
+| `sourceX`       | 裁剪图片的起点 X 坐标                                                                                                       | `0`                                |
+| `sourceY`       | 裁剪图片的起点 Y 坐标                                                                                                       | `0`                                |
+| `sourceWidth`   | 裁剪图片宽度                                                                                                                | `({ imageWidth }) => imageWidth`   |
+| `sourceHeight`  | 裁剪图片高度，支持数值或相对于图片高度的百分比                                                                              | `({ imageHeight }) => imageHeight` |
+| `mode`          | 图片缩放模式，仅容器有固定宽高时生效，可选值：`'scaleToFill'`、`'aspectFill'`、`'aspectFit'`                                | `'scaleToFill'`                    |
+| `flipX`         | 沿 x 轴翻转                                                                                                                 | -                                  |
+| `flipY`         | 沿 y 轴翻转                                                                                                                 | -                                  |
+| `rotate`        | 旋转角度，不会改变元素盒模型，不影响子元素相对定位                                                                          | -                                  |
+| `border`        | 边框属性，可包含：`'lineCap'`、`'lineColor'`、`'lineDash'`、`'lineDashOffset'`、`'lineJoin'`、`'lineWidth'`、`'miterLimit'` | -                                  |
+| `borderRadius`  | 圆角大小，支持数值或基于容器尺寸和自身尺寸的函数                                                                            | -                                  |
+| `shadowOffsetX` | 阴影 X 轴偏移                                                                                                               | -                                  |
+| `shadowOffsetY` | 阴影 Y 轴偏移                                                                                                               | -                                  |
+| `shadowBlur`    | 阴影模糊程度                                                                                                                | -                                  |
+| `shadowColor`   | 阴影颜色                                                                                                                    | -                                  |
+| `id`            | 用于相对定位的标识符                                                                                                        | -                                  |
+| `relativeTo`    | 相对于某个 id 对应的元素进行定位（注意避免循环依赖）                                                                        | -                                  |
 
 <Image />
 
@@ -546,23 +564,25 @@ onMounted(() => {
 
 ## 矩形 Rect
 
-| 属性名            | 说明                                                                                         |
-| ----------------- | -------------------------------------------------------------------------------------------- |
-| `type`            | 元素类型，固定为 'rect'                                                                      |
-| `backgroundColor` | 背景颜色，支持纯色、渐变或图案                                                               |
-| `width`           | 宽度，支持数字或返回数字的函数                                                               |
-| `height`          | 高度，支持数字或返回数字的函数                                                               |
-| `top`             | 上边距，支持数字或返回数字的函数                                                             |
-| `right`           | 右边距，支持数字或返回数字的函数                                                             |
-| `bottom`          | 下边距，支持数字或返回数字的函数                                                             |
-| `left`            | 左边距，支持数字或返回数字的函数                                                             |
-| `rotate`          | 旋转角度，旋转不会改变元素盒模型，不会影响子元素相对定位                                     |
-| `shadowOffsetX`   | 阴影水平偏移量                                                                               |
-| `shadowOffsetY`   | 阴影垂直偏移量                                                                               |
-| `shadowBlur`      | 阴影模糊半径                                                                                 |
-| `shadowColor`     | 阴影颜色                                                                                     |
-| `border`          | 边框配置，包括 lineCap、lineColor、lineDash、lineDashOffset、lineJoin、lineWidth、miterLimit |
-| `borderRadius`    | 边框圆角，支持数值或函数                                                                     |
+| 属性名            | 说明                                                                                                                        | 默认值 |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------- | ------ |
+| \*`type`          | 固定为 `rect`                                                                                                               | -      |
+| `backgroundColor` | 背景颜色，支持渐变和图案                                                                                                    | -      |
+| `border`          | 边框属性，可包含：`'lineCap'`、`'lineColor'`、`'lineDash'`、`'lineDashOffset'`、`'lineJoin'`、`'lineWidth'`、`'miterLimit'` | -      |
+| `borderRadius`    | 圆角大小，支持数值或基于容器尺寸和自身尺寸的函数                                                                            | -      |
+| `width`           | 宽度，支持数值或基于容器尺寸的函数                                                                                          | -      |
+| `height`          | 高度，支持数值或基于容器尺寸的函数                                                                                          | -      |
+| `top`             | 顶部偏移，支持数值或基于容器尺寸的函数                                                                                      | -      |
+| `right`           | 右侧偏移，支持数值或基于容器尺寸的函数                                                                                      | -      |
+| `bottom`          | 底部偏移，支持数值或基于容器尺寸的函数                                                                                      | -      |
+| `left`            | 左侧偏移，支持数值或基于容器尺寸的函数                                                                                      | -      |
+| `rotate`          | 旋转角度，不会改变元素盒模型，不影响子元素相对定位                                                                          | -      |
+| `shadowOffsetX`   | 阴影 X 轴偏移                                                                                                               | -      |
+| `shadowOffsetY`   | 阴影 Y 轴偏移                                                                                                               | -      |
+| `shadowBlur`      | 阴影模糊程度                                                                                                                | -      |
+| `shadowColor`     | 阴影颜色                                                                                                                    | -      |
+| `id`              | 用于相对定位的标识符                                                                                                        | -      |
+| `relativeTo`      | 相对于某个 id 对应的元素进行定位（注意避免循环依赖）                                                                        | -      |
 
 <Rect />
 
@@ -624,28 +644,24 @@ onMounted(() => {
 
 ## 线条 Line
 
-| 属性名           | 说明                                                     |
-| ---------------- | -------------------------------------------------------- |
-| `type`           | 元素类型，固定为 'line'                                  |
-| `points`         | 线条顶点，可以为 2 个或多个                              |
-| `lineWidth`      | 线条宽度，默认为 1                                       |
-| `lineColor`      | 线条颜色，支持纯色、渐变或图案                           |
-| `lineDash`       | 虚线样式                                                 |
-| `lineDashOffset` | 虚线偏移量                                               |
-| `lineCap`        | 线条端点样式，默认为 'butt'                              |
-| `lineJoin`       | 线条连接处样式，默认为 'miter'                           |
-| `miterLimit`     | 斜接限制比例，默认为 10                                  |
-| `width`          | 宽度，支持数字或返回数字的函数                           |
-| `height`         | 高度，支持数字或返回数字的函数                           |
-| `top`            | 上边距，支持数字或返回数字的函数                         |
-| `right`          | 右边距，支持数字或返回数字的函数                         |
-| `bottom`         | 下边距，支持数字或返回数字的函数                         |
-| `left`           | 左边距，支持数字或返回数字的函数                         |
-| `rotate`         | 旋转角度，旋转不会改变元素盒模型，不会影响子元素相对定位 |
-| `shadowOffsetX`  | 阴影水平偏移量                                           |
-| `shadowOffsetY`  | 阴影垂直偏移量                                           |
-| `shadowBlur`     | 阴影模糊半径                                             |
-| `shadowColor`    | 阴影颜色                                                 |
+| 属性名           | 说明                                                  | 默认值    |
+| ---------------- | ----------------------------------------------------- | --------- |
+| \*`type`         | 固定为 `line`                                         | -         |
+| \*`points`       | 线条顶点，可以为 2 个或多个                           | -         |
+| `lineWidth`      | 线条宽度                                              | `1`       |
+| `lineColor`      | 线条颜色，支持渐变和图案                              | -         |
+| `lineDash`       | 虚线样式                                              | -         |
+| `lineDashOffset` | 虚线偏移量                                            | -         |
+| `lineCap`        | 线条端点样式，可选值：`'butt'`、`'round'`、`'square'` | `'butt'`  |
+| `lineJoin`       | 线条连接样式，可选值：`'miter'`、`'round'`、`'bevel'` | `'miter'` |
+| `miterLimit`     | 斜接长度限制比例                                      | `10`      |
+| `rotate`         | 旋转角度，不会改变元素盒模型，不影响子元素相对定位    | -         |
+| `shadowOffsetX`  | 阴影 X 轴偏移                                         | -         |
+| `shadowOffsetY`  | 阴影 Y 轴偏移                                         | -         |
+| `shadowBlur`     | 阴影模糊程度                                          | -         |
+| `shadowColor`    | 阴影颜色                                              | -         |
+| `id`             | 用于相对定位的标识符                                  | -         |
+| `relativeTo`     | 相对于某个 id 对应的元素进行定位（注意避免循环依赖）  | -         |
 
 <Line />
 

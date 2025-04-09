@@ -157,7 +157,6 @@ export interface PosterText extends PosterTextCommonOptions, PosterElementCommon
   content: string | PosterTextCommonOptions[]
   /**
    * 最大行数，超出省略显示
-   * height 小于内容高度时，会进行裁剪
    */
   lineClamp?: number
   /**
@@ -248,7 +247,7 @@ export interface PosterRect extends PosterElementCommonOptions {
   border?: Pick<PosterLine, 'lineCap' | 'lineColor' | 'lineDash' | 'lineDashOffset' | 'lineJoin' | 'lineWidth' | 'miterLimit'>
   /**
    * 圆角大小
-   * 支持数值或以自身宽、高对象为参数，返回数值的函数
+   * 支持数值或以容器宽、高，自身宽、高对象为参数，返回数值的函数
    */
   borderRadius?: NumberWithContainerAndSelf
 }

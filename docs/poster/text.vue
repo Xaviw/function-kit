@@ -6,7 +6,7 @@ const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
 
 onMounted(() => {
   const ctx = canvas.value!.getContext('2d')
-  const gradient = ctx!.createLinearGradient(0, 0, 280, 0)
+  const gradient = ctx!.createLinearGradient(0, 0, 500, 0)
   gradient.addColorStop(0, '#cf1322')
   gradient.addColorStop(1, '#389e0d')
   const poster = new CanvasPoster({
@@ -20,26 +20,26 @@ onMounted(() => {
       type: 'text',
       content: [
         {
-          content: '测试字体 ！，。',
+          content: '测试',
           fontFamily: 'ZCOOL KuaiLe',
           fontFamilySrc: 'https://fonts.gstatic.com/s/zcoolkuaile/v19/tssqApdaRQokwFjFJjvM6h2Wo-Tpo2MpsrpYU3EJjXfOiTrBdUtGm0PGsPHkbHZzpr3G.116.woff2',
         },
         {
-          content: 'FontFamily 123 !,.',
+          content: ' Font Family',
           fontFamily: 'Underdog',
           fontFamilySrc: 'https://gstatic.loli.net/s/underdog/v23/CHygV-jCElj7diMroWSlWV8.woff2',
+          textStyle: 'stroke',
         },
       ],
       color: gradient,
       fontSize: 26,
       fontStyle: 'italic',
-      letterSpacing: 6,
+      letterSpacing: 4,
       shadowBlur: 2,
       shadowColor: '#00000033',
       shadowOffsetX: 6,
       shadowOffsetY: 6,
       textDecoration: 'underline',
-      textStyle: 'stroke',
       wordSpacing: 6,
       backgroundColor: '#5cdbd348',
       lineHeight: h => h,
