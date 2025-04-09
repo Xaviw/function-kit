@@ -2,17 +2,11 @@
 
 ## 模块
 
-- [canvas/common](canvas/common.md)
-- [canvas/image](canvas/image.md)
-- [canvas/line](canvas/line.md)
-- [canvas/poster](canvas/poster.md)
-- [canvas/rect](canvas/rect.md)
-- [canvas/text](canvas/text.md)
+- [canvasPoster](canvasPoster.md)
 - [case](case.md)
 - [className](className.md)
 - [cloneDeep](cloneDeep.md)
 - [curry](curry.md)
-- [datetime](datetime.md)
 - [debounce](debounce.md)
 - [fileSize](fileSize.md)
 - [filterObject](filterObject.md)
@@ -22,6 +16,7 @@
 - [isEmpty](isEmpty.md)
 - [isEqual](isEqual.md)
 - [isJSON](isJSON.md)
+- [isLeapYear](isLeapYear.md)
 - [last](last.md)
 - [Lru](Lru.md)
 - [mapObject](mapObject.md)

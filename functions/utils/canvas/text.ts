@@ -17,8 +17,24 @@ interface NormalizedText extends PosterText {
 export const text = {
   // 前置工作、与容器尺寸无关的属性标准化
   async prepare(props: PosterText) {
-    if (props.fontFamily && props.fontFamilySrc)
-      await loadFont(props.fontFamily, props.fontFamilySrc)
+    const { fontFamily, fontFamilySrc, content } = props
+    const fonts = []
+
+    if (fontFamily && fontFamilySrc)
+      fonts.push([fontFamily, fontFamilySrc])
+
+    if (isArray(content)) {
+      content.forEach((item) => {
+        if (item.fontFamily && item.fontFamilySrc)
+          fonts.push([item.fontFamily, item.fontFamilySrc])
+      })
+    }
+
+    const events: Promise<any>[] = []
+    fonts.forEach(([family, src]) => {
+      events.push(loadFont(family, src))
+    })
+    await Promise.allSettled(events)
 
     return props
   },

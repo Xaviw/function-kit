@@ -1,6 +1,6 @@
-[function-kit](index.md) / datetime
+[function-kit](index.md) / isLeapYear
 
-# datetime
+# isLeapYear
 
 ## isLeapYear()
 

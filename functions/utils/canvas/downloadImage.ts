@@ -1,4 +1,4 @@
-import type { Canvas } from '../../types/_canvas'
+import type { Canvas } from '../../types/canvas'
 import { memo } from '../../src/memo'
 import { isDataUrl, isPath, isUrl } from '../../src/reg'
 

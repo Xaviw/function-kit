@@ -18,8 +18,9 @@
 运行具体项目中的命令需要先 cd 到对应目录再执行，或使用 `pnpm -F 项目名 项目命令`
 
 本工作空间包括项目：
-  - @function-kit/functions
-  - @function-kit/docs
+
+- @function-kit/functions
+- @function-kit/docs
 
 全局命令包括：
 

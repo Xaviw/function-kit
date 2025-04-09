@@ -18,12 +18,21 @@ onMounted(() => {
   poster.draw([
     {
       type: 'text',
-      content: 'FontFamily 1234 !@#$',
+      content: [
+        {
+          content: '测试字体 ！，。',
+          fontFamily: 'ZCOOL KuaiLe',
+          fontFamilySrc: 'https://fonts.gstatic.com/s/zcoolkuaile/v19/tssqApdaRQokwFjFJjvM6h2Wo-Tpo2MpsrpYU3EJjXfOiTrBdUtGm0PGsPHkbHZzpr3G.116.woff2',
+        },
+        {
+          content: 'FontFamily 123 !,.',
+          fontFamily: 'Underdog',
+          fontFamilySrc: 'https://gstatic.loli.net/s/underdog/v23/CHygV-jCElj7diMroWSlWV8.woff2',
+        },
+      ],
       color: gradient,
       fontSize: 26,
       fontStyle: 'italic',
-      fontFamily: 'Hanalei',
-      fontFamilySrc: 'https://fonts.gstatic.font.im/s/hanaleifill/v22/fC1mPYtObGbfyQznIaQzPQi8UAjAhFqtag.woff2',
       letterSpacing: 6,
       shadowBlur: 2,
       shadowColor: '#00000033',

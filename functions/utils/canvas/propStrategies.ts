@@ -1,4 +1,4 @@
-import type { CanvasContext } from '../../types/_canvas'
+import type { CanvasContext } from '../../types/canvas'
 import type { Recordable } from '../../types/common'
 import { isArray, isNumber, isObject, isString } from '../../src/is'
 
