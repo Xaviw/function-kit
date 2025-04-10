@@ -207,7 +207,12 @@ export class CanvasPoster {
 /**
  * 导出 canvas
  */
-export function saveCanvasAsImage(canvas: Canvas, options?: { type?: string, quality?: number, fileName?: string }) {
+export function saveCanvasAsImage(canvas: Canvas, options?: {
+  /** mime 值；小程序中仅 image/jpeg 时为 jpg，否则为 png */
+  type?: string
+  quality?: number
+  fileName?: string
+}) {
   let { type, quality, fileName } = isObject(options) ? options : {}
   type = isString(type) && type.startsWith('image/') ? type : undefined
   quality = isNumber(quality) && quality > 0 && quality <= 1 ? quality : 1
@@ -229,7 +234,7 @@ export function saveCanvasAsImage(canvas: Canvas, options?: { type?: string, qua
     else {
       wx.canvasToTempFilePath({
         canvas,
-        fileType: isString(type) && ['jpg', 'jpeg'].includes(type.toLowerCase()) ? 'jpg' : 'png',
+        fileType: type === 'image/jpeg' ? 'jpg' : 'png',
         quality,
         success({ tempFilePath }) {
           wx.saveImageToPhotosAlbum({
