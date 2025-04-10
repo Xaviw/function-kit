@@ -58,36 +58,54 @@ poster.draw(
 :::details 代码
 
 ```ts
-const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
+const canvas = ref<HTMLCanvasElement>()
 
 onMounted(() => {
-  const ctx = canvas.value!.getContext('2d')
-
-  const gradient = ctx!.createLinearGradient(0, 900, 0, 1006)
-  gradient.addColorStop(0, '#a55002')
-  gradient.addColorStop(1, '#ffb470')
-
   const poster = new CanvasPoster({
-    node: canvas.value!,
-    width: 620,
-    height: 1006,
+    node: 'canvas',
   })
 
-  const metrics = poster.measure({
-    content: '姓名',
-    fontSize: 44,
-    fontWeight: 600,
-    color: '#5d4d4a',
-  })
-  const nameWidth = metrics.width
-  const nameHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
+  const gradientText: PosterText = {
+    type: 'text',
+    content: '- 每步志愿路，都在铸就美好未来 -',
+    top: 924,
+    textAlign: 'center',
+    fontSize: 32,
+  }
+
+  let nameWidth: number
+  let nameHeight: number
 
   poster.draw([
+    async ({ ctx, canvas: node }) => {
+      canvas.value = node
+
+      const gradient = ctx.createLinearGradient(0, 900, 0, 1006)
+      gradient.addColorStop(0, '#a55002')
+      gradient.addColorStop(1, '#ffb470')
+      gradientText.color = gradient
+
+      const metrics = await poster.measure({
+        content: '姓名',
+        fontSize: 44,
+        fontWeight: 600,
+        color: '#5d4d4a',
+      })
+      nameWidth = metrics.width
+      nameHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
+    },
     {
       type: 'image',
       src: 'https://cdn-public-test.community-platform.qq.com/applet-public-img/certificate-bg-long.png',
-      width: ({ containerWidth }) => containerWidth,
-      height: ({ containerHeight }) => containerHeight,
+      width: ({ containerWidth }) => containerWidth - 20,
+      height: ({ containerHeight }) => containerHeight - 20,
+      top: 10,
+      left: 10,
+      border: {
+        lineColor: '#ffc069',
+        lineWidth: 10,
+      },
+      borderRadius: 40,
     },
     {
       id: 'a',
@@ -152,14 +170,7 @@ onMounted(() => {
       height: 306,
       mode: 'aspectFit',
     },
-    {
-      type: 'text',
-      content: '- 每步志愿路，都在铸就美好未来 -',
-      top: 924,
-      textAlign: 'center',
-      fontSize: 32,
-      color: gradient,
-    },
+    gradientText,
   ])
 })
 ```

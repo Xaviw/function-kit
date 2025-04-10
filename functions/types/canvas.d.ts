@@ -21,15 +21,15 @@ export interface PosterOptions {
   /**
    * canvas 节点
    */
-  node: Canvas
+  node: Canvas | string
   /**
    * 海报设计图宽度
    */
-  width: number
+  width?: number
   /**
    * 海报设计图高度
    */
-  height: number
+  height?: number
   /**
    * 像素比，默认会自动获取设备 drp
    */

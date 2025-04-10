@@ -2,8 +2,7 @@ import type { Canvas, CanvasContext, NormalizedBox, PosterImage } from '../../ty
 import { isFunction, isNil, isNumber, isString } from '../../src/is'
 import { mapObject } from '../../src/mapObject'
 import { pick } from '../../src/pick'
-import { roundRect } from './common'
-import { downloadImage } from './downloadImage'
+import { downloadImage, roundRect } from './common'
 import { settingCanvasProps } from './propStrategies'
 
 interface PreparedImage extends PosterImage {

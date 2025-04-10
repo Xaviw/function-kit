@@ -1,5 +1,5 @@
 import type { Fn, Key } from '../types/common'
-import { isFunction } from './is'
+import { isFunction, isPromise } from './is'
 import { Lru } from './Lru'
 
 /**
@@ -48,8 +48,16 @@ export function memo<Args extends any[], R>(fn: Fn<Args, R>, options?: MemoOptio
       return existing.value
     }
 
-    const result = fn(...args)
+    let result = fn(...args)
+    if (isPromise(result)) {
+      result = result.catch((err) => {
+        memoize.cache.remove(key)
+        throw err
+      }) as R
+    }
+
     const expires = Number.parseInt(options?.expires as any) || null
+
     memoize.cache.set(key, {
       value: result,
       expires: expires ? Date.now() + expires : null,

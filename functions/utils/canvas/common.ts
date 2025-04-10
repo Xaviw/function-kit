@@ -1,5 +1,7 @@
-import type { CanvasContext, NormalizedBox } from '../../types/canvas'
+import type { Canvas, CanvasContext, NormalizedBox } from '../../types/canvas'
+import type { MaybePromise } from '../../types/common'
 import { isNumber, isString } from '../../src/is'
+import { memo } from '../../src/memo'
 import { isPath, isUrl } from '../../src/reg'
 
 /*
@@ -15,6 +17,38 @@ export function getDpr(dpr?: number) {
   }
   else {
     return window.devicePixelRatio
+  }
+}
+
+export interface CanvasNode { canvas: Canvas, width: number, height: number }
+
+/**
+ * 获取 canvas 节点
+ */
+export function getCanvas(str: string): MaybePromise<CanvasNode> {
+  if (PLATFORM === 'miniprogram') {
+    return new Promise((resolve) => {
+      wx.createSelectorQuery()
+        .select(str)
+        .fields(
+          { node: true, size: true },
+          (res) => {
+            const { node, width, height } = res || {}
+            resolve({ canvas: node, width, height } as CanvasNode)
+          },
+        )
+        .exec()
+    })
+  }
+  else {
+    const canvas = document.querySelector(str) as HTMLCanvasElement
+    return canvas
+      ? {
+          canvas,
+          width: Number.parseFloat(canvas.style.width),
+          height: Number.parseFloat(canvas.style.height),
+        }
+      : {} as CanvasNode
   }
 }
 
@@ -67,9 +101,32 @@ export function roundRect(options: CanvasRoundRectOptions) {
 }
 
 /**
+ * 加载图片
+ */
+export const downloadImage = memo((src: string, canvas: Canvas | WechatMiniprogram.Canvas): Promise<{ image: CanvasImageSource, width: number, height: number }> => {
+  return new Promise((resolve, reject) => {
+    const image
+      = PLATFORM === 'miniprogram'
+        ? (canvas as WechatMiniprogram.Canvas).createImage() as HTMLImageElement
+        : new Image()
+
+    image.onload = () => resolve({ image, width: image.width, height: image.height })
+
+    image.onerror = reject
+
+    image.src = src
+  })
+}, {
+  lruMax: 20,
+  key(src) {
+    return src
+  },
+})
+
+/**
  * 加载字体
  */
-export function loadFont(name: string, src: string) {
+export const loadFont = memo((name: string, src: string) => {
   if (!isString(name) || (!isUrl(src) && !isPath(src))) {
     return Promise.reject(new Error('字体文件链接错误！'))
   }
@@ -95,4 +152,4 @@ export function loadFont(name: string, src: string) {
     document.fonts.add(font)
     return font.load()
   }
-}
+})

@@ -12,6 +12,8 @@
 new CanvasPoster(options: PosterOptions): CanvasPoster
 ```
 
+**小程序中 node 不为字符串时，必须传 width、height，否则为画布默认宽高**
+
 ##### 参数
 
 ###### options
@@ -42,10 +44,20 @@ draw(configs: PosterElements): Promise<void>
 
 `Promise`\<`void`\>
 
+#### init()
+
+```ts
+init(): Promise<void>
+```
+
+##### 返回
+
+`Promise`\<`void`\>
+
 #### measure()
 
 ```ts
-measure(content: PosterTextCommonOptions): TextMetrics
+measure(content: PosterTextCommonOptions): Promise<TextMetrics>
 ```
 
 ##### 参数
@@ -56,7 +68,7 @@ measure(content: PosterTextCommonOptions): TextMetrics
 
 ##### 返回
 
-`TextMetrics`
+`Promise`\<`TextMetrics`\>
 
 #### measureHeight()
 

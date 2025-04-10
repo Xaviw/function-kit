@@ -1,6 +1,7 @@
 import type { Canvas, CanvasContext, NormalizedBox, PosterElement, PosterOptions, PosterRenderFunction, PosterText, PosterTextCommonOptions } from '../types/canvas'
 import type { Recordable } from '../types/common'
-import { getDpr, rotateCanvas } from '../utils/canvas/common'
+import type { CanvasNode } from '../utils/canvas/common'
+import { getCanvas, getDpr, rotateCanvas } from '../utils/canvas/common'
 import { image } from '../utils/canvas/image'
 import { line } from '../utils/canvas/line'
 import { rect } from '../utils/canvas/rect'
@@ -10,8 +11,11 @@ import { isArray, isFunction, isNumber, isObject, isString } from './is'
 type PosterElements = (PosterElement | PosterRenderFunction)[]
 
 export class CanvasPoster {
+  /** 初始化参数 */
+  private initOptions
+
   /** 画布配置 */
-  private options: PosterOptions
+  private options!: CanvasNode
 
   /** 绘制项数组 */
   private configs: PosterElements = []
@@ -22,7 +26,6 @@ export class CanvasPoster {
   /** 绘制上下文 */
   private ctx: CanvasContext = null!
 
-  /** 画布使用的像素比 */
   private dpr: number = 1
 
   /** 全部绘制项 */
@@ -34,32 +37,71 @@ export class CanvasPoster {
   }
 
   /**
+   * **小程序中 node 为字符串时，必须传 width、height，否则为画布默认宽高**
    * @param options - 画布配置
    */
   constructor(options: PosterOptions) {
-    this.options = options
-    let { node: canvas, width, height, dpr } = options
+    this.initOptions = options
+  }
+
+  async init() {
+    let { node, width, height, dpr } = isObject(this.initOptions) ? this.initOptions : {}
 
     width = Number.parseFloat(width as any)
     height = Number.parseFloat(height as any)
 
-    if (!isFunction(canvas?.getContext) || !width || !height) {
-      console.error(`canvasPoster 参数错误，当前为：${options}`)
+    if (isString(node)) {
+      const { canvas, width: styleWidth, height: styleHeight } = await getCanvas(node)
+
+      if (!isFunction(canvas?.getContext)) {
+        console.error(`未获取到 ${node} 节点`)
+        return
+      }
+
+      node = canvas
+
+      if (!width || width < 0)
+        width = styleWidth
+
+      if (!height || height < 0)
+        height = styleHeight
+    }
+
+    if (isObject(node)) {
+      if (!width || width < 0) {
+        if (PLATFORM === 'miniprogram')
+          width = node.width
+        else
+          width = Number.parseFloat(node.style.width)
+      }
+
+      if (!height || height < 0) {
+        if (PLATFORM === 'miniprogram')
+          height = node.height
+        else
+          height = Number.parseFloat(node.style.height)
+      }
+    }
+
+    if (!isFunction(node?.getContext) || !width || !height) {
+      console.error(`canvasPoster 参数错误，当前为：${this.initOptions}`)
       return
     }
 
-    const ctx = canvas.getContext('2d')
+    const ctx = node.getContext('2d')
     if (!ctx) {
       console.error('获取 Canvas 上下文失败')
       return
     }
 
     dpr = getDpr(dpr)
-    canvas.width = width * dpr
-    canvas.height = height * dpr
+    node.width = width * dpr
+    node.height = height * dpr
     ctx.scale(dpr, dpr)
-    this.dpr = dpr
+
+    this.options = { canvas: node, width, height }
     this.ctx = ctx
+    this.dpr = dpr
   }
 
   async draw(configs: PosterElements) {
@@ -68,12 +110,14 @@ export class CanvasPoster {
       return
     }
 
+    await this.init()
+
     this.configs = configs
 
     for (let index = 0; index < configs.length; index++) {
       const config = configs[index]
       if (isFunction(config)) {
-        const renderOptions = { ctx: this.ctx, canvas: this.options.node, dpr: this.dpr }
+        const renderOptions = { ctx: this.ctx, canvas: this.options.canvas, dpr: this.dpr }
         await config(renderOptions)
       }
       else if (isObject(config) && config.type in this.plugins) {
@@ -99,6 +143,17 @@ export class CanvasPoster {
         this.ctx.restore()
       }
     }
+  }
+
+  async measure(content: PosterTextCommonOptions) {
+    await this.init()
+    return measure(content, { ctx: this.ctx })
+  }
+
+  async measureHeight(content: PosterText, maxWidth?: number) {
+    await this.init()
+    await text.prepare(content)
+    return enhancedMeasure(content, { ctx: this.ctx, maxWidth: maxWidth || this.options.width })
   }
 
   /** 递归绘制项，获取相对定位元素盒模型并调用 normalize */
@@ -134,7 +189,7 @@ export class CanvasPoster {
     // TODO
     let preparedProps = cache.prepare
     if (!preparedProps) {
-      preparedProps = await plugin.prepare(config as any, { canvas: this.options.node })
+      preparedProps = await plugin.prepare(config as any, { canvas: this.options.canvas })
       cache.prepare = preparedProps
     }
 
@@ -145,15 +200,6 @@ export class CanvasPoster {
     }
 
     return calculatedProps
-  }
-
-  measure(content: PosterTextCommonOptions) {
-    return measure(content, { ctx: this.ctx })
-  }
-
-  async measureHeight(content: PosterText, maxWidth?: number) {
-    await text.prepare(content)
-    return enhancedMeasure(content, { ctx: this.ctx, maxWidth: maxWidth || this.options.width })
   }
 }
 
