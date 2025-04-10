@@ -47,7 +47,7 @@ export class CanvasPoster {
     this.componentThis = componentThis
   }
 
-  async init() {
+  private async init() {
     let { node, width, height, dpr } = isObject(this.initOptions) ? this.initOptions : {}
 
     width = Number.parseFloat(width as any)

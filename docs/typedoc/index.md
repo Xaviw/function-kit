@@ -2,7 +2,7 @@
 
 ## 模块
 
-- [canvasPoster](canvasPoster.md)
+- [CanvasPoster](CanvasPoster.md)
 - [case](case.md)
 - [className](className.md)
 - [cloneDeep](cloneDeep.md)

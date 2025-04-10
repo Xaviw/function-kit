@@ -1,6 +1,6 @@
-[function-kit](index.md) / canvasPoster
+[function-kit](index.md) / CanvasPoster
 
-# canvasPoster
+# CanvasPoster
 
 ## CanvasPoster
 
@@ -9,10 +9,10 @@
 #### new CanvasPoster()
 
 ```ts
-new CanvasPoster(options: PosterOptions): CanvasPoster
+new CanvasPoster(options: PosterOptions, componentThis?: any): CanvasPoster
 ```
 
-**小程序中 node 不为字符串时，必须传 width、height，否则为画布默认宽高**
+**小程序中 node 为字符串时，必须传 width、height，否则为画布默认宽高**
 
 ##### 参数
 
@@ -21,6 +21,12 @@ new CanvasPoster(options: PosterOptions): CanvasPoster
 `PosterOptions`
 
 画布配置
+
+###### componentThis?
+
+`any`
+
+options.node 为字符串，且在小程序组件中使用时必传，否则无法获取到 canvas 节点
 
 ##### 返回
 
@@ -39,16 +45,6 @@ draw(configs: PosterElements): Promise<void>
 ###### configs
 
 `PosterElements`
-
-##### 返回
-
-`Promise`\<`void`\>
-
-#### init()
-
-```ts
-init(): Promise<void>
-```
 
 ##### 返回
 
