@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { PosterText } from '../../functions/types/canvas'
 import { onMounted, ref } from 'vue'
-import { CanvasPoster, saveCanvasAsImage } from '../../functions/src/canvasPoster'
+import { CanvasPoster, saveCanvasAsImage } from '../../functions/src/CanvasPoster'
 
 const canvas = ref<HTMLCanvasElement>()
 

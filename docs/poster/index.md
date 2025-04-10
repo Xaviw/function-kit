@@ -12,24 +12,33 @@
 
 ## 使用方式
 
-```js
+```ts
 // 渐变色或图案可在外部定义，再应用到配置中
 const ctx = canvas.getContext('2d')
 const gradient = ctx.createLinearGradient() // 省略详细定义
+const gradientItem: PosterText = {
+  // 省略具体定义
+}
 
-const poster = new CanvasPoster({
-  node, // canvas 节点
-  width, // 海报设计图宽度
-  height, // 海报设计图高度
-  dpr, // 可选的实际像素与物理像素比，默认获取设备像素比
-})
+const poster = new CanvasPoster(
+  {
+    node, // canvas 节点或 selector 字符串
+    width, // 可选的海报设计图宽度
+    height, // 可选的海报设计图高度
+    dpr, // 可选的实际像素与物理像素比，默认获取设备像素比
+  },
+  this, // 小程序组件中使用时必传
+)
 
 poster.draw(
   [
     // 函数式
     ({ ctx, canvas, dpr }) => {
-      // 自定义渲染
-      // 或设置实例属性（注意理解实例状态的栈结构，使用不当会影响后续渲染）
+      // 自定义渲染或设置实例属性等（注意理解实例状态的栈结构，使用不当会影响后续渲染）
+
+      // 在函数项中定义绘制需要的属性时，注意需要赋值到对象中
+      // 因为 draw 方法是异步的，简单值作为配置属性时赋值还未完成
+      gradientItem.color = ctx.createLinearGradient() // 省略详细定义
     },
     // 配置式
     {
@@ -181,12 +190,12 @@ onMounted(() => {
 
 `CanvasPoster` 初始化时需要传入以下属性组成的对象：
 
-| 属性名        | 说明                             |
-| ------------- | -------------------------------- |
-| `node`        | Canvas 元素                      |
-| `width`       | 海报设计图宽度                   |
-| `height`      | 海报设计图高度                   |
-| `dpr`（可选） | 绘制像素比，不传会获取设备像素比 |
+| 属性名   | 说明                                                   |
+| -------- | ------------------------------------------------------ |
+| \*`node` | Canvas 元素或 selector 字符串                          |
+| `width`  | 海报设计图宽度（小程序中使用，且 node 为字符串时必传） |
+| `height` | 海报设计图高度（小程序中使用，且 node 为字符串时必传） |
+| `dpr`    | 绘制像素比，不传会获取设备像素比                       |
 
 :::warning 注意
 为避免海报变形，请保持 Canvas 元素宽高比与海报设计图宽高比一致
@@ -235,12 +244,20 @@ onMounted(() => {
 ::: tip 提示
 Canvas 中使用自定义字体时需要确保字体加载完成再绘制，否则渲染会回退到使用默认字体
 
-使用 `fontFamilySrc` 属性时，会在浏览器环境通过 [FontFace](https://developer.mozilla.org/zh-CN/docs/Web/API/CSS_Font_Loading_API) API、小程序环境中可以通过 [wx.loadFontFace](https://developers.weixin.qq.com/miniprogram/dev/api/ui/font/wx.loadFontFace.html) API 加载字体
+`fontFamilySrc` 属性会在浏览器环境通过 [FontFace](https://developer.mozilla.org/zh-CN/docs/Web/API/CSS_Font_Loading_API) API、小程序环境中可以通过 [wx.loadFontFace](https://developers.weixin.qq.com/miniprogram/dev/api/ui/font/wx.loadFontFace.html) API 完成加载字体
+
+**text 元素没有显式定义宽度时，即使有相对定位的元素，最大宽度还是从起点到画布右边界**
 :::
 
-`CanvasPoster` 实例对象上还提供了 `measure` 方法，用于接收单个文本段配置对象后（`content` 属性为数组时可接收的对象），返回文本的 `Metrics` 对象（不会换行）
+`CanvasPoster` 实例对象上还提供了 `measure` 方法，用于接收单个文本段配置对象后（`content` 属性为数组时可接收的对象），返回文本的 [TextMetrics](https://developer.mozilla.org/zh-CN/docs/Web/API/TextMetrics) 对象（不会换行）
 
 以及 `measureHeight` 方法，用于接收与完整配置一致的配置对象及可选的最大宽度（默认为画布宽度）后，返回文本换行后的总高度和全部文本累计的总宽度
+
+:::warning 注意
+实测小程序真机中（未大规模测试），canvas measure 方法返回的对象只有 `width`、`fontBoundingBoxAscent`、`fontBoundingBoxDescent` 属性，且 `fontBoundingBoxAscent`、`fontBoundingBoxDescent` 不会随着 `textBaseLine` 属性变化
+
+所以在小程序中使用 text 时慎用 `textBaseLine` 属性
+:::
 
 ::: details 代码
 

@@ -11,9 +11,8 @@ import { isArray, isFunction, isNumber, isObject, isString } from './is'
 type PosterElements = (PosterElement | PosterRenderFunction)[]
 
 export class CanvasPoster {
-  /** 初始化参数 */
-  private initOptions
-  private componentThis
+  /** 初始化 Promise */
+  private initial
 
   /** 画布配置 */
   private options!: CanvasNode
@@ -43,18 +42,17 @@ export class CanvasPoster {
    * @param componentThis - options.node 为字符串，且在小程序组件中使用时必传，否则无法获取到 canvas 节点
    */
   constructor(options: PosterOptions, componentThis?: any) {
-    this.initOptions = options
-    this.componentThis = componentThis
+    this.initial = this.init(options, componentThis)
   }
 
-  private async init() {
-    let { node, width, height, dpr } = isObject(this.initOptions) ? this.initOptions : {}
+  private async init(options: PosterOptions, componentThis?: any) {
+    let { node, width, height, dpr } = isObject(options) ? options : {}
 
     width = Number.parseFloat(width as any)
     height = Number.parseFloat(height as any)
 
     if (isString(node)) {
-      const { canvas, width: styleWidth, height: styleHeight } = await getCanvas(node, this.componentThis)
+      const { canvas, width: styleWidth, height: styleHeight } = await getCanvas(node, componentThis)
 
       if (!isFunction(canvas?.getContext)) {
         console.error(`未获取到 ${node} 节点`)
@@ -87,7 +85,7 @@ export class CanvasPoster {
     }
 
     if (!isFunction(node?.getContext) || !width || !height) {
-      console.error(`canvasPoster 参数错误，当前为：${this.initOptions}`)
+      console.error(`CanvasPoster 参数错误，当前为：${options}`)
       return
     }
 
@@ -113,7 +111,7 @@ export class CanvasPoster {
       return
     }
 
-    await this.init()
+    await this.initial
 
     this.configs = configs
 
@@ -149,12 +147,12 @@ export class CanvasPoster {
   }
 
   async measure(content: PosterTextCommonOptions) {
-    await this.init()
+    await this.initial
     return measure(content, { ctx: this.ctx })
   }
 
   async measureHeight(content: PosterText, maxWidth?: number) {
-    await this.init()
+    await this.initial
     await text.prepare(content)
     return enhancedMeasure(content, { ctx: this.ctx, maxWidth: maxWidth || this.options.width })
   }
@@ -231,7 +229,7 @@ export function saveCanvasAsImage(canvas: Canvas, options?: { type?: string, qua
     else {
       wx.canvasToTempFilePath({
         canvas,
-        fileType: type === 'image/jpeg' ? 'jpg' : 'png',
+        fileType: isString(type) && ['jpg', 'jpeg'].includes(type.toLowerCase()) ? 'jpg' : 'png',
         quality,
         success({ tempFilePath }) {
           wx.saveImageToPhotosAlbum({
