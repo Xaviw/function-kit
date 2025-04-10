@@ -15,19 +15,20 @@ if (!files.length) {
   process.exit(0)
 }
 
-// 获取构建目标平台，未传递平台参数时为交互式构建
-let platform = process.argv[2]
-if (!['web', 'miniprogram', 'node'].includes(platform)) {
-  const { platform: p } = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'platform',
-      message: '请选择构建目标平台：',
-      choices: ['web', 'miniprogram', 'node'],
-    },
-  ])
-  platform = p
-}
+const { platform, uglify } = await inquirer.prompt([
+  {
+    type: 'list',
+    name: 'platform',
+    message: '请选择构建目标平台：',
+    choices: ['web', 'miniprogram', 'node'],
+  },
+  {
+    type: 'list',
+    name: 'uglify',
+    message: '是否丑化代码：',
+    choices: [{ name: '是', value: true }, { name: '否', value: false }],
+  },
+])
 
 // 获取全部可用被导出声明
 const exported = {}
@@ -77,7 +78,7 @@ await Promise.all([
     plugins: [
       injectPlatform(),
       typescript({ check: false }),
-      terser(),
+      uglify && terser(),
       injectDisableLint(),
     ],
     // 排除 node 内建模块

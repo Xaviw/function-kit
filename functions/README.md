@@ -16,23 +16,15 @@ Rollup + Vitest + Typedoc
 ├── tsconfig.json    # TS 配置
 ├── typedoc.json     # typedoc 配置（用于生成 API 文档）
 ├── eslint.config.js # 代码格式化配置
-└── xxx              # src 下的代码可以根据需要拆分到其他位置
+└── xxx              # 非函数入口的代码可以根据需要拆分到其他位置
 ```
 
 ## 常用命令
 
 ```sh
-# 交互式手动选择构建范围
+# 交互式构建
+# `空格键`选中，`a`键全选，`i`键反选，“回车键”确认
 pnpm build
-
-# 构建支持 web 环境的函数
-pnpm build:web
-
-# 构建支持小程序环境的函数
-pnpm build:miniprogram
-
-# 构建支持 node 环境的函数
-pnpm build:node
 
 # 生成文档（docs/typedoc）
 pnpm docs:generate

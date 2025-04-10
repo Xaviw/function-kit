@@ -2,9 +2,13 @@
 
 [PNPM Monorepo](https://pnpm.io/zh/workspaces) + Typescript
 
+克隆项目后**必须使用 PNPM 安装**，推荐使用最新版本
+
 工作空间下项目的详细说明请查看对应目录下 README
 
 ## 待办
+
+> 提需求直接修改此处后发起合并请求
 
 - [ ] 图片压缩、修改尺寸方法
 
