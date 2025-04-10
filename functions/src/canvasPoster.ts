@@ -13,6 +13,7 @@ type PosterElements = (PosterElement | PosterRenderFunction)[]
 export class CanvasPoster {
   /** 初始化参数 */
   private initOptions
+  private componentThis
 
   /** 画布配置 */
   private options!: CanvasNode
@@ -39,9 +40,11 @@ export class CanvasPoster {
   /**
    * **小程序中 node 为字符串时，必须传 width、height，否则为画布默认宽高**
    * @param options - 画布配置
+   * @param componentThis - options.node 为字符串，且在小程序组件中使用时必传，否则无法获取到 canvas 节点
    */
-  constructor(options: PosterOptions) {
+  constructor(options: PosterOptions, componentThis?: any) {
     this.initOptions = options
+    this.componentThis = componentThis
   }
 
   async init() {
@@ -51,7 +54,7 @@ export class CanvasPoster {
     height = Number.parseFloat(height as any)
 
     if (isString(node)) {
-      const { canvas, width: styleWidth, height: styleHeight } = await getCanvas(node)
+      const { canvas, width: styleWidth, height: styleHeight } = await getCanvas(node, this.componentThis)
 
       if (!isFunction(canvas?.getContext)) {
         console.error(`未获取到 ${node} 节点`)

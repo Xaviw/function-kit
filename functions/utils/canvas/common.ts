@@ -25,11 +25,12 @@ export interface CanvasNode { canvas: Canvas, width: number, height: number }
 /**
  * 获取 canvas 节点
  */
-export function getCanvas(str: string): MaybePromise<CanvasNode> {
+export function getCanvas(str: string, componentThis?: any): MaybePromise<CanvasNode> {
   if (PLATFORM === 'miniprogram') {
     return new Promise((resolve) => {
-      wx.createSelectorQuery()
-        .select(str)
+      const query = wx.createSelectorQuery()
+      componentThis && query.in(componentThis)
+      query.select(str)
         .fields(
           { node: true, size: true },
           (res) => {
