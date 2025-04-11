@@ -122,7 +122,7 @@ export interface PosterTextCommonOptions extends Pick<PosterElementCommonOptions
    * 基线位置为起点 Y 坐标加基线上方文字高度（含上方的lineHeight）
    * @default 'alphabetic'
    */
-  textBaseLine?: CanvasTextBaseline
+  textBaseline?: CanvasTextBaseline
   letterSpacing?: number
   wordSpacing?: number
   /**

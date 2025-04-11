@@ -224,7 +224,7 @@ onMounted(() => {
 | `color`               | 文字颜色，支持渐变和图案                                                                                                                             | -                        |
 | `lineHeight`          | 文本行高，支持数值或接收文本高度返回数值的函数                                                                                                       | `(h: number) => 1.2 * h` |
 | `textAlign`           | 容器内的对齐方式，可选值：`'left'`、`'center'`、`'right'`                                                                                            | `'left'`                 |
-| `textBaseLine`        | 基线位置为起点 Y 坐标加基线上方文字高度（含上方的lineHeight），可选值：`'top'`、`'hanging'`、`'middle'`、`'alphabetic'`、`'ideographic'`、`'bottom'` | `'alphabetic'`           |
+| `textBaseline`        | 基线位置为起点 Y 坐标加基线上方文字高度（含上方的lineHeight），可选值：`'top'`、`'hanging'`、`'middle'`、`'alphabetic'`、`'ideographic'`、`'bottom'` | `'alphabetic'`           |
 | `letterSpacing`       | 字母间距                                                                                                                                             | -                        |
 | `wordSpacing`         | 词间距                                                                                                                                               | -                        |
 | `lineClamp`           | 最大行数，超出省略显示                                                                                                                               | -                        |
@@ -254,9 +254,9 @@ Canvas 中使用自定义字体时需要确保字体加载完成再绘制，否�
 以及 `measureHeight` 方法，用于接收与完整配置一致的配置对象及可选的最大宽度（默认为画布宽度）后，返回文本换行后的总高度和全部文本累计的总宽度
 
 :::warning 注意
-实测小程序真机中（未大规模测试），canvas measure 方法返回的对象只有 `width`、`fontBoundingBoxAscent`、`fontBoundingBoxDescent` 属性，且 `fontBoundingBoxAscent`、`fontBoundingBoxDescent` 不会随着 `textBaseLine` 属性变化
+实测小程序真机中（未大规模测试），canvas measure 方法返回的对象只有 `width`、`fontBoundingBoxAscent`、`fontBoundingBoxDescent` 属性，且 `fontBoundingBoxAscent`、`fontBoundingBoxDescent` 不会随着 `textBaseline` 属性变化
 
-所以在小程序中使用 text 时慎用 `textBaseLine` 属性
+所以在小程序中使用 text 时慎用 `textBaseline` 属性
 :::
 
 ::: details 代码
@@ -310,28 +310,28 @@ onMounted(() => {
       fontSize: 22,
       content: [
         {
-          content: 'textBaseLine: top ',
-          textBaseLine: 'top',
+          content: 'textBaseline: top ',
+          textBaseline: 'top',
         },
         {
           content: 'hanging ',
-          textBaseLine: 'hanging',
+          textBaseline: 'hanging',
         },
         {
           content: 'middle ',
-          textBaseLine: 'middle',
+          textBaseline: 'middle',
         },
         {
           content: 'alphabetic ',
-          textBaseLine: 'alphabetic',
+          textBaseline: 'alphabetic',
         },
         {
           content: 'ideographic ',
-          textBaseLine: 'ideographic',
+          textBaseline: 'ideographic',
         },
         {
           content: 'bottom',
-          textBaseLine: 'bottom',
+          textBaseline: 'bottom',
         },
       ],
     },

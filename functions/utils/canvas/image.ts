@@ -6,7 +6,7 @@ import { downloadImage, roundRect } from './common'
 import { settingCanvasProps } from './propStrategies'
 
 interface PreparedImage extends PosterImage {
-  image: CanvasImageSource
+  image: CanvasImageSource | undefined
   imageWidth: number
   imageHeight: number
   shadowOffsetX: number
@@ -34,16 +34,30 @@ export const image = {
   async prepare(props: PosterImage, { canvas }: { canvas: Canvas }): Promise<PreparedImage> {
     const { src } = props
 
-    if (!isString(src))
-      console.error(`图片链接错误，当前为：${src}`)
+    let image
+    let imageWidth = 0
+    let imageHeight = 0
 
-    const { image, width, height } = await downloadImage(src, canvas)
+    if (!isString(src)) {
+      console.error(`图片链接错误，当前为：${src}`)
+    }
+    else {
+      try {
+        const img = await downloadImage(src, canvas)
+        image = img.image
+        imageWidth = img.width
+        imageHeight = img.height
+      }
+      catch {
+        console.error(`${src} 图片加载失败`)
+      }
+    }
 
     return {
       ...props,
       image,
-      imageWidth: width,
-      imageHeight: height,
+      imageWidth,
+      imageHeight,
       shadowBlur: isNumber(props.shadowBlur) ? props.shadowBlur : 0,
       shadowColor: isString(props.shadowColor) ? props.shadowColor : '#00000000',
       shadowOffsetX: isNumber(props.shadowOffsetX) ? props.shadowOffsetX : 0,
@@ -61,6 +75,10 @@ export const image = {
       mode,
     } = preparedProps
 
+    const sizeProps = pick(
+      preparedProps,
+      ['width', 'height', 'top', 'right', 'bottom', 'left'],
+    )
     const {
       top,
       right,
@@ -69,10 +87,7 @@ export const image = {
       width: elementWidth,
       height: elementHeight,
     } = mapObject(
-      pick(
-        preparedProps,
-        ['width', 'height', 'top', 'right', 'bottom', 'left'],
-      ),
+      sizeProps,
       (key, value) => {
         const newValue = isNumber(value)
           ? value
@@ -86,7 +101,7 @@ export const image = {
             : undefined
         return [key, newValue]
       },
-    ) as Record<'width' | 'height' | 'top' | 'right' | 'bottom' | 'left', number | undefined>
+    )
 
     let {
       sourceHeight,
@@ -125,43 +140,44 @@ export const image = {
     let height = 0
     const imageRatio = sourceWidth / sourceHeight
 
-    if (elementWidth) {
+    if (elementWidth && elementWidth > 0) {
       width = elementWidth
-      const ratio = width / sourceWidth
 
-      if (!elementHeight) {
-        height = sourceHeight * ratio
-      }
+      if (!isNil(left))
+        x = left
+      else if (!isNil(right))
+        x = containerWidth - right - width
+    }
+    else {
+      const x1 = left || 0
+      // TODO
+      const x2 = containerWidth - (right || 0)
+      x = Math.min(x1, x2)
+      if (!isNil(left) && !isNil(right))
+        width = Math.abs(x2 - x1)
     }
 
-    if (elementHeight) {
+    if (elementHeight && elementHeight > 0) {
       height = elementHeight
-      const ratio = height / sourceHeight
 
-      if (!elementWidth) {
-        width = sourceWidth * ratio
-      }
+      if (!isNil(top))
+        y = top
+      else if (!isNil(bottom))
+        y = containerHeight - bottom - height
     }
-
-    if (!elementWidth && !elementHeight) {
-      width = sourceWidth
-      height = sourceHeight
+    else {
+      const y1 = top || 0
+      // TODO
+      const y2 = containerHeight - (bottom || 0)
+      y = Math.min(y1, y2)
+      if (!isNil(top) && !isNil(bottom))
+        height = Math.abs(y2 - y1)
     }
-
-    if (!isNil(left))
-      x = left
-    else if (!isNil(right))
-      x = containerWidth - right - width
-
-    if (!isNil(top))
-      y = top
-    else if (!isNil(bottom))
-      y = containerHeight - bottom - height
 
     let borderOffsetX = 0
     let borderOffsetY = 0
 
-    if (elementWidth && elementHeight) {
+    if (width > 0 && height > 0) {
       // 默认的 scaleToFill 无需处理
       if (mode === 'aspectFill') {
         const ratio = width / height
@@ -190,6 +206,14 @@ export const image = {
           height = newHeight
         }
       }
+    }
+    else if (width > 0) {
+      const ratio = width / sourceWidth
+      height = sourceHeight * ratio
+    }
+    else if (height > 0) {
+      const ratio = height / sourceHeight
+      width = sourceWidth * ratio
     }
 
     borderRadius
@@ -242,6 +266,9 @@ export const image = {
       borderOffsetX,
       borderOffsetY,
     } = calculatedProps
+
+    if (!image)
+      return
 
     // 翻转
     ctx.translate(flipX ? posterWidth : 0, flipY ? posterHeight : 0)

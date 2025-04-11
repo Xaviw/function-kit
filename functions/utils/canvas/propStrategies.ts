@@ -62,9 +62,9 @@ const canvasPropsStrategies: Record<string, (val: any, ctx: CanvasContext) => vo
     if (isNumber(letterSpacing))
       ctx.letterSpacing = `${letterSpacing}px`
   },
-  textBaseLine(textBaseLine, ctx) {
-    if (textBaseLine && ['alphabetic', 'bottom', 'hanging', 'ideographic', 'middle', 'top'].includes(textBaseLine))
-      ctx.textBaseline = textBaseLine
+  textBaseline(textBaseline, ctx) {
+    if (textBaseline && ['alphabetic', 'bottom', 'hanging', 'ideographic', 'middle', 'top'].includes(textBaseline))
+      ctx.textBaseline = textBaseline
   },
   filter(filter, ctx) {
     if (isString(filter))
@@ -81,23 +81,10 @@ type CanvasProps = Partial<Record<CanavsProp, any>> & Recordable
  * @param props 实例属性对象
  */
 export function settingCanvasProps(props: CanvasProps, ctx: CanvasContext) {
-  for (const key in props) {
-    if (Object.prototype.hasOwnProperty.call(props, key) && canvasPropsStrategies[key]) {
-      canvasPropsStrategies[key](props[key], ctx)
-    }
-  }
+  Object.entries(props).forEach(([key, value]) => {
+    const strategy = canvasPropsStrategies[key]
+    strategy && strategy(value, ctx)
+  })
 
-  const borderSize = Math.max(Number.parseFloat(props.borderSize) || 0, 0)
-  if (borderSize) {
-    if (props.borderStyle === 'dashed' && !props.borderDash)
-      ctx.setLineDash([borderSize * 2, borderSize])
-    else if (props.borderStyle === 'solid' && props.borderDash)
-      ctx.setLineDash([])
-  }
-
-  if (props.fontStyle && props.fontWeight && props.fontSize && props.fontFamily
-  )
-    ctx.font = `${props.fontStyle} ${props.fontWeight} ${props.fontSize}px '${props.fontFamily}'`
-
-  return borderSize
+  ctx.font = `${props.fontStyle} ${props.fontWeight} ${props.fontSize}px '${props.fontFamily}'`
 }

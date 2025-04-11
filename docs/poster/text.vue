@@ -50,28 +50,28 @@ onMounted(() => {
       fontSize: 22,
       content: [
         {
-          content: 'textBaseLine: top ',
-          textBaseLine: 'top',
+          content: 'textBaseline: top ',
+          textBaseline: 'top',
         },
         {
           content: 'hanging ',
-          textBaseLine: 'hanging',
+          textBaseline: 'hanging',
         },
         {
           content: 'middle ',
-          textBaseLine: 'middle',
+          textBaseline: 'middle',
         },
         {
           content: 'alphabetic ',
-          textBaseLine: 'alphabetic',
+          textBaseline: 'alphabetic',
         },
         {
           content: 'ideographic ',
-          textBaseLine: 'ideographic',
+          textBaseline: 'ideographic',
         },
         {
           content: 'bottom',
-          textBaseLine: 'bottom',
+          textBaseline: 'bottom',
         },
       ],
     },

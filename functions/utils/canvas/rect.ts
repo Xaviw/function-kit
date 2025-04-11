@@ -22,6 +22,10 @@ export const rect = {
   calculate(preparedProps: PosterRect, parentContainer: NormalizedBox): NormalizedRect {
     const { width: containerWidth, height: containerHeight } = parentContainer
 
+    const sizeProps = pick(
+      preparedProps,
+      ['top', 'right', 'bottom', 'left', 'width', 'height'],
+    )
     const {
       top,
       right,
@@ -30,27 +34,23 @@ export const rect = {
       width: elementWidth,
       height: elementHeight,
     } = mapObject(
-      pick(
-        preparedProps,
-        ['top', 'right', 'bottom', 'left', 'width', 'height'],
-      ),
+      sizeProps,
       (key, value) => {
         const newValue = isNumber(value)
           ? value
           : isFunction(value)
-            // TODO
-            ? value({ containerWidth, containerHeight } as any)
+            ? value({ containerWidth, containerHeight })
             : undefined
         return [key, newValue]
       },
-    ) as Record<'width' | 'height' | 'top' | 'right' | 'bottom' | 'left', number | undefined>
+    )
 
     let x = 0
     let y = 0
     let width = 0
     let height = 0
 
-    if (elementWidth) {
+    if (elementWidth && elementWidth > 0) {
       width = elementWidth
 
       if (!isNil(left))
@@ -59,12 +59,13 @@ export const rect = {
         x = containerWidth - right - width
     }
     else {
-      x = left || 0
-      const x2 = right || 0
-      width = containerWidth - x - x2
+      const x1 = left || 0
+      const x2 = containerWidth - (right || 0)
+      width = Math.abs(x2 - x1)
+      x = Math.min(x1, x2)
     }
 
-    if (!isNil(elementHeight)) {
+    if (elementHeight && elementHeight > 0) {
       height = elementHeight
 
       if (!isNil(top))
@@ -73,9 +74,10 @@ export const rect = {
         y = containerHeight - bottom - height
     }
     else {
-      y = top || 0
-      const y2 = bottom || 0
-      height = containerHeight - y - y2
+      const y1 = top || 0
+      const y2 = containerHeight - (bottom || 0)
+      height = Math.abs(y2 - y1)
+      y = Math.min(y1, y2)
     }
 
     let { borderRadius } = preparedProps

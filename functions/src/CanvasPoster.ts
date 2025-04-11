@@ -7,12 +7,13 @@ import { line } from '../utils/canvas/line'
 import { rect } from '../utils/canvas/rect'
 import { enhancedMeasure, measure, text } from '../utils/canvas/text'
 import { isArray, isFunction, isNumber, isObject, isString } from './is'
+import { isEqual } from './isEqual'
 
 type PosterElements = (PosterElement | PosterRenderFunction)[]
 
 export class CanvasPoster {
   /** 初始化 Promise */
-  private initial
+  private initial: Promise<void>
 
   /** 画布配置 */
   private options!: CanvasNode
@@ -21,7 +22,7 @@ export class CanvasPoster {
   private configs: PosterElements = []
 
   /** 绘制项缓存 */
-  private cache: { prepare: Recordable, calculate: NormalizedBox & Recordable }[] = []
+  private cache: { config?: PosterElement, prepare?: Recordable, calculate?: NormalizedBox & Recordable }[] = []
 
   /** 绘制上下文 */
   private ctx: CanvasContext = null!
@@ -37,7 +38,7 @@ export class CanvasPoster {
   }
 
   /**
-   * **小程序中 node 为字符串时，必须传 width、height，否则为画布默认宽高**
+   * 未传递 width、height 时，会尝试获取 canvas 元素 css 宽高，未获取到则使用 canvas 默认宽高
    * @param options - 画布配置
    * @param componentThis - options.node 为字符串，且在小程序组件中使用时必传，否则无法获取到 canvas 节点
    */
@@ -55,8 +56,7 @@ export class CanvasPoster {
       const { canvas, width: styleWidth, height: styleHeight } = await getCanvas(node, componentThis)
 
       if (!isFunction(canvas?.getContext)) {
-        console.error(`未获取到 ${node} 节点`)
-        return
+        throw new Error(`未获取到 ${node} 节点`)
       }
 
       node = canvas
@@ -85,14 +85,13 @@ export class CanvasPoster {
     }
 
     if (!isFunction(node?.getContext) || !width || !height) {
-      console.error(`CanvasPoster 参数错误，当前为：${options}`)
-      return
+      throw new Error(`CanvasPoster 参数错误，当前为：${options}`)
     }
 
     const ctx = node.getContext('2d')
     if (!ctx) {
       console.error('获取 Canvas 上下文失败')
-      return
+      throw new Error('获取 Canvas 上下文失败')
     }
 
     dpr = getDpr(dpr)
@@ -180,22 +179,24 @@ export class CanvasPoster {
   /** 标准化参数，扩展盒模型等参数 */
   private async normalize(index: number, parents: NormalizedBox[]) {
     const config = this.configs[index] as PosterElement
+
     if (!this.cache[index])
-      this.cache[index] = {} as any
+      this.cache[index] = { config }
+
     const cache = this.cache[index]
+    const cacheAvaliable = isEqual(cache.config, config)
     const plugin = this.plugins[config.type]
     const parent = parents[parents.length - 1]
     const maxWidth = this.options.width - parents.reduce((p, c) => p + c.x, 0)
 
-    // TODO
     let preparedProps = cache.prepare
-    if (!preparedProps) {
+    if (!preparedProps || !cacheAvaliable) {
       preparedProps = await plugin.prepare(config as any, { canvas: this.options.canvas })
       cache.prepare = preparedProps
     }
 
     let calculatedProps = cache.calculate
-    if (!calculatedProps) {
+    if (!calculatedProps || !cacheAvaliable) {
       calculatedProps = plugin.calculate(preparedProps as any, parent, { ctx: this.ctx, maxWidth })
       cache.calculate = calculatedProps
     }
@@ -228,6 +229,9 @@ export function saveCanvasAsImage(canvas: Canvas, options?: {
         a.download = isString(fileName) ? fileName : `${Date.now()}`
         a.href = url
         a.click()
+        setTimeout(() => {
+          URL.revokeObjectURL(url)
+        }, 100)
         resolve(url)
       }, type, quality)
     }

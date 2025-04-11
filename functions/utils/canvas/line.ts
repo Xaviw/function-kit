@@ -1,5 +1,5 @@
 import type { CanvasContext, NormalizedBox, PosterLine } from '../../types/canvas'
-import { isFunction, isNumber } from '../../src/is'
+import { isArray, isFunction, isNumber } from '../../src/is'
 import { settingCanvasProps } from './propStrategies'
 
 interface NormalizedLine extends PosterLine {
@@ -13,6 +13,10 @@ interface NormalizedLine extends PosterLine {
 export const line = {
   // 前置工作、与容器尺寸无关的属性标准化
   prepare(props: PosterLine) {
+    if (!isArray(props.points) || !props.points.every(item => isArray(item) && item.length === 2)) {
+      console.error(`line points 参数错误，当前为：${props.points}`)
+      props.points = []
+    }
     return props
   },
   // 容器尺寸相关的属性标准化
@@ -48,6 +52,17 @@ export const line = {
 
       return p
     }, [] as [number, number][])
+
+    if (!points.length) {
+      return {
+        ...preparedProps,
+        points,
+        width: 0,
+        height: 0,
+        x: 0,
+        y: 0,
+      }
+    }
 
     return {
       ...preparedProps,

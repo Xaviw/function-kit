@@ -42,6 +42,10 @@ export const text = {
   calculate(preparedProps: PosterText, parentContainer: NormalizedBox, { ctx, maxWidth }: { ctx: CanvasContext, maxWidth: number }): NormalizedText {
     const { width: containerWidth, height: containerHeight } = parentContainer
 
+    const sizeProps = pick(
+      preparedProps,
+      ['top', 'right', 'bottom', 'left', 'width', 'height'],
+    )
     const {
       top,
       right,
@@ -50,20 +54,16 @@ export const text = {
       width: elementWidth,
       height: elementHeight,
     } = mapObject(
-      pick(
-        preparedProps,
-        ['top', 'right', 'bottom', 'left', 'width', 'height'],
-      ),
+      sizeProps,
       (key, value) => {
         const newValue = isNumber(value)
           ? value
           : isFunction(value)
-            // TODO
-            ? value({ containerWidth, containerHeight } as any)
+            ? value({ containerWidth, containerHeight })
             : undefined
         return [key, newValue]
       },
-    ) as Record<'width' | 'height' | 'top' | 'right' | 'bottom' | 'left', number | undefined>
+    )
 
     let x = 0
     let y = 0
@@ -119,7 +119,7 @@ export const text = {
   },
 }
 type TextProps = Omit<PosterTextCommonOptions, 'content'>
-type NormalizeTextProps = PartiallyRequired<TextProps, 'lineHeight' | 'fontFamily' | 'fontSize' | 'fontWeight' | 'textBaseLine' | 'fontStyle' | 'textStyle' | 'textDecorationProps' | 'strokeProps'>
+type NormalizeTextProps = PartiallyRequired<TextProps, 'lineHeight' | 'fontFamily' | 'fontSize' | 'fontWeight' | 'textBaseline' | 'fontStyle' | 'textStyle' | 'textDecorationProps' | 'strokeProps'>
 
 /**
  * 绘制全部段落
@@ -299,7 +299,7 @@ function measureRowHeight(contents: PosterTextCommonOptions[], options: {
         top.push(fontBoundingBoxAscent + halfLineHeight)
         bottom.push(fontBoundingBoxDescent + halfLineHeight)
 
-        const baseLine = props.textBaseLine
+        const baseLine = props.textBaseline
         const overLineY = -fontBoundingBoxAscent
         let lineThroughY = -(height / 2) + fontBoundingBoxDescent
         const underLineY = fontBoundingBoxDescent
@@ -412,7 +412,7 @@ function settingProperty(properties: Omit<TextProps, 'fontFamilySrc'>, options: 
     color: [
       (v: any) => isString(v) || isObject(v),
     ],
-    textBaseLine: [
+    textBaseline: [
       (v: any) => ['alphabetic', 'bottom', 'hanging', 'ideographic', 'middle', 'top'].includes(v),
       'alphabetic',
     ],

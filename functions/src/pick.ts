@@ -12,19 +12,20 @@ import { isArray, isObject } from './is'
  * // 结果: { name: 'John', age: 30 }
  * ```
  */
-export function pick<T extends object, TKeys extends keyof T>(
+export function pick<T extends object, K extends keyof T>(
   obj: T,
-  keys: TKeys[],
-): Pick<T, TKeys> {
+  keys: readonly K[],
+): Pick<T, K> {
   if (!isObject(obj))
-    return obj
+    return obj as any
 
   if (!isArray(keys) || !keys.length)
-    return {} as Pick<T, TKeys>
+    return {} as Pick<T, K>
 
-  return keys.reduce((acc, key) => {
-    if (Object.prototype.hasOwnProperty.call(obj, key))
+  return keys.reduce((acc: Pick<T, K>, key: K) => {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
       acc[key] = obj[key]
+    }
     return acc
-  }, {} as Pick<T, TKeys>)
+  }, {} as Pick<T, K>)
 }

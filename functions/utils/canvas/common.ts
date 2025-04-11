@@ -46,8 +46,8 @@ export function getCanvas(str: string, componentThis?: any): MaybePromise<Canvas
     return canvas
       ? {
           canvas,
-          width: Number.parseFloat(canvas.style.width),
-          height: Number.parseFloat(canvas.style.height),
+          width: Number.parseFloat(canvas.style.width) || canvas.width,
+          height: Number.parseFloat(canvas.style.height) || canvas.height,
         }
       : {} as CanvasNode
   }
@@ -139,12 +139,8 @@ export const loadFont = memo((name: string, src: string) => {
         source: `url("${src}")`,
         global: true,
         scopes: ['webview', 'native', 'skyline'],
-        success() {
-          resolve(true)
-        },
-        fail(err) {
-          reject(err)
-        },
+        success: resolve,
+        fail: reject,
       })
     })
   }
