@@ -58,11 +58,18 @@ export const rect = {
       else if (!isNil(right))
         x = containerWidth - right - width
     }
+    else if (!isNil(left)) {
+      x = left
+
+      if (!isNil(right)) {
+        const x2 = containerWidth - right
+        width = Math.abs(x2 - x)
+        x = Math.min(x, x2)
+      }
+    }
     else {
-      const x1 = left || 0
-      const x2 = containerWidth - (right || 0)
-      width = Math.abs(x2 - x1)
-      x = Math.min(x1, x2)
+      width = containerWidth
+      x = -(right || 0)
     }
 
     if (elementHeight && elementHeight > 0) {
@@ -73,11 +80,18 @@ export const rect = {
       else if (!isNil(bottom))
         y = containerHeight - bottom - height
     }
+    else if (!isNil(top)) {
+      y = top
+
+      if (!isNil(bottom)) {
+        const y2 = containerHeight - bottom
+        height = Math.abs(y2 - y)
+        y = Math.min(y, y2)
+      }
+    }
     else {
-      const y1 = top || 0
-      const y2 = containerHeight - (bottom || 0)
-      height = Math.abs(y2 - y1)
-      y = Math.min(y1, y2)
+      height = containerHeight
+      y = -(bottom || 0)
     }
 
     let { borderRadius } = preparedProps

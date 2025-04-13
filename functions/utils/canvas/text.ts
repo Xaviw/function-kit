@@ -70,7 +70,7 @@ export const text = {
     let width = 0
     let height = 0
 
-    if (elementWidth) {
+    if (elementWidth && elementWidth > 0) {
       width = elementWidth
 
       if (!isNil(left))
@@ -78,15 +78,17 @@ export const text = {
       else if (!isNil(right))
         x = containerWidth - right - width
     }
-    else if (!isNil(left) && !isNil(right)) {
+    else if (!isNil(left)) {
       x = left
-      width = containerWidth - left - right
-    }
-    else {
-      x = isNil(left) ? 0 : left
+
+      if (!isNil(right)) {
+        const x2 = containerWidth - right
+        width = Math.abs(x2 - x)
+        x = Math.min(x, x2)
+      }
     }
 
-    if (!isNil(elementHeight)) {
+    if (elementHeight && elementHeight > 0) {
       height = elementHeight
 
       if (!isNil(top))
@@ -94,21 +96,32 @@ export const text = {
       else if (!isNil(bottom))
         y = containerHeight - bottom - height
     }
-    else if (!isNil(top) && !isNil(bottom)) {
+    else if (!isNil(top)) {
       y = top
-      height = containerHeight - top - bottom
-    }
-    else {
-      y = isNil(top) ? 0 : top
+
+      if (!isNil(bottom)) {
+        const y2 = containerHeight - bottom
+        height = Math.abs(y2 - y)
+        y = Math.min(y, y2)
+      }
     }
 
     const { height: fullHeight } = enhancedMeasure(preparedProps, { maxWidth: width || maxWidth, ctx })
 
-    if (!width)
+    if (width <= 0) {
       width = maxWidth
-
-    if (!height)
+    }
+    if (height <= 0) {
       height = fullHeight
+    }
+
+    if (isNil(left) && !isNil(right)) {
+      x = containerWidth - right - width
+    }
+
+    if (isNil(top) && !isNil(bottom)) {
+      y = containerHeight - bottom - height
+    }
 
     return { ...preparedProps, x, y, width, height }
   },

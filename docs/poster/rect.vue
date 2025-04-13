@@ -19,10 +19,10 @@ onMounted(() => {
     {
       id: 'a',
       type: 'rect',
-      width: 200,
-      height: 200,
-      left: ({ containerWidth }) => containerWidth * 0.5 - 100,
-      top: ({ containerHeight }) => containerHeight * 0.5 - 100,
+      left: 200,
+      right: 200,
+      top: 10,
+      bottom: 10,
       backgroundColor: gradient,
       border: {
         lineWidth: 5,
@@ -48,6 +48,34 @@ onMounted(() => {
         lineWidth: 3,
         lineColor: '#ff0000',
       },
+    },
+    {
+      type: 'rect',
+      width: 30,
+      height: 30,
+      backgroundColor: '#ff0000',
+    },
+    {
+      type: 'rect',
+      width: 30,
+      height: 30,
+      right: 0,
+      backgroundColor: '#ff0000',
+    },
+    {
+      type: 'rect',
+      width: 30,
+      height: 30,
+      bottom: 0,
+      backgroundColor: '#ff0000',
+    },
+    {
+      type: 'rect',
+      width: 30,
+      height: 30,
+      bottom: 0,
+      right: 0,
+      backgroundColor: '#ff0000',
     },
   ])
 })

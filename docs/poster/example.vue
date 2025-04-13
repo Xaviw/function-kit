@@ -8,12 +8,14 @@ const canvas = ref<HTMLCanvasElement>()
 onMounted(() => {
   const poster = new CanvasPoster({
     node: '#canvas',
+    width: 620,
+    height: 1006,
   })
 
   const gradientText: PosterText = {
     type: 'text',
     content: '- 每步志愿路，都在铸就美好未来 -',
-    top: 924,
+    bottom: 30,
     textAlign: 'center',
     fontSize: 32,
   }
@@ -112,7 +114,6 @@ onMounted(() => {
       bottom: 118,
       left: 67,
       right: 67,
-      height: 306,
       mode: 'aspectFit',
     },
     gradientText,
@@ -127,7 +128,7 @@ function onExport() {
 </script>
 
 <template>
-  <canvas id="canvas" style="width: 620px;height: 1006px;" />
+  <canvas id="canvas" style="width: 310px;height: 503px;" />
 
   <button style="margin-top: 8px; padding: 6px 12px; background-color: #69c0ff; color: white; border: none; border-radius: 5px; cursor: pointer;" @click="onExport">
     导出
