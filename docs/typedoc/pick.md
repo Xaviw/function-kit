@@ -5,7 +5,7 @@
 ## pick()
 
 ```ts
-function pick<T, TKeys>(obj: T, keys: TKeys[]): Pick<T, TKeys>
+function pick<T, K>(obj: T, keys: readonly K[]): Pick<T, K>
 ```
 
 从对象中提取指定的属性，创建一个新的对象
@@ -16,9 +16,9 @@ function pick<T, TKeys>(obj: T, keys: TKeys[]): Pick<T, TKeys>
 
 `T` *extends* `object`
 
-#### TKeys
+#### K
 
-`TKeys` *extends* `string` \| `number` \| `symbol`
+`K` *extends* `string` \| `number` \| `symbol`
 
 ### 参数
 
@@ -30,13 +30,13 @@ function pick<T, TKeys>(obj: T, keys: TKeys[]): Pick<T, TKeys>
 
 #### keys
 
-`TKeys`[]
+readonly `K`[]
 
 要提取的属性键数组
 
 ### 返回
 
-`Pick`\<`T`, `TKeys`\>
+`Pick`\<`T`, `K`\>
 
 包含指定属性的新对象
 

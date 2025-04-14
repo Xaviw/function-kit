@@ -12,7 +12,7 @@
 new CanvasPoster(options: PosterOptions, componentThis?: any): CanvasPoster
 ```
 
-**小程序中 node 为字符串时，必须传 width、height，否则为画布默认宽高**
+未传递 width、height 时，会尝试获取 canvas 元素 css 宽高，未获取到则使用 canvas 默认宽高
 
 ##### 参数
 
@@ -125,6 +125,8 @@ function saveCanvasAsImage(canvas: HTMLCanvasElement, options?: {
 ##### type?
 
 `string`
+
+mime 值；小程序中仅 image/jpeg 时为 jpg，否则为 png
 
 ### 返回
 

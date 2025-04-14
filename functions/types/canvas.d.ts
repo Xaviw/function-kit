@@ -248,7 +248,8 @@ export interface PosterImage extends Omit<PosterElementCommonOptions, 'top' | 'r
  */
 export interface PosterRect extends PosterElementCommonOptions {
   type: 'rect'
-  border?: Pick<PosterLine, 'backgroundColor' | 'lineCap' | 'lineColor' | 'lineDash' | 'lineDashOffset' | 'lineJoin' | 'lineWidth' | 'miterLimit'>
+  border?: Pick<PosterLine, 'lineCap' | 'lineColor' | 'lineDash' | 'lineDashOffset' | 'lineJoin' | 'lineWidth' | 'miterLimit'>
+  backgroundColor?: string | CanvasGradient | CanvasPattern
   /**
    * 圆角大小
    * 支持数值或以容器宽、高，自身宽、高对象为参数，返回数值的函数
