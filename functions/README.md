@@ -35,7 +35,16 @@ pnpm test
 
 ## 贡献指南
 
-> **构建时会忽略默认导出，请全部使用具名导出**
+### 自检清单
+
+1. 函数定义在 src 目录下，并具名导出
+2. 函数功能完善、类型完备
+3. 拥有详细的 TSDoc 说明，包括参数、返回值、示例、平台注解（如有）等
+4. 基础函数需创建单元测试，保证测试通过且覆盖率达到 100%（通过编辑器 vitest 插件或 `test` 命令运行）
+5. 运行 `docs:generate` 命令生成文档（复杂的功能在文档中单开页面介绍，具体查看 [vitepress](https://vitepress.dev/zh/) 文档）
+6. 提交并发起合并请求
+
+### 示例
 
 新建 `src/example.ts` 文件，写入工具函数代码，并导出
 
@@ -125,9 +134,9 @@ export interface Y {
 export type * from './xxx'
 ```
 
-函数完成后，在 test 目录下新建同名 `example.test.ts` 文件，使用 vitest 语法编写单元测试，请确保测试通过且代码覆盖率 100%
+函数完成后，在 test 目录下新建同名 `example.test.ts` 文件，使用 vitest 语法编写单元测试，确保测试通过且覆盖率 100%
 
-测试无误后执行 `pnpm docs:generate` 生成 API 文档
+测试无误后执行 `docs:generate` 命令生成 API 文档
 
 ## 动态编译原理
 

@@ -1,75 +1,111 @@
-import { expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { Lru } from '../src/Lru'
 import { memo } from '../src/memo'
 
-it('memo', () => {
-  const fn = vi.fn((a: number, b: number) => a + b)
+describe('memo', () => {
+  let fn: ReturnType<typeof vi.fn>
 
-  const memoized = memo(fn)
-
-  // 首次调用应该执行原函数
-  expect(memoized(1, 2)).toBe(3)
-  expect(fn).toHaveBeenCalledTimes(1)
-
-  // 相同参数再次调用应该使用缓存
-  expect(memoized(1, 2)).toBe(3)
-  expect(fn).toHaveBeenCalledTimes(1)
-
-  // 不同参数应该重新执行原函数
-  expect(memoized(2, 3)).toBe(5)
-  expect(fn).toHaveBeenCalledTimes(2)
-
-  // 测试自定义 key 函数
-  fn.mockClear()
-  const memoizedWithKey = memo(fn, {
-    key: (a, b) => `${a}-${b}`,
+  beforeEach(() => {
+    fn = vi.fn((a: number, b: number) => a + b)
+    vi.useFakeTimers()
   })
 
-  expect(memoizedWithKey(1, 2)).toBe(3)
-  expect(fn).toHaveBeenCalledTimes(1)
-  expect(memoizedWithKey(1, 2)).toBe(3)
-  expect(fn).toHaveBeenCalledTimes(1)
-  const memoizedWithKeyCache = new Lru()
-  memoizedWithKeyCache.set('1-2', { expires: null, value: 3 })
-  expect((memoizedWithKey as any).cache).toEqual(memoizedWithKeyCache)
+  it('should memoize basic function calls', () => {
+    const memoized = memo(fn)
 
-  // 测试过期功能
-  fn.mockClear()
-  vi.useFakeTimers()
-  const memoizedWithExpires = memo(fn, {
-    expires: 50,
+    expect(memoized(1, 2)).toBe(3)
+    expect(fn).toHaveBeenCalledTimes(1)
+
+    expect(memoized(1, 2)).toBe(3)
+    expect(fn).toHaveBeenCalledTimes(1)
+
+    expect(memoized(2, 3)).toBe(5)
+    expect(fn).toHaveBeenCalledTimes(2)
   })
 
-  expect(memoizedWithExpires(1, 2)).toBe(3)
-  expect(fn).toHaveBeenCalledTimes(1)
-  expect(memoizedWithExpires(1, 2)).toBe(3)
-  expect(fn).toHaveBeenCalledTimes(1)
+  it('should work with custom key function', () => {
+    const memoizedWithKey = memo(fn, {
+      key: (a, b) => `${a}-${b}`,
+    })
 
-  // 等待缓存过期
-  vi.advanceTimersByTime(100)
+    expect(memoizedWithKey(1, 2)).toBe(3)
+    expect(fn).toHaveBeenCalledTimes(1)
+    expect(memoizedWithKey(1, 2)).toBe(3)
+    expect(fn).toHaveBeenCalledTimes(1)
 
-  expect(memoizedWithExpires(1, 2)).toBe(3)
-  expect(fn).toHaveBeenCalledTimes(2)
-
-  // 测试 LRU 缓存限制
-  fn.mockClear()
-  const memoizedWithLru = memo(fn, {
-    lruMax: 2,
+    const memoizedWithKeyCache = new Lru()
+    memoizedWithKeyCache.set('1-2', { expires: null, value: 3 })
+    expect((memoizedWithKey as any).cache).toEqual(memoizedWithKeyCache)
   })
 
-  expect(memoizedWithLru(1, 2)).toBe(3)
-  expect(memoizedWithLru(3, 4)).toBe(7)
-  expect(fn).toHaveBeenCalledTimes(2)
+  it('should handle expiration correctly', () => {
+    const memoizedWithExpires = memo(fn, {
+      expires: 50,
+    })
 
-  // 添加第三个缓存项，应该淘汰最早的缓存
-  expect(memoizedWithLru(5, 6)).toBe(11)
-  expect(fn).toHaveBeenCalledTimes(3)
+    expect(memoizedWithExpires(1, 2)).toBe(3)
+    expect(fn).toHaveBeenCalledTimes(1)
+    expect(memoizedWithExpires(1, 2)).toBe(3)
+    expect(fn).toHaveBeenCalledTimes(1)
 
-  // 第一个缓存项应该被淘汰，再次调用应重新执行
-  expect(memoizedWithLru(1, 2)).toBe(3)
-  expect(fn).toHaveBeenCalledTimes(4)
+    vi.advanceTimersByTime(100)
 
-  // 第三个缓存项应该还在
-  expect(memoizedWithLru(5, 6)).toBe(11)
-  expect(fn).toHaveBeenCalledTimes(4)
+    expect(memoizedWithExpires(1, 2)).toBe(3)
+    expect(fn).toHaveBeenCalledTimes(2)
+  })
+
+  it('should handle invalid expires parameter', () => {
+    const memoizedWithInvalidExpires = memo(fn, {
+      expires: 'invalid' as any,
+    })
+
+    expect(memoizedWithInvalidExpires(1, 2)).toBe(3)
+    expect(fn).toHaveBeenCalledTimes(1)
+    expect(memoizedWithInvalidExpires(1, 2)).toBe(3)
+    expect(fn).toHaveBeenCalledTimes(1)
+  })
+
+  it('should handle LRU cache correctly', () => {
+    const memoizedWithLru = memo(fn, {
+      lruMax: 2,
+    })
+
+    expect(memoizedWithLru(1, 2)).toBe(3)
+    expect(memoizedWithLru(3, 4)).toBe(7)
+    expect(fn).toHaveBeenCalledTimes(2)
+
+    expect(memoizedWithLru(5, 6)).toBe(11)
+    expect(fn).toHaveBeenCalledTimes(3)
+
+    expect(memoizedWithLru(1, 2)).toBe(3)
+    expect(fn).toHaveBeenCalledTimes(4)
+
+    expect(memoizedWithLru(5, 6)).toBe(11)
+    expect(fn).toHaveBeenCalledTimes(4)
+  })
+
+  it('should handle async functions', async () => {
+    const asyncFn = vi.fn(async (a: number, b: number) => a + b)
+    const memoizedAsync = memo(asyncFn)
+
+    await expect(memoizedAsync(1, 2)).resolves.toBe(3)
+    expect(asyncFn).toHaveBeenCalledTimes(1)
+
+    await expect(memoizedAsync(1, 2)).resolves.toBe(3)
+    expect(asyncFn).toHaveBeenCalledTimes(1)
+  })
+
+  it('should handle async function errors', async () => {
+    const error = new Error('test error')
+    const asyncFn = vi.fn(async () => {
+      throw error
+    })
+    const memoizedAsync = memo(asyncFn)
+
+    await expect(memoizedAsync()).rejects.toThrow(error)
+    expect(asyncFn).toHaveBeenCalledTimes(1)
+
+    await expect(memoizedAsync()).rejects.toThrow(error)
+    expect(asyncFn).toHaveBeenCalledTimes(2)
+  })
 })

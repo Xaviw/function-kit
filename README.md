@@ -6,6 +6,24 @@
 
 工作空间下项目的详细说明请查看对应目录下 README
 
+## 使用指南
+
+```sh
+# 一、克隆项目
+git clone xxx
+
+# 二、安装依赖
+pnpm i
+
+# 三、按需构建
+pnpm -F @function-kit/functions build
+
+# 四、复制 functions/dist 目录下的文件到项目中
+
+# 查看接口文档
+pnpm -F @function-kit/docs dev
+```
+
 ## 待办
 
 > 提需求直接修改此处后发起合并请求
@@ -30,7 +48,7 @@
 - @function-kit/functions
 - @function-kit/docs
 
-全局命令包括：
+根目录可用命令包括：
 
 ```sh
 # 全局代码格式化检查及自动修复
