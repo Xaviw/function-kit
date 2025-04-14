@@ -88,6 +88,8 @@ export const line = {
       shadowColor,
       shadowOffsetX,
       shadowOffsetY,
+      closePath,
+      backgroundColor,
     } = calculatedProps
 
     if (points.length < 2) {
@@ -98,6 +100,7 @@ export const line = {
     settingCanvasProps({
       lineCap,
       strokeStyle: lineColor,
+      fillStyle: backgroundColor,
       lineDash,
       lineDashOffset,
       lineJoin,
@@ -113,7 +116,8 @@ export const line = {
     ctx.beginPath()
     ctx.moveTo(...first)
     rest.forEach(item => ctx.lineTo(...item))
+    closePath && ctx.closePath()
+    backgroundColor && ctx.fill()
     ctx.stroke()
-    ctx.closePath()
   },
 }

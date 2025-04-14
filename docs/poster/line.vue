@@ -47,6 +47,17 @@ onMounted(() => {
       ],
       lineWidth: 5,
     },
+    {
+      type: 'line',
+      points: [
+        [10, 10],
+        [80, 10],
+        [45, 80],
+      ],
+      lineWidth: 5,
+      closePath: true,
+      backgroundColor: '#0000ff33',
+    },
   ])
 })
 

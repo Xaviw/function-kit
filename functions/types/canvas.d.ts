@@ -84,6 +84,11 @@ export interface PosterElementCommonOptions {
   bottom?: NumberWithContainer
   left?: NumberWithContainer
   /**
+   * 透明度，取值范围 0 - 1
+   * @default 1
+   */
+  globalAlpha?: number
+  /**
    * 旋转角度，注意旋转不会改变元素盒模型，不会影响子元素相对定位
    */
   rotate?: number
@@ -243,8 +248,7 @@ export interface PosterImage extends Omit<PosterElementCommonOptions, 'top' | 'r
  */
 export interface PosterRect extends PosterElementCommonOptions {
   type: 'rect'
-  backgroundColor?: string | CanvasGradient | CanvasPattern
-  border?: Pick<PosterLine, 'lineCap' | 'lineColor' | 'lineDash' | 'lineDashOffset' | 'lineJoin' | 'lineWidth' | 'miterLimit'>
+  border?: Pick<PosterLine, 'backgroundColor' | 'lineCap' | 'lineColor' | 'lineDash' | 'lineDashOffset' | 'lineJoin' | 'lineWidth' | 'miterLimit'>
   /**
    * 圆角大小
    * 支持数值或以容器宽、高，自身宽、高对象为参数，返回数值的函数
@@ -261,6 +265,15 @@ export interface PosterLine extends Omit<PosterElementCommonOptions, 'top' | 'ri
    * 线条顶点，可以为 2 个或多个
    */
   points: [NumberWithContainer, NumberWithContainer][]
+  /**
+   * 是否自动闭合路径
+   * @default false
+   */
+  closePath?: boolean
+  /**
+   * line 中仅 closePath 为 true 时生效
+   */
+  backgroundColor?: string | CanvasGradient | CanvasPattern
   /**
    * @default 1
    */

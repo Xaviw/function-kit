@@ -475,7 +475,7 @@ function settingProperty(properties: Omit<TextProps, 'fontFamilySrc'>, options: 
     }
   })
 
-  // // 设置 canvas 属性
+  // 设置 canvas 属性
   settingCanvasProps({
     ...props,
     ...props.strokeProps,

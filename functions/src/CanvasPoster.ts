@@ -90,7 +90,6 @@ export class CanvasPoster {
 
     const ctx = node.getContext('2d')
     if (!ctx) {
-      console.error('获取 Canvas 上下文失败')
       throw new Error('获取 Canvas 上下文失败')
     }
 
@@ -137,6 +136,10 @@ export class CanvasPoster {
         const rotate = Number.parseFloat(props.rotate)
         if (rotate)
           rotateCanvas(rotate, { x: props.x, y: props.y, width: props.width, height: props.height, ctx: this.ctx })
+
+        const globalAlpha = Number.parseFloat(props.globalAlpha)
+        if (isNumber(globalAlpha) && globalAlpha >= 0 && globalAlpha <= 1)
+          this.ctx.globalAlpha = globalAlpha
 
         plugin.render(props as any, { ...this.options, ctx: this.ctx })
 

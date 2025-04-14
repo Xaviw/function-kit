@@ -2,7 +2,7 @@
   "name": "function-kit",
   "type": "module",
   "version": "1.0.0",
-  "packageManager": "pnpm@10.7.0",
+  "packageManager": "pnpm@10.8.0",
   "description": "零依赖多端函数工具库",
   "engines": {
     "node": ">=18"
@@ -14,14 +14,14 @@
     "postinstall": "npx -y simple-git-hooks"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.11.0",
-    "@types/node": "^22.13.14",
-    "eslint": "^9.23.0",
+    "@antfu/eslint-config": "^4.12.0",
+    "@types/node": "^22.14.1",
+    "eslint": "^9.24.0",
     "eslint-plugin-format": "^1.0.1",
-    "lint-staged": "^15.5.0",
+    "lint-staged": "^15.5.1",
     "rimraf": "^6.0.1",
     "simple-git-hooks": "^2.12.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
