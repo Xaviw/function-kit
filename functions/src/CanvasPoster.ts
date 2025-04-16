@@ -6,7 +6,7 @@ import { image } from '../utils/canvas/image'
 import { line } from '../utils/canvas/line'
 import { rect } from '../utils/canvas/rect'
 import { enhancedMeasure, measure, text } from '../utils/canvas/text'
-import { isArray, isFunction, isNumber, isObject, isString } from './is'
+import { isArray, isFunction, isNil, isNumber, isObject, isString } from './is'
 import { isEqual } from './isEqual'
 
 type PosterElements = (PosterElement | PosterRenderFunction)[]
@@ -16,13 +16,13 @@ export class CanvasPoster {
   private initial: Promise<void>
 
   /** 画布配置 */
-  private options!: CanvasNode
+  private options!: CanvasNode & { nodeWidth: number, nodeHeight: number, debug?: { lineColor: string, lineWidth: number } }
 
   /** 绘制项数组 */
   private configs: PosterElements = []
 
   /** 绘制项缓存 */
-  private cache: { config?: PosterElement, prepare?: Recordable, calculate?: NormalizedBox & Recordable }[] = []
+  private cache: { config?: PosterElement, prepare?: Recordable, calculate?: NormalizedBox & Recordable, x?: number, y?: number }[] = []
 
   /** 绘制上下文 */
   private ctx: CanvasContext = null!
@@ -47,10 +47,12 @@ export class CanvasPoster {
   }
 
   private async init(options: PosterOptions, componentThis?: any) {
-    let { node, width, height, dpr } = isObject(options) ? options : {}
+    let { node, width, height, dpr, nodeWidth, nodeHeight, debug } = isObject(options) ? options : {}
 
     width = Number.parseFloat(width as any)
     height = Number.parseFloat(height as any)
+    nodeWidth = Number.parseFloat(nodeWidth as any)
+    nodeHeight = Number.parseFloat(nodeHeight as any)
 
     if (isString(node)) {
       const { canvas, width: styleWidth, height: styleHeight } = await getCanvas(node, componentThis)
@@ -66,6 +68,12 @@ export class CanvasPoster {
 
       if (!height || height < 0)
         height = styleHeight
+
+      if (!nodeWidth || nodeWidth < 0)
+        nodeWidth = styleWidth
+
+      if (!nodeHeight || nodeHeight < 0)
+        nodeHeight = styleHeight
     }
 
     if (isObject(node)) {
@@ -82,6 +90,12 @@ export class CanvasPoster {
         else
           height = Number.parseFloat(node.style.height)
       }
+
+      if (!nodeWidth || nodeWidth < 0)
+        nodeWidth = width
+
+      if (!nodeHeight || nodeHeight < 0)
+        nodeHeight = height
     }
 
     if (!isFunction(node?.getContext) || !width || !height) {
@@ -98,7 +112,22 @@ export class CanvasPoster {
     node.height = height * dpr
     ctx.scale(dpr, dpr)
 
-    this.options = { canvas: node, width, height }
+    const { lineColor = '#ff0000', lineWidth = 2 } = isObject(debug) ? debug : {}
+
+    this.options = {
+      canvas: node,
+      width,
+      height,
+      nodeHeight,
+      nodeWidth,
+      debug:
+        debug
+          ? {
+              lineWidth,
+              lineColor,
+            }
+          : undefined,
+    }
     this.ctx = ctx
     this.dpr = dpr
   }
@@ -110,13 +139,15 @@ export class CanvasPoster {
     }
 
     await this.initial
+    const { canvas, debug } = this.options
+    canvas.removeEventListener('click', this.clickHandler)
 
     this.configs = configs
 
     for (let index = 0; index < configs.length; index++) {
       const config = configs[index]
       if (isFunction(config)) {
-        const renderOptions = { ctx: this.ctx, canvas: this.options.canvas, dpr: this.dpr }
+        const renderOptions = { ctx: this.ctx, canvas, dpr: this.dpr }
         await config(renderOptions)
       }
       else if (isObject(config) && config.type in this.plugins) {
@@ -128,6 +159,9 @@ export class CanvasPoster {
           p.y += c.y
           return p
         }, { x: 0, y: 0 })
+
+        this.cache[index].x = x
+        this.cache[index].y = y
 
         this.ctx.save()
 
@@ -144,8 +178,43 @@ export class CanvasPoster {
         plugin.render(props as any, { ...this.options, ctx: this.ctx })
 
         this.ctx.restore()
+
+        if (debug) {
+          this.ctx.save()
+          this.ctx.strokeStyle = debug.lineColor
+          this.ctx.lineWidth = debug.lineWidth
+          this.ctx.strokeRect(x + props.x, y + props.y, props.width, props.height)
+          this.ctx.restore()
+        }
       }
     }
+    canvas.addEventListener('click', this.clickHandler.bind(this))
+  }
+
+  clickHandler(e: MouseEvent) {
+    let { offsetX, offsetY } = e
+    const { canvas, nodeHeight, nodeWidth, width, height } = this.options
+    offsetX = width / nodeWidth * offsetX
+    offsetY = height / nodeHeight * offsetY
+    const cache = [...this.cache]
+    cache.reverse().some((item) => {
+      if (!item)
+        return false
+      const { config, calculate, x, y } = item
+      const handler = config?.onClick
+      if (isFunction(handler) && calculate && !isNil(x) && !isNil(y)) {
+        const { width, height, x: ex, y: ey } = calculate
+        const startX = x + ex
+        const startY = y + ey
+        const endX = startX + width
+        const endY = startY + height
+        if (offsetX >= startX && offsetX <= endX && offsetY >= startY && offsetY <= endY) {
+          handler.call(config, e, { ctx: this.ctx, canvas, dpr: this.dpr })
+          return true
+        }
+      }
+      return false
+    })
   }
 
   async measure(content: PosterTextCommonOptions) {

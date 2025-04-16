@@ -19,17 +19,38 @@ interface NormalizedBox {
  */
 export interface PosterOptions {
   /**
-   * canvas 节点
+   * canvas 节点或节点选择器
+   *
+   * 小程序中不支持从节点上获取标签宽高，所以传入节点时，需要显示定义画布宽高、标签宽高
    */
   node: Canvas | string
   /**
+   * canvas 节点的 css 宽度，用于元素事件定位
+   */
+  nodeWidth?: number
+  /**
+   * canvas 节点的 css 高度，用于元素事件定位
+   */
+  nodeHeight?: number
+  /**
    * 海报设计图宽度
+   *
+   * [小程序 Canvas 文档](https://developers.weixin.qq.com/miniprogram/dev/component/canvas.html#Bug-Tip)中画布的最大宽高定义为 1365，请自行控制
    */
   width?: number
   /**
    * 海报设计图高度
+   *
+   * [小程序 Canvas 文档](https://developers.weixin.qq.com/miniprogram/dev/component/canvas.html#Bug-Tip)中画布的最大宽高定义为 1365，请自行控制
    */
   height?: number
+  /**
+   * 调试选项，开启后会在元素盒模型上绘制边框，用于判断相对定位以及事件作用范围
+   */
+  debug?: boolean | {
+    lineWidth?: number
+    lineColor?: string
+  }
   /**
    * 像素比，默认会自动获取设备 drp
    */
@@ -39,16 +60,7 @@ export interface PosterOptions {
 /**
  * poster 配置式绘制项
  */
-export type PosterElement = (PosterText | PosterImage | PosterRect | PosterLine) & {
-  /**
-   * 用于相对定位
-   */
-  id?: string
-  /**
-   * 相对于某个 id 对应的元素进行定位（注意避免循环依赖）
-   */
-  relativeTo?: string
-}
+export type PosterElement = PosterText | PosterImage | PosterRect | PosterLine
 
 /**
  * poster 函数式绘制项
@@ -77,6 +89,20 @@ type NumberWithContainer = number | Fn<[{ containerWidth: number, containerHeigh
  * poster 绘制公共配置
  */
 export interface PosterElementCommonOptions {
+  /**
+   * 用于相对定位
+   */
+  id?: string
+  /**
+   * 相对于某个 id 对应的元素进行定位（注意避免循环依赖）
+   */
+  relativeTo?: string
+  /**
+   * 点击事件（不精确！！！仅根据元素盒模型与配置顺序确定是否被点击）
+   *
+   * 事件中 this 为配置项本身
+   */
+  onClick?: (e: MouseEvent, options: { ctx: CanvasContext, canvas: Canvas, dpr: number }) => void
   width?: NumberWithContainer
   height?: NumberWithContainer
   top?: NumberWithContainer

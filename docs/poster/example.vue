@@ -1,3 +1,4 @@
+<!-- eslint-disable no-console -->
 <script lang="ts" setup>
 import type { PosterText } from '../../functions/types/canvas'
 import { onMounted, ref } from 'vue'
@@ -10,6 +11,7 @@ onMounted(() => {
     node: '#canvas',
     width: 620,
     height: 1006,
+    debug: true,
   })
 
   const gradientText: PosterText = {
@@ -18,6 +20,9 @@ onMounted(() => {
     bottom: 30,
     textAlign: 'center',
     fontSize: 32,
+    onClick(...args) {
+      console.log('slogan', ...args, this)
+    },
   }
 
   let nameWidth: number
@@ -61,6 +66,9 @@ onMounted(() => {
       top: 47.88,
       left: 47.86,
       height: 31.18,
+      onClick(...args) {
+        console.log('logo1', ...args)
+      },
     },
     {
       relativeTo: 'a',
@@ -68,6 +76,9 @@ onMounted(() => {
       src: 'https://cdn-public-test.community-platform.qq.com/applet-public-img/logo.png',
       left: ({ containerWidth }) => containerWidth + 30,
       height: 31.18,
+      onClick(...args) {
+        console.log('logo2', ...args)
+      },
     },
     {
       id: 'b',
@@ -77,6 +88,9 @@ onMounted(() => {
       top: 236,
       height: 60,
       width: 60,
+      onClick(...args) {
+        console.log('avatar', ...args)
+      },
     },
     {
       relativeTo: 'b',
@@ -88,6 +102,9 @@ onMounted(() => {
       fontWeight: 600,
       color: '#5d4d4a',
       lineHeight: h => h,
+      onClick(...args) {
+        console.log('name', ...args)
+      },
     },
     {
       type: 'text',
@@ -96,6 +113,9 @@ onMounted(() => {
       textAlign: 'center',
       fontSize: 32,
       color: '#5b4c49',
+      onClick(...args) {
+        console.log('title', ...args)
+      },
     },
     {
       type: 'text',
@@ -107,6 +127,9 @@ onMounted(() => {
       left: 72,
       right: 72,
       lineHeight: 48,
+      onClick(...args) {
+        console.log('content', ...args)
+      },
     },
     {
       type: 'image',
@@ -115,6 +138,9 @@ onMounted(() => {
       left: 67,
       right: 67,
       mode: 'aspectFit',
+      onClick(...args) {
+        console.log('image', ...args)
+      },
     },
     gradientText,
   ])
