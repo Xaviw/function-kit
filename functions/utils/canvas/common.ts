@@ -20,7 +20,11 @@ export function getDpr(dpr?: number) {
   }
 }
 
-export interface CanvasNode { canvas: Canvas, width: number, height: number }
+interface CanvasNode {
+  node: Canvas
+  width: number
+  height: number
+}
 
 /**
  * 获取 canvas 节点
@@ -35,19 +39,19 @@ export function getCanvas(str: string, componentThis?: any): MaybePromise<Canvas
           { node: true, size: true },
           (res) => {
             const { node, width, height } = res || {}
-            resolve({ canvas: node, width, height } as CanvasNode)
+            resolve({ node, width, height })
           },
         )
         .exec()
     })
   }
   else {
-    const canvas = document.querySelector(str) as HTMLCanvasElement
-    return canvas
+    const node = document.querySelector(str) as HTMLCanvasElement
+    return node
       ? {
-          canvas,
-          width: Number.parseFloat(canvas.style.width) || canvas.width,
-          height: Number.parseFloat(canvas.style.height) || canvas.height,
+          node,
+          width: Number.parseFloat(node.style.width) || node.width,
+          height: Number.parseFloat(node.style.height) || node.height,
         }
       : {} as CanvasNode
   }
