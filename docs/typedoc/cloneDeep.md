@@ -5,7 +5,7 @@
 ## cloneDeep()
 
 ```ts
-function cloneDeep<T>(val: T, seen: WeakMap<any, any>): T
+function cloneDeep<T>(val: T, seen: WeakMap<any, any>): T;
 ```
 
 深度克隆一个值，支持多种数据类型

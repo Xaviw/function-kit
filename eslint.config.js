@@ -3,17 +3,12 @@ import antfu from '@antfu/eslint-config'
 export default antfu(
   {
     ignores: ['docs/typedoc/**/*'],
+    pnpm: true,
     vue: true,
     formatters: {
       css: true,
-      html: true,
       markdown: true,
-    },
-  },
-  {
-    // 自定义规则
-    rules: {
-      'node/prefer-global/process': 'off',
+      svg: true,
     },
   },
 )

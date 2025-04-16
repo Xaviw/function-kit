@@ -38,7 +38,7 @@ optional key: string;
 function search<T>(
    target: any, 
    sources: T[], 
-   options?: FuzzySearchOptions): T[]
+   options?: FuzzySearchOptions): T[];
 ```
 
 在数组中搜索满足条件的项

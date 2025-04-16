@@ -5,7 +5,7 @@
 ## camelCase()
 
 ```ts
-function camelCase(str: string): string
+function camelCase(str: string): string;
 ```
 
 将字符串转换为小驼峰命名格式
@@ -36,7 +36,7 @@ camelCase('HelloWorld') // => 'helloWorld'
 ## kebabCase()
 
 ```ts
-function kebabCase(str: string): string
+function kebabCase(str: string): string;
 ```
 
 将字符串转换为短横线命名格式
@@ -67,7 +67,7 @@ kebabCase('HelloWorld') // => 'hello-world'
 ## pascalCase()
 
 ```ts
-function pascalCase(str: string): string
+function pascalCase(str: string): string;
 ```
 
 将字符串转换为大驼峰命名格式
@@ -98,7 +98,7 @@ pascalCase('helloWorld') // => 'HelloWorld'
 ## snakeCase()
 
 ```ts
-function snakeCase(str: string): string
+function snakeCase(str: string): string;
 ```
 
 将字符串转换为下划线命名格式
@@ -129,7 +129,7 @@ snakeCase('HelloWorld') // => 'hello_world'
 ## splitCase()
 
 ```ts
-function splitCase(str: string): string[]
+function splitCase(str: string): string[];
 ```
 
 将字符串按照常见的命名规则分割为单词数组
@@ -163,7 +163,7 @@ splitCase('hello world') // => ['hello', 'world']
 ## upperFirst()
 
 ```ts
-function upperFirst(str: string): string
+function upperFirst(str: string): string;
 ```
 
 将字符串的第一个字符转换为大写
@@ -193,7 +193,7 @@ upperFirst('hello') // => 'Hello'
 ## upperSnakeCase()
 
 ```ts
-function upperSnakeCase(str: string): string
+function upperSnakeCase(str: string): string;
 ```
 
 将字符串转换为大写下划线命名格式

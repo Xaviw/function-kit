@@ -5,7 +5,7 @@
 ## pick()
 
 ```ts
-function pick<T, K>(obj: T, keys: readonly K[]): Pick<T, K>
+function pick<T, K>(obj: T, keys: readonly K[]): Pick<T, K>;
 ```
 
 从对象中提取指定的属性，创建一个新的对象

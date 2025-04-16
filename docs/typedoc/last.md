@@ -5,7 +5,7 @@
 ## last()
 
 ```ts
-function last<T>(arr: T[], defaultValue?: T): undefined | T
+function last<T>(arr: T[], defaultValue?: T): undefined | T;
 ```
 
 获取数组最后一项

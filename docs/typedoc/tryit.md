@@ -19,7 +19,7 @@ type TryitReturn<Return> = Return extends Promise<any> ? Promise<[Error, undefin
 ## tryit()
 
 ```ts
-function tryit<Args, Return>(func: (...args: Args) => Return): (...args: Args) => TryitReturn<Return>
+function tryit<Args, Return>(func: (...args: Args) => Return): (...args: Args) => TryitReturn<Return>;
 ```
 
 包装一个函数，使其返回值转换为 [error, result] 的形式，用于优雅地处理错误
@@ -44,9 +44,11 @@ function tryit<Args, Return>(func: (...args: Args) => Return): (...args: Args) =
 
 ### 返回
 
-`Function`
-
 返回一个新函数，该函数返回 [error, result] 形式的结果
+
+```ts
+(...args: Args): TryitReturn<Return>;
+```
 
 #### 参数
 

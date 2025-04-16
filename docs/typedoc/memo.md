@@ -43,7 +43,7 @@ optional lruMax: number;
 ## memo()
 
 ```ts
-function memo<Args, R>(fn: Fn<Args, R>, options?: MemoOptions<Args>): Fn<Args, R>
+function memo<Args, R>(fn: Fn<Args, R>, options?: MemoOptions<Args>): Fn<Args, R>;
 ```
 
 创建一个带有缓存功能的记忆化函数

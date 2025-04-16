@@ -7,7 +7,6 @@ export default defineConfig({
       include: ['src/**'],
       exclude: ['src/CanvasPoster.ts'],
       reporter: ['text'],
-      skipFull: true,
     },
   },
 })

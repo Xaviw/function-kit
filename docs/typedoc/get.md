@@ -8,7 +8,7 @@
 function get<TDefault>(
    value: any, 
    path: string, 
-   defaultValue?: TDefault): undefined | TDefault
+   defaultValue?: TDefault): undefined | TDefault;
 ```
 
 安全地获取对象或数组中的嵌套值

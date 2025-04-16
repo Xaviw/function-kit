@@ -5,7 +5,7 @@
 ## isBase64()
 
 ```ts
-function isBase64(str: string): boolean
+function isBase64(str: string): boolean;
 ```
 
 判断字符串是否为 Base64 编码的 Data URL
@@ -36,7 +36,7 @@ isBase64('data:text/plain,Hello') // false
 ## isChinese()
 
 ```ts
-function isChinese(str: string): boolean
+function isChinese(str: string): boolean;
 ```
 
 判断字符串是否全为中文字符
@@ -67,7 +67,7 @@ isChinese('Hello世界') // false
 ## isChineseName()
 
 ```ts
-function isChineseName(str: string): boolean
+function isChineseName(str: string): boolean;
 ```
 
 判断字符串是否为中文姓名（支持 "·" 分隔）
@@ -98,7 +98,7 @@ isChineseName('艾力·买买提') // true
 ## isDataUrl()
 
 ```ts
-function isDataUrl(str: string): boolean
+function isDataUrl(str: string): boolean;
 ```
 
 判断字符串是否为有效的 Data URL
@@ -129,7 +129,7 @@ isDataUrl('https://example.com/image.png') // false
 ## isEmail()
 
 ```ts
-function isEmail(str: string): boolean
+function isEmail(str: string): boolean;
 ```
 
 判断字符串是否为有效的电子邮件地址
@@ -160,7 +160,7 @@ isEmail('invalid-email') // false
 ## isIDCard()
 
 ```ts
-function isIDCard(str: string): boolean
+function isIDCard(str: string): boolean;
 ```
 
 判断字符串是否为有效的中国大陆第二代身份证号
@@ -191,7 +191,7 @@ isIDCard('11010119900307775X') // true
 ## isIPV4()
 
 ```ts
-function isIPV4(str: string): boolean
+function isIPV4(str: string): boolean;
 ```
 
 判断字符串是否为有效的 IPv4 地址（可选带端口号）
@@ -222,7 +222,7 @@ isIPV4('192.168.1.1:8080') // true
 ## isMacAddress()
 
 ```ts
-function isMacAddress(str: string): boolean
+function isMacAddress(str: string): boolean;
 ```
 
 判断字符串是否为有效的 MAC 地址
@@ -253,7 +253,7 @@ isMacAddress('00-0a-95-9d-68-16') // true
 ## isPath()
 
 ```ts
-function isPath(str: string): boolean
+function isPath(str: string): boolean;
 ```
 
 判断字符串是否为相对路径或绝对路径
@@ -277,7 +277,7 @@ function isPath(str: string): boolean
 ## isPhone()
 
 ```ts
-function isPhone(str: string): boolean
+function isPhone(str: string): boolean;
 ```
 
 判断字符串是否为有效的中国大陆手机号
@@ -308,7 +308,7 @@ isPhone('+8613812345678') // true
 ## isPostalCode()
 
 ```ts
-function isPostalCode(str: string): boolean
+function isPostalCode(str: string): boolean;
 ```
 
 判断字符串是否为有效的中国邮政编码
@@ -339,7 +339,7 @@ isPostalCode('000000') // false
 ## isTelphone()
 
 ```ts
-function isTelphone(str: string): boolean
+function isTelphone(str: string): boolean;
 ```
 
 判断字符串是否为有效的座机号码
@@ -370,7 +370,7 @@ isTelphone('0755-1234567') // true
 ## isUrl()
 
 ```ts
-function isUrl(str: string): boolean
+function isUrl(str: string): boolean;
 ```
 
 判断字符串是否为有效的 URL（支持 localhost）
@@ -401,7 +401,7 @@ isUrl('http://localhost:3000') // true
 ## isVehiclePlate()
 
 ```ts
-function isVehiclePlate(str: string): boolean
+function isVehiclePlate(str: string): boolean;
 ```
 
 判断字符串是否为有效的中国车牌号（支持新能源和非新能源）

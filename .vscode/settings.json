@@ -53,8 +53,12 @@
   "cSpell.words": [
     "apng",
     "dequoted",
+    "esbuild",
     "onwarn",
+    "rollup",
+    "tinyglobby",
     "tryit",
-    "upperize"
+    "upperize",
+    "vitest"
   ]
 }

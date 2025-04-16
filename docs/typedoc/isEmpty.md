@@ -5,7 +5,7 @@
 ## isEmpty()
 
 ```ts
-function isEmpty(val: unknown): boolean
+function isEmpty(val: unknown): boolean;
 ```
 
 判断参数是否为空值

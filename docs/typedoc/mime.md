@@ -5,7 +5,7 @@
 ## getExtensionsFromMime()
 
 ```ts
-function getExtensionsFromMime(mime: string): undefined | string[]
+function getExtensionsFromMime(mime: string): undefined | string[];
 ```
 
 根据 MIME 类型获取对应的文件扩展名列表
@@ -37,7 +37,7 @@ getExtensionsFromMime('unknown/type') // undefined
 ## getMimeFromExtension()
 
 ```ts
-function getMimeFromExtension(ext: string): undefined | string
+function getMimeFromExtension(ext: string): undefined | string;
 ```
 
 根据文件扩展名获取对应的 MIME 类型

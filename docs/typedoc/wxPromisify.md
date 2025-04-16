@@ -5,7 +5,7 @@
 ## wxPromisify()
 
 ```ts
-function wxPromisify<M>(method: M, options: CallbackifyParams<M>): Promise<CallbackifyResults<M>>
+function wxPromisify<M>(method: M, options: CallbackifyParams<M>): Promise<CallbackifyResults<M>>;
 ```
 
 **`Miniprogram`**

@@ -5,7 +5,7 @@
 ## isEqual()
 
 ```ts
-function isEqual(a: any, b: any): boolean
+function isEqual(a: any, b: any): boolean;
 ```
 
 深度比较两个值是否相等

@@ -6,10 +6,10 @@
 
 ### 构造函数
 
-#### new CanvasPoster()
+#### 构造函数
 
 ```ts
-new CanvasPoster(options: PosterOptions, componentThis?: any): CanvasPoster
+new CanvasPoster(options: PosterOptions, componentThis?: any): CanvasPoster;
 ```
 
 未传递 width、height 时，会尝试获取 canvas 元素 css 宽高，未获取到则使用 canvas 默认宽高
@@ -37,7 +37,7 @@ options.node 为字符串，且在小程序组件中使用时必传，否则无�
 #### draw()
 
 ```ts
-draw(configs: PosterElements): Promise<void>
+draw(configs: PosterElements): Promise<void>;
 ```
 
 ##### 参数
@@ -53,7 +53,7 @@ draw(configs: PosterElements): Promise<void>
 #### measure()
 
 ```ts
-measure(content: PosterTextCommonOptions): Promise<TextMetrics>
+measure(content: PosterTextCommonOptions): Promise<TextMetrics>;
 ```
 
 ##### 参数
@@ -72,7 +72,7 @@ measure(content: PosterTextCommonOptions): Promise<TextMetrics>
 measureHeight(content: PosterText, maxWidth?: number): Promise<{
   height: number;
   width: number;
-}>
+}>;
 ```
 
 ##### 参数
@@ -90,7 +90,7 @@ measureHeight(content: PosterText, maxWidth?: number): Promise<{
 `Promise`\<\{
   `height`: `number`;
   `width`: `number`;
- \}\>
+\}\>
 
 ***
 
@@ -101,7 +101,7 @@ function saveCanvasAsImage(canvas: HTMLCanvasElement, options?: {
   fileName: string;
   quality: number;
   type: string;
-}): Promise<unknown>
+}): Promise<unknown>;
 ```
 
 导出 canvas

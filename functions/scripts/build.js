@@ -1,4 +1,5 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import process from 'node:process'
 import terser from '@rollup/plugin-terser'
 import inquirer from 'inquirer'
 import { rimraf } from 'rimraf'
@@ -15,7 +16,7 @@ if (!files.length) {
   process.exit(0)
 }
 
-const { platform, uglify } = await inquirer.prompt([
+const { platform, uglify, name } = await inquirer.prompt([
   {
     type: 'list',
     name: 'platform',
@@ -27,6 +28,12 @@ const { platform, uglify } = await inquirer.prompt([
     name: 'uglify',
     message: '是否丑化代码：',
     choices: [{ name: '是', value: true }, { name: '否', value: false }],
+  },
+  {
+    type: 'input',
+    name: 'name',
+    message: '请输入输出文件名：',
+    default: 'index',
   },
 ])
 
@@ -99,6 +106,7 @@ await Promise.all([
     await bundle.write({
       dir: 'dist',
       format: 'es',
+      entryFileNames: `${name}.js`,
     })
     return bundle.close()
   }),
@@ -113,6 +121,7 @@ await Promise.all([
     await bundle.write({
       dir: 'dist',
       format: 'es',
+      entryFileNames: `${name}.d.ts`,
     })
     return bundle.close()
   }),

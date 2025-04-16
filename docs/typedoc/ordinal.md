@@ -5,7 +5,7 @@
 ## ordinal()
 
 ```ts
-function ordinal(num: number): string
+function ordinal(num: number): string;
 ```
 
 为数字添加英文序数词后缀（st、nd、rd、th）

@@ -5,7 +5,7 @@
 ## objectToString()
 
 ```ts
-function objectToString(val: any): string
+function objectToString(val: any): string;
 ```
 
 获取值的内部 [[Class]] 属性，等同于 Object.prototype.toString.call

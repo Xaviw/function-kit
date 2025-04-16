@@ -17,18 +17,18 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "@rollup/plugin-terser": "^0.4.4",
-    "@vitest/coverage-v8": "^3.0.9",
-    "builtin-modules": "^5.0.0",
-    "inquirer": "^12.5.0",
-    "miniprogram-api-typings": "^4.0.5",
-    "rollup": "^4.36.0",
-    "rollup-plugin-dts": "^6.1.1",
-    "rollup-plugin-typescript2": "^0.36.0",
-    "tinyglobby": "^0.2.12",
-    "typedoc": "^0.28.0",
-    "typedoc-plugin-markdown": "^4.5.1",
-    "typedoc-vitepress-theme": "^1.1.2",
-    "vitest": "^3.0.9"
+    "@rollup/plugin-terser": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "builtin-modules": "catalog:",
+    "inquirer": "catalog:",
+    "miniprogram-api-typings": "catalog:",
+    "rollup": "catalog:",
+    "rollup-plugin-dts": "catalog:",
+    "rollup-plugin-typescript2": "catalog:",
+    "tinyglobby": "catalog:",
+    "typedoc": "catalog:",
+    "typedoc-plugin-markdown": "catalog:",
+    "typedoc-vitepress-theme": "catalog:",
+    "vitest": "catalog:"
   }
 }

@@ -8,7 +8,7 @@
 function throttle<F>(
    fn: F, 
    waitMilliseconds?: number, 
-immediate?: boolean): CancelableFunction<F>
+immediate?: boolean): CancelableFunction<F>;
 ```
 
 创建一个节流函数，限制函数在一定时间内只能执行一次

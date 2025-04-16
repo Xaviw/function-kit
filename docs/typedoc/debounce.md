@@ -8,7 +8,7 @@
 function debounce<F>(
    fn: F, 
    waitMilliseconds?: number, 
-immediate?: boolean): CancelableFunction<F>
+immediate?: boolean): CancelableFunction<F>;
 ```
 
 创建一个防抖函数，限制函数连续触发时仅执行一次

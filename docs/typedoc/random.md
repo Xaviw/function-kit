@@ -8,7 +8,7 @@
 function randomNumber(
    min?: number, 
    max?: number, 
-   floatNum?: number): number
+   floatNum?: number): number;
 ```
 
 生成指定范围内的随机数
@@ -52,7 +52,7 @@ randomNumber(1, 10, 2) // 1-10 之间的数字，保留 2 位小数
 ## randomString()
 
 ```ts
-function randomString(length?: number, chars?: string): string
+function randomString(length?: number, chars?: string): string;
 ```
 
 生成指定长度的随机字符串
@@ -90,7 +90,7 @@ randomString(4, 'abc123') // 'a1b2'
 ## shuffle()
 
 ```ts
-function shuffle<T>(arr: T): T
+function shuffle<T>(arr: T): T;
 ```
 
 随机打乱数组元素的顺序

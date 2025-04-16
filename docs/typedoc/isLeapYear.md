@@ -5,7 +5,7 @@
 ## isLeapYear()
 
 ```ts
-function isLeapYear(year: number): boolean
+function isLeapYear(year: number): boolean;
 ```
 
 判断年份是否是闰年

@@ -19,7 +19,7 @@ type MapObjectIterator<T> = Fn<[keyof T, T[keyof T]], [Key, any]>;
 ## mapObject()
 
 ```ts
-function mapObject<T>(obj: T, iterator: MapObjectIterator<T>): Recordable
+function mapObject<T>(obj: T, iterator: MapObjectIterator<T>): Recordable;
 ```
 
 遍历对象的每个键值并返回一个新对象，类似数组的 map 方法

@@ -5,7 +5,7 @@
 ## fileSize()
 
 ```ts
-function fileSize(bytes: number, suffixes: string[]): string
+function fileSize(bytes: number, suffixes: string[]): string;
 ```
 
 将字节数转换为带单位的文件大小字符串

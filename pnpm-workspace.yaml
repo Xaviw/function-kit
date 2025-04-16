@@ -1,4 +1,32 @@
 packages:
   - functions
   - docs
-  - playground
+catalog:
+  '@antfu/eslint-config': ^4.12.0
+  '@prettier/plugin-xml': ^3.4.1
+  '@rollup/plugin-terser': ^0.4.4
+  '@types/node': ^22.14.1
+  '@vitest/coverage-v8': ^3.1.1
+  '@vue/tsconfig': ^0.7.0
+  builtin-modules: ^5.0.0
+  eslint: ^9.24.0
+  eslint-plugin-format: ^1.0.1
+  inquirer: ^12.5.2
+  lint-staged: ^15.5.1
+  miniprogram-api-typings: ^4.0.5
+  rimraf: ^6.0.1
+  rollup: ^4.40.0
+  rollup-plugin-dts: ^6.2.1
+  rollup-plugin-typescript2: ^0.36.0
+  simple-git-hooks: ^2.12.1
+  tinyglobby: ^0.2.12
+  typedoc: ^0.28.2
+  typedoc-plugin-markdown: ^4.6.2
+  typedoc-vitepress-theme: ^1.1.2
+  typescript: ^5.8.3
+  vitepress: ^1.6.3
+  vitest: ^3.1.1
+  vue: ^3.5.13
+onlyBuiltDependencies:
+  - esbuild
+  - simple-git-hooks

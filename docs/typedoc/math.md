@@ -8,7 +8,7 @@
 function difference<T, K>(
    root: readonly T[], 
    other: readonly T[], 
-   identity?: (item: T) => K): T[]
+   identity?: (item: T) => K): T[];
 ```
 
 计算两个数组的差集
@@ -64,7 +64,7 @@ difference([{id: 1}, {id: 2}], [{id: 2}], x => x.id) // [{id: 1}]
 function intersects<T, K>(
    listA: readonly T[], 
    listB: readonly T[], 
-   identity?: (t: T) => K): T[]
+   identity?: (t: T) => K): T[];
 ```
 
 计算两个数组的交集
@@ -117,7 +117,7 @@ intersects([{id: 1}, {id: 2}], [{id: 2}, {id: 3}], x => x.id) // [{id: 2}]
 ## isEven()
 
 ```ts
-function isEven(val: number): boolean
+function isEven(val: number): boolean;
 ```
 
 判断数值是否为偶数
@@ -149,7 +149,7 @@ isEven(1.2) // false
 ## isInteger()
 
 ```ts
-function isInteger(val: number): boolean
+function isInteger(val: number): boolean;
 ```
 
 判断数值是否为整数
@@ -181,7 +181,7 @@ isInteger(NaN) // false
 ## isOdd()
 
 ```ts
-function isOdd(val: number): boolean
+function isOdd(val: number): boolean;
 ```
 
 判断数值是否为奇数
@@ -216,7 +216,7 @@ isOdd(1.5) // false
 function union<T, K>(
    listA: readonly T[], 
    listB: readonly T[], 
-   identity?: (t: T) => K): T[]
+   identity?: (t: T) => K): T[];
 ```
 
 计算两个数组的并集

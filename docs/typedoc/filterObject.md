@@ -19,7 +19,7 @@ type FilterObjectIterator<T> = Fn<[keyof T, T[keyof T]], boolean>;
 ## filterObject()
 
 ```ts
-function filterObject<T>(obj: T, iterator: FilterObjectIterator<T>): Partial<T>
+function filterObject<T>(obj: T, iterator: FilterObjectIterator<T>): Partial<T>;
 ```
 
 根据条件过滤对象的属性并返回新对象

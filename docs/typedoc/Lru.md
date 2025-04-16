@@ -18,10 +18,10 @@ cache.set('c', 3) // 'b' 会被删除
 
 ### 构造函数
 
-#### new Lru()
+#### 构造函数
 
 ```ts
-new Lru(max?: number): Lru
+new Lru(max?: number): Lru;
 ```
 
 创建一个新的 LRU 缓存实例
@@ -43,7 +43,7 @@ new Lru(max?: number): Lru
 #### clear()
 
 ```ts
-clear(): void
+clear(): void;
 ```
 
 清空缓存
@@ -55,7 +55,7 @@ clear(): void
 #### get()
 
 ```ts
-get(key: string | number | symbol): any
+get(key: string | number | symbol): any;
 ```
 
 获取缓存中指定键的值，并将其移到最近使用的位置
@@ -77,7 +77,7 @@ get(key: string | number | symbol): any
 #### has()
 
 ```ts
-has(key: string | number | symbol): boolean
+has(key: string | number | symbol): boolean;
 ```
 
 检查缓存中是否存在指定的键
@@ -99,7 +99,7 @@ has(key: string | number | symbol): boolean
 #### remove()
 
 ```ts
-remove(key: string | number | symbol): void
+remove(key: string | number | symbol): void;
 ```
 
 从缓存中移除指定的键值对
@@ -119,7 +119,7 @@ remove(key: string | number | symbol): void
 #### set()
 
 ```ts
-set(key: string | number | symbol, value: any): void
+set(key: string | number | symbol, value: any): void;
 ```
 
 设置缓存中的键值对，如果缓存已满则移除最久未使用的项

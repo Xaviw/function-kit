@@ -1,10 +1,8 @@
 node_modules
 dist
-functions/coverage
-docs/.vitepress/cache
-.vscode/launch.json
+coverage
 
-**/.DS_Store
+.DS_Store
 *.log
 .idea
 .temp
@@ -12,3 +10,6 @@ docs/.vitepress/cache
 .eslint-config-inspector
 package-lock.json
 yarn.lock
+
+docs/.vitepress/cache
+.vscode/launch.json

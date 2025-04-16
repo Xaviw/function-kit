@@ -35,7 +35,7 @@ type Curried<T> = <A>(...args: A) => Parameters<T> extends [...A, ...(infer R)] 
 ## curry()
 
 ```ts
-function curry<T>(fn: T): Curried<T>
+function curry<T>(fn: T): Curried<T>;
 ```
 
 函数柯里化

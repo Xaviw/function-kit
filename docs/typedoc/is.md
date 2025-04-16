@@ -5,7 +5,7 @@
 ## isArray()
 
 ```ts
-function isArray(val: unknown): val is any[]
+function isArray(val: unknown): val is any[];
 ```
 
 判断值是否为数组
@@ -36,7 +36,7 @@ isArray('hello') // false
 ## isArrayBuffer()
 
 ```ts
-function isArrayBuffer(val: unknown): val is ArrayBuffer
+function isArrayBuffer(val: unknown): val is ArrayBuffer;
 ```
 
 判断值是否为 ArrayBuffer
@@ -67,7 +67,7 @@ isArrayBuffer([]) // false
 ## isBlob()
 
 ```ts
-function isBlob(val: unknown): val is Blob
+function isBlob(val: unknown): val is Blob;
 ```
 
 判断值是否为 Blob
@@ -98,7 +98,7 @@ isBlob({}) // false
 ## isBoolean()
 
 ```ts
-function isBoolean(val: unknown): val is boolean
+function isBoolean(val: unknown): val is boolean;
 ```
 
 判断值是否为布尔值
@@ -129,7 +129,7 @@ isBoolean(0) // false
 ## isDate()
 
 ```ts
-function isDate(val: unknown): val is Date
+function isDate(val: unknown): val is Date;
 ```
 
 判断值是否为日期对象
@@ -160,7 +160,7 @@ isDate('2021-01-01') // false
 ## isError()
 
 ```ts
-function isError(val: unknown): val is Error
+function isError(val: unknown): val is Error;
 ```
 
 判断值是否为错误对象
@@ -191,7 +191,7 @@ isError('error') // false
 ## isFunction()
 
 ```ts
-function isFunction(val: unknown): val is Fn
+function isFunction(val: unknown): val is Fn;
 ```
 
 判断值是否为函数
@@ -222,7 +222,7 @@ isFunction(123) // false
 ## isGeneratorFunction()
 
 ```ts
-function isGeneratorFunction(val: unknown): val is GeneratorFunction
+function isGeneratorFunction(val: unknown): val is GeneratorFunction;
 ```
 
 判断值是否为生成器函数
@@ -253,7 +253,7 @@ isGeneratorFunction(123) // false
 ## isMap()
 
 ```ts
-function isMap(val: unknown): val is Map<any, any>
+function isMap(val: unknown): val is Map<any, any>;
 ```
 
 判断值是否为 Map
@@ -284,7 +284,7 @@ isMap({}) // false
 ## isNil()
 
 ```ts
-function isNil(val: unknown): val is undefined | null
+function isNil(val: unknown): val is undefined | null;
 ```
 
 判断值是否为 null 或者 undefined（void 0）
@@ -315,7 +315,7 @@ isNil(123) // false
 ## isNumber()
 
 ```ts
-function isNumber(val: unknown): val is number
+function isNumber(val: unknown): val is number;
 ```
 
 判断值是否为数字
@@ -346,7 +346,7 @@ isNumber('123') // false
 ## isObject()
 
 ```ts
-function isObject(val: unknown): val is Recordable
+function isObject(val: unknown): val is Recordable;
 ```
 
 判断值是否为对象（包括函数）
@@ -377,7 +377,7 @@ isObject(null) // false
 ## isPrimitive()
 
 ```ts
-function isPrimitive(val: unknown): val is undefined | null | string | number | boolean | symbol
+function isPrimitive(val: unknown): val is undefined | null | string | number | boolean | symbol;
 ```
 
 判断值是否为原始类型值
@@ -408,7 +408,7 @@ isPrimitive({}) // false
 ## isPromise()
 
 ```ts
-function isPromise(val: unknown): val is Promise<any>
+function isPromise(val: unknown): val is Promise<any>;
 ```
 
 判断值是否为 Promise 对象
@@ -439,7 +439,7 @@ isPromise({}) // false
 ## isRegExp()
 
 ```ts
-function isRegExp(val: unknown): val is RegExp
+function isRegExp(val: unknown): val is RegExp;
 ```
 
 判断值是否为正则表达式对象
@@ -470,7 +470,7 @@ isRegExp({}) // false
 ## isSet()
 
 ```ts
-function isSet(val: unknown): val is Set<any>
+function isSet(val: unknown): val is Set<any>;
 ```
 
 判断值是否为 Set 对象
@@ -501,7 +501,7 @@ isSet({}) // false
 ## isString()
 
 ```ts
-function isString(val: unknown): val is string
+function isString(val: unknown): val is string;
 ```
 
 判断值是否为字符串
@@ -532,7 +532,7 @@ isString(123) // false
 ## isSymbol()
 
 ```ts
-function isSymbol(val: unknown): val is symbol
+function isSymbol(val: unknown): val is symbol;
 ```
 
 判断值是否为 Symbol
@@ -563,7 +563,7 @@ isSymbol('foo') // false
 ## isTypedArray()
 
 ```ts
-function isTypedArray(val: unknown): val is Int8Array<ArrayBufferLike> | Int16Array<ArrayBufferLike> | Int32Array<ArrayBufferLike> | Uint8Array<ArrayBufferLike> | Uint8ClampedArray<ArrayBufferLike> | Uint16Array<ArrayBufferLike> | Uint32Array<ArrayBufferLike> | Float32Array<ArrayBufferLike> | Float64Array<ArrayBufferLike>
+function isTypedArray(val: unknown): val is Int8Array<ArrayBufferLike> | Int16Array<ArrayBufferLike> | Int32Array<ArrayBufferLike> | Uint8Array<ArrayBufferLike> | Uint8ClampedArray<ArrayBufferLike> | Uint16Array<ArrayBufferLike> | Uint32Array<ArrayBufferLike> | Float32Array<ArrayBufferLike> | Float64Array<ArrayBufferLike>;
 ```
 
 判断值是否为 typedArray
@@ -594,7 +594,7 @@ isTypedArray([]) // false
 ## isUndef()
 
 ```ts
-function isUndef(val: unknown): val is undefined
+function isUndef(val: unknown): val is undefined;
 ```
 
 判断值是否为 undefined（void 0）
@@ -625,7 +625,7 @@ isUndef(null) // false
 ## isWeakMap()
 
 ```ts
-function isWeakMap(val: unknown): val is WeakMap<any, any>
+function isWeakMap(val: unknown): val is WeakMap<any, any>;
 ```
 
 判断值是否为 WeakMap
@@ -656,7 +656,7 @@ isWeakMap({}) // false
 ## isWeakSet()
 
 ```ts
-function isWeakSet(val: unknown): val is WeakSet<any>
+function isWeakSet(val: unknown): val is WeakSet<any>;
 ```
 
 判断值是否为 WeakSet

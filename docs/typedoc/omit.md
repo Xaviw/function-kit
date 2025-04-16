@@ -5,7 +5,7 @@
 ## omit()
 
 ```ts
-function omit<T, TKeys>(obj: T, keys: TKeys[]): Omit<T, TKeys>
+function omit<T, TKeys>(obj: T, keys: TKeys[]): Omit<T, TKeys>;
 ```
 
 从对象中排除指定的属性，返回新对象

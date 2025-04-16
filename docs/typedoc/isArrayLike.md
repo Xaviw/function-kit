@@ -5,7 +5,7 @@
 ## isArrayLike()
 
 ```ts
-function isArrayLike(val: unknown): val is ArrayLike<any>
+function isArrayLike(val: unknown): val is ArrayLike<any>;
 ```
 
 判断值是否为类数组值

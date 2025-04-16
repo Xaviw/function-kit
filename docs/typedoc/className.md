@@ -5,7 +5,7 @@
 ## className()
 
 ```ts
-function className(...names: any[]): string
+function className(...names: any[]): string;
 ```
 
 计算动态绑定后的 css class 字符串
