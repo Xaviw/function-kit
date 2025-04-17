@@ -5,7 +5,6 @@ import { image } from '../utils/canvas/image'
 import { line } from '../utils/canvas/line'
 import { rect } from '../utils/canvas/rect'
 import { enhancedMeasure, measure, text } from '../utils/canvas/text'
-import { cloneDeep } from './cloneDeep'
 import { isArray, isFunction, isNil, isNumber, isObject, isString } from './is'
 import { isEqual } from './isEqual'
 
@@ -139,7 +138,9 @@ export class CanvasPoster {
       const config = configs[index]
 
       if (isFunction(config)) {
-        await config(cloneDeep(this.options))
+        ctx.save()
+        await config({ ...this.options })
+        ctx.restore()
       }
       else if (isObject(config) && config.type in plugins) {
         const plugin = plugins[config.type]
@@ -154,7 +155,6 @@ export class CanvasPoster {
         this.cache[index].y = y
 
         ctx.save()
-
         ctx.translate(x, y)
 
         const rotate = Number.parseFloat(props.rotate)
@@ -166,7 +166,6 @@ export class CanvasPoster {
           ctx.globalAlpha = globalAlpha
 
         plugin.render(props as any, this.options)
-
         ctx.restore()
 
         if (debug) {
@@ -198,7 +197,7 @@ export class CanvasPoster {
         const endX = startX + width
         const endY = startY + height
         if (offsetX >= startX && offsetX <= endX && offsetY >= startY && offsetY <= endY) {
-          handler.call(config, e, cloneDeep(this.options))
+          handler.call(config, e, { ...this.options })
           return true
         }
       }

@@ -29,7 +29,7 @@ onMounted(() => {
   let nameHeight: number
 
   poster.draw([
-    async ({ ctx, canvas: node }) => {
+    async ({ ctx, node }) => {
       canvas.value = node
 
       const gradient = ctx.createLinearGradient(0, 900, 0, 1006)
