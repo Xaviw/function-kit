@@ -24,9 +24,11 @@ interface NormalizedImage extends PreparedImage {
   sourceY: number
   sourceWidth: number
   sourceHeight: number
+  imgX: number
+  imgY: number
+  imgWidth: number
+  imgHeight: number
   borderRadius: number
-  borderOffsetX: number
-  borderOffsetY: number
 }
 
 export const image = {
@@ -176,8 +178,10 @@ export const image = {
       }
     }
 
-    let borderOffsetX = 0
-    let borderOffsetY = 0
+    let imgX = x
+    let imgY = y
+    let imgWidth = width
+    let imgHeight = height
 
     if (width > 0 && height > 0) {
       // 默认的 scaleToFill 无需处理
@@ -196,38 +200,42 @@ export const image = {
         if (imageRatio < 1) {
           // 高为长边，撑满；宽按比例缩小，左右留白
           const newWidth = height * imageRatio
-          borderOffsetX = (width - newWidth) / 2
-          x += borderOffsetX
-          width = newWidth
+          const offsetX = (width - newWidth) / 2
+          imgX += offsetX
+          imgWidth = newWidth
         }
         else {
           // 宽为长边，撑满；高按比例缩小，上下留白
           const newHeight = width / imageRatio
-          borderOffsetY = (height - newHeight) / 2
-          y += borderOffsetY
-          height = newHeight
+          const offsetY = (height - newHeight) / 2
+          imgY += offsetY
+          imgHeight = newHeight
         }
       }
     }
     else if (width > 0) {
       const ratio = width / sourceWidth
-      height = sourceHeight * ratio
+      height = imgHeight = sourceHeight * ratio
     }
     else if (height > 0) {
       const ratio = height / sourceHeight
-      width = sourceWidth * ratio
+      width = imgWidth = sourceWidth * ratio
     }
     else {
-      width = sourceWidth
-      height = sourceHeight
+      width = imgWidth = sourceWidth
+      height = imgHeight = sourceHeight
     }
 
     if (isNil(left) && !isNil(right)) {
-      x = containerWidth - right - width
+      const newX = containerWidth - right - width
+      imgX += newX - x
+      x = newX
     }
 
     if (isNil(top) && !isNil(bottom)) {
-      y = containerHeight - bottom - height
+      const newY = containerHeight - bottom - height
+      imgY += newY - y
+      y = newY
     }
 
     borderRadius
@@ -253,8 +261,10 @@ export const image = {
       width,
       height,
       borderRadius,
-      borderOffsetX,
-      borderOffsetY,
+      imgX,
+      imgY,
+      imgWidth,
+      imgHeight,
     }
   },
   // 绘制
@@ -277,8 +287,10 @@ export const image = {
       sourceY,
       flipX,
       flipY,
-      borderOffsetX,
-      borderOffsetY,
+      imgX,
+      imgY,
+      imgWidth,
+      imgHeight,
     } = calculatedProps
 
     if (!image)
@@ -287,10 +299,14 @@ export const image = {
     // 翻转
     ctx.translate(flipX ? posterWidth : 0, flipY ? posterHeight : 0)
     ctx.scale(flipX ? -1 : 1, flipY ? -1 : 1)
-    if (flipX)
+    if (flipX) {
       x = posterWidth - x - width
-    if (flipY)
+      imgX = posterWidth - imgX - imgWidth
+    }
+    if (flipY) {
       y = posterHeight - y - height
+      imgY = posterHeight - imgY - imgHeight
+    }
 
     let { lineWidth } = border || {}
     lineWidth = isNumber(lineWidth) ? lineWidth : 0
@@ -299,10 +315,10 @@ export const image = {
     if (borderRadius || (border && lineWidth)) {
       ctx.save()
       roundRect({
-        x: x - lineWidth / 2 - borderOffsetX + shadowOffsetX,
-        y: y - lineWidth / 2 - borderOffsetY + shadowOffsetY,
-        w: width + lineWidth + 2 * borderOffsetX,
-        h: height + lineWidth + 2 * borderOffsetY,
+        x: x - lineWidth / 2 + shadowOffsetX,
+        y: y - lineWidth / 2 + shadowOffsetY,
+        w: width + lineWidth,
+        h: height + lineWidth,
         r: borderRadius,
         ctx,
       })
@@ -314,10 +330,10 @@ export const image = {
       ctx.restore()
 
       roundRect({
-        x: x - lineWidth / 2 - borderOffsetX,
-        y: y - lineWidth / 2 - borderOffsetY,
-        w: width + lineWidth + 2 * borderOffsetX,
-        h: height + lineWidth + 2 * borderOffsetY,
+        x: x - lineWidth / 2,
+        y: y - lineWidth / 2,
+        w: width + lineWidth,
+        h: height + lineWidth,
         r: borderRadius,
         ctx,
       })
@@ -334,7 +350,7 @@ export const image = {
     }
 
     // 绘制图片
-    ctx.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, x, y, width, height)
+    ctx.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, imgX, imgY, imgWidth, imgHeight)
 
     // 绘制边框
     if (border && lineWidth) {

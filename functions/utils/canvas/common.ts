@@ -89,20 +89,28 @@ interface CanvasRoundRectOptions {
 /**
  * canvas 圆角矩形
  */
-export function roundRect(options: CanvasRoundRectOptions) {
+export function roundRect(options: Omit<CanvasRoundRectOptions, 'ctx'>): Path2D
+export function roundRect(options: CanvasRoundRectOptions): void
+export function roundRect(options: any): any {
   let { x, y, w, h, r, ctx } = options
+
+  ctx && ctx.beginPath()
+
+  if (!ctx)
+    ctx = new Path2D()
 
   const min_size = Math.min(w, h)
   if (r > min_size / 2)
     r = min_size / 2
 
-  ctx.beginPath()
   ctx.moveTo(x + r, y)
   ctx.arcTo(x + w, y, x + w, y + h, r)
   ctx.arcTo(x + w, y + h, x, y + h, r)
   ctx.arcTo(x, y + h, x, y, r)
   ctx.arcTo(x, y, x + w, y, r)
   ctx.closePath()
+
+  return ctx
 }
 
 /**

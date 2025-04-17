@@ -161,20 +161,21 @@ export class CanvasPoster {
         if (rotate)
           rotateCanvas(rotate, { ...props, ctx })
 
+        // if (debug) {
+        if (true) {
+          ctx.save()
+          ctx.strokeStyle = (debug as Recordable)?.lineColor || '#ff0000'
+          ctx.lineWidth = (debug as Recordable)?.lineWidth || 2
+          ctx.strokeRect(props.x, props.y, props.width, props.height)
+          ctx.restore()
+        }
+
         const globalAlpha = Number.parseFloat(props.globalAlpha)
         if (isNumber(globalAlpha) && globalAlpha >= 0 && globalAlpha <= 1)
           ctx.globalAlpha = globalAlpha
 
         plugin.render(props as any, this.options)
         ctx.restore()
-
-        if (debug) {
-          ctx.save()
-          ctx.strokeStyle = (debug as Recordable)?.lineColor || '#ff0000'
-          ctx.lineWidth = (debug as Recordable)?.lineWidth || 2
-          ctx.strokeRect(x + props.x, y + props.y, props.width, props.height)
-          ctx.restore()
-        }
       }
     }
   }
