@@ -1,20 +1,27 @@
-import type { Canvas, CanvasContext, NormalizedBox, PosterElement, PosterOptions, PosterRenderFunction, PosterText, PosterTextCommonOptions } from '../types/canvas'
+import type { Canvas, ElementBox, PosterElement, PosterInstanceOptions, PosterOptions, PosterRenderFunction, PosterText, PosterTextCommonOptions } from '../types/canvas'
 import type { Recordable } from '../types/common'
 import { getCanvas, getDpr, rotateCanvas } from '../utils/canvas/common'
 import { image } from '../utils/canvas/image'
 import { line } from '../utils/canvas/line'
 import { rect } from '../utils/canvas/rect'
 import { enhancedMeasure, measure, text } from '../utils/canvas/text'
+import { cloneDeep } from './cloneDeep'
 import { isArray, isFunction, isNil, isNumber, isObject, isString } from './is'
 import { isEqual } from './isEqual'
 
 type PosterElements = (PosterElement | PosterRenderFunction)[]
 
-interface CacheItem { config?: PosterElement, prepare?: Recordable, calculate?: NormalizedBox & Recordable, x?: number, y?: number }
-
-interface PosterInstanceOptions extends Required<PosterOptions> {
-  node: Canvas
-  ctx: CanvasContext
+interface CacheItem {
+  /** 原始配置 */
+  config?: PosterElement
+  /** prepare 后的配置 */
+  prepare?: Recordable
+  /** calculate 后的配置 */
+  calculate?: ElementBox & Recordable
+  /** 元素在画布中的 x 坐标 */
+  x?: number
+  /** 元素在画布中的 y 坐标 */
+  y?: number
 }
 
 /** 全部绘制项 */
@@ -52,8 +59,6 @@ export class CanvasPoster {
 
     width = Number.parseFloat(width as any)
     height = Number.parseFloat(height as any)
-    nodeWidth = Number.parseFloat(nodeWidth as any)
-    nodeHeight = Number.parseFloat(nodeHeight as any)
 
     if (isString(node)) {
       const { node: canvas, width: styleWidth, height: styleHeight } = await getCanvas(node, componentThis)
@@ -96,9 +101,10 @@ export class CanvasPoster {
       throw new Error('获取 Canvas 上下文失败')
     }
 
+    nodeWidth = Number.parseFloat(nodeWidth as any)
+    nodeHeight = Number.parseFloat(nodeHeight as any)
     if (!nodeWidth || nodeWidth < 0)
       nodeWidth = width
-
     if (!nodeHeight || nodeHeight < 0)
       nodeHeight = height
 
@@ -126,27 +132,24 @@ export class CanvasPoster {
     }
 
     await this.initial
-    const { node, debug, ctx, dpr } = this.options
-    node.removeEventListener('click', this.clickHandler)
-
     this.configs = configs
+    const { debug, ctx } = this.options
 
     for (let index = 0; index < configs.length; index++) {
       const config = configs[index]
+
       if (isFunction(config)) {
-        const renderOptions = { ctx, canvas: node, dpr }
-        await config(renderOptions)
+        await config(cloneDeep(this.options))
       }
       else if (isObject(config) && config.type in plugins) {
         const plugin = plugins[config.type]
         const elements = await this.travelContainer(index)
-        const props = elements[elements.length - 1]
-        const { x, y } = elements.slice(0, -1).reduce((p, c) => {
+        const props = elements.pop()!
+        const { x, y } = elements.reduce((p, c) => {
           p.x += c.x
           p.y += c.y
           return p
         }, { x: 0, y: 0 })
-
         this.cache[index].x = x
         this.cache[index].y = y
 
@@ -156,13 +159,13 @@ export class CanvasPoster {
 
         const rotate = Number.parseFloat(props.rotate)
         if (rotate)
-          rotateCanvas(rotate, { x: props.x, y: props.y, width: props.width, height: props.height, ctx })
+          rotateCanvas(rotate, { ...props, ctx })
 
         const globalAlpha = Number.parseFloat(props.globalAlpha)
         if (isNumber(globalAlpha) && globalAlpha >= 0 && globalAlpha <= 1)
           ctx.globalAlpha = globalAlpha
 
-        plugin.render(props as any, { ...this.options, ctx })
+        plugin.render(props as any, this.options)
 
         ctx.restore()
 
@@ -175,12 +178,11 @@ export class CanvasPoster {
         }
       }
     }
-    node.addEventListener('click', this.clickHandler.bind(this))
   }
 
   clickHandler(e: MouseEvent) {
     let { offsetX, offsetY } = e
-    const { node, nodeHeight, nodeWidth, width, height, ctx, dpr } = this.options
+    const { nodeHeight, nodeWidth, width, height } = this.options
     offsetX = width / nodeWidth * offsetX
     offsetY = height / nodeHeight * offsetY
     const cache = [...this.cache]
@@ -196,7 +198,7 @@ export class CanvasPoster {
         const endX = startX + width
         const endY = startY + height
         if (offsetX >= startX && offsetX <= endX && offsetY >= startY && offsetY <= endY) {
-          handler.call(config, e, { ctx, canvas: node, dpr })
+          handler.call(config, e, cloneDeep(this.options))
           return true
         }
       }
@@ -218,7 +220,7 @@ export class CanvasPoster {
   /** 递归绘制项，获取相对定位元素盒模型并调用 normalize */
   private async travelContainer(
     index: number,
-    containers: (NormalizedBox & Recordable)[] = [{
+    containers: (ElementBox & Recordable)[] = [{
       x: 0,
       y: 0,
       width: this.options.width,
@@ -236,7 +238,7 @@ export class CanvasPoster {
   }
 
   /** 标准化参数，扩展盒模型等参数 */
-  private async normalize(index: number, parents: NormalizedBox[]) {
+  private async normalize(index: number, parents: ElementBox[]) {
     const config = this.configs[index] as PosterElement
 
     if (!this.cache[index])
@@ -250,13 +252,13 @@ export class CanvasPoster {
 
     let preparedProps = cache.prepare
     if (!preparedProps || !cacheAvaliable) {
-      preparedProps = await plugin.prepare(config as any, { canvas: this.options.node })
+      preparedProps = await plugin.prepare(config as any, this.options)
       cache.prepare = preparedProps
     }
 
     let calculatedProps = cache.calculate
     if (!calculatedProps || !cacheAvaliable) {
-      calculatedProps = plugin.calculate(preparedProps as any, parent, { ctx: this.options.ctx, maxWidth })
+      calculatedProps = plugin.calculate(preparedProps as any, parent, { ...this.options, maxWidth })
       cache.calculate = calculatedProps
     }
 

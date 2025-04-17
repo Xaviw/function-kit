@@ -1,4 +1,4 @@
-import type { CanvasContext, NormalizedBox, PosterText, PosterTextCommonOptions } from '../../types/canvas'
+import type { CanvasContext, ElementBox, PosterText, PosterTextCommonOptions } from '../../types/canvas'
 import type { Fn, PartiallyRequired, Recordable } from '../../types/common'
 import { isArray, isFunction, isNil, isNumber, isObject, isString } from '../../src/is'
 import { mapObject } from '../../src/mapObject'
@@ -39,7 +39,7 @@ export const text = {
     return props
   },
   // 容器尺寸相关的属性标准化
-  calculate(preparedProps: PosterText, parentContainer: NormalizedBox, { ctx, maxWidth }: { ctx: CanvasContext, maxWidth: number }): NormalizedText {
+  calculate(preparedProps: PosterText, parentContainer: ElementBox, { ctx, maxWidth }: { ctx: CanvasContext, maxWidth: number }): NormalizedText {
     const { width: containerWidth, height: containerHeight } = parentContainer
 
     const sizeProps = pick(

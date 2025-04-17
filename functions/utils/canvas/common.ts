@@ -1,4 +1,4 @@
-import type { Canvas, CanvasContext, NormalizedBox } from '../../types/canvas'
+import type { Canvas, CanvasContext, ElementBox } from '../../types/canvas'
 import type { MaybePromise } from '../../types/common'
 import { isNumber, isString } from '../../src/is'
 import { memo } from '../../src/memo'
@@ -60,7 +60,7 @@ export function getCanvas(str: string, componentThis?: any): MaybePromise<Canvas
 /**
  * 绘制元素旋转
  */
-export function rotateCanvas(rotate: number, options: NormalizedBox & { ctx: CanvasContext }): void {
+export function rotateCanvas(rotate: number, options: ElementBox & { ctx: CanvasContext }): void {
   if (isNumber(rotate)) {
     const { x, y, width, height, ctx } = options
     const centerX = x + width / 2
@@ -108,11 +108,11 @@ export function roundRect(options: CanvasRoundRectOptions) {
 /**
  * 加载图片
  */
-export const downloadImage = memo((src: string, canvas: Canvas | WechatMiniprogram.Canvas): Promise<{ image: CanvasImageSource, width: number, height: number }> => {
+export const downloadImage = memo((src: string, node: Canvas | WechatMiniprogram.Canvas): Promise<{ image: CanvasImageSource, width: number, height: number }> => {
   return new Promise((resolve, reject) => {
     const image
       = PLATFORM === 'miniprogram'
-        ? (canvas as WechatMiniprogram.Canvas).createImage() as HTMLImageElement
+        ? (node as WechatMiniprogram.Canvas).createImage() as HTMLImageElement
         : new Image()
 
     image.onload = () => resolve({ image, width: image.width, height: image.height })

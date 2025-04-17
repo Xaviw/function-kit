@@ -1,4 +1,4 @@
-import type { Canvas, CanvasContext, NormalizedBox, PosterImage } from '../../types/canvas'
+import type { Canvas, CanvasContext, ElementBox, PosterImage } from '../../types/canvas'
 import { isFunction, isNil, isNumber, isString } from '../../src/is'
 import { mapObject } from '../../src/mapObject'
 import { pick } from '../../src/pick'
@@ -31,7 +31,7 @@ interface NormalizedImage extends PreparedImage {
 
 export const image = {
   // 前置工作、与容器尺寸无关的属性标准化
-  async prepare(props: PosterImage, { canvas }: { canvas: Canvas }): Promise<PreparedImage> {
+  async prepare(props: PosterImage, { node }: { node: Canvas }): Promise<PreparedImage> {
     const { src } = props
 
     let image
@@ -43,7 +43,7 @@ export const image = {
     }
     else {
       try {
-        const img = await downloadImage(src, canvas)
+        const img = await downloadImage(src, node)
         image = img.image
         imageWidth = img.width
         imageHeight = img.height
@@ -65,7 +65,7 @@ export const image = {
     }
   },
   // 容器尺寸相关的属性标准化
-  calculate(preparedProps: PreparedImage, parentContainer: NormalizedBox): NormalizedImage {
+  calculate(preparedProps: PreparedImage, parentContainer: ElementBox): NormalizedImage {
     const { width: containerWidth, height: containerHeight } = parentContainer
 
     let {

@@ -1,4 +1,4 @@
-import type { CanvasContext, NormalizedBox, PosterRect } from '../../types/canvas'
+import type { CanvasContext, ElementBox, PosterRect } from '../../types/canvas'
 import { isFunction, isNil, isNumber, isObject, isString } from '../../src/is'
 import { mapObject } from '../../src/mapObject'
 import { pick } from '../../src/pick'
@@ -19,7 +19,7 @@ export const rect = {
     return props
   },
   // 容器尺寸相关的属性标准化
-  calculate(preparedProps: PosterRect, parentContainer: NormalizedBox): NormalizedRect {
+  calculate(preparedProps: PosterRect, parentContainer: ElementBox): NormalizedRect {
     const { width: containerWidth, height: containerHeight } = parentContainer
 
     const sizeProps = pick(

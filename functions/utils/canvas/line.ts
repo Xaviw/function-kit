@@ -1,4 +1,4 @@
-import type { CanvasContext, NormalizedBox, PosterLine } from '../../types/canvas'
+import type { CanvasContext, ElementBox, PosterLine } from '../../types/canvas'
 import { isArray, isFunction, isNumber } from '../../src/is'
 import { settingCanvasProps } from './propStrategies'
 
@@ -20,7 +20,7 @@ export const line = {
     return props
   },
   // 容器尺寸相关的属性标准化
-  calculate(preparedProps: PosterLine, { width, height }: NormalizedBox): NormalizedLine {
+  calculate(preparedProps: PosterLine, { width, height }: ElementBox): NormalizedLine {
     let { lineWidth } = preparedProps
     lineWidth = isNumber(lineWidth) ? lineWidth : 1
 

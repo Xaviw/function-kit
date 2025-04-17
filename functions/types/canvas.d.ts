@@ -7,7 +7,7 @@ export type CanvasContext = CanvasRenderingContext2D
 /**
  * 根据定位、尺寸属性计算标准盒子属性
  */
-interface NormalizedBox {
+interface ElementBox {
   x: number
   y: number
   width: number
@@ -19,29 +19,35 @@ interface NormalizedBox {
  */
 export interface PosterOptions {
   /**
-   * canvas 节点或节点选择器
-   *
-   * 小程序中不支持从节点上获取标签宽高，所以传入节点时，需要显示定义画布宽高、标签宽高
+   * canvas 元素，或选择器字符串
    */
   node: Canvas | string
   /**
-   * canvas 节点的 css 宽度，用于元素事件定位
+   * canvas 元素的 css 宽度，用于在事件系统中定位元素
+   *
+   * 小程序中不支持从元素本身获取 css 宽高，所以 node 为元素节点时，需要显式定义
    */
   nodeWidth?: number
   /**
-   * canvas 节点的 css 高度，用于元素事件定位
+   * canvas 元素的 css 高度，用于在事件系统中定位元素
+   *
+   * 小程序中不支持从元素本身获取 css 宽高，所以 node 为元素节点时，需要显式定义
    */
   nodeHeight?: number
   /**
    * 海报设计图宽度
    *
-   * [小程序 Canvas 文档](https://developers.weixin.qq.com/miniprogram/dev/component/canvas.html#Bug-Tip)中画布的最大宽高定义为 1365，请自行控制
+   * 小程序中不支持从元素本身获取 css 宽高，所以 node 为元素节点时，需要显式定义
+   *
+   * **注意：**[小程序 Canvas 文档](https://developers.weixin.qq.com/miniprogram/dev/component/canvas.html#Bug-Tip)中对画布的最大宽高说明为 1365，过大的宽高存在页面崩溃的可能
    */
   width?: number
   /**
    * 海报设计图高度
    *
-   * [小程序 Canvas 文档](https://developers.weixin.qq.com/miniprogram/dev/component/canvas.html#Bug-Tip)中画布的最大宽高定义为 1365，请自行控制
+   * 小程序中不支持从元素本身获取 css 宽高，所以 node 为元素节点时，需要显式定义
+   *
+   * **注意：**[小程序 Canvas 文档](https://developers.weixin.qq.com/miniprogram/dev/component/canvas.html#Bug-Tip)中对画布的最大宽高说明为 1365，过大的宽高存在页面崩溃的可能
    */
   height?: number
   /**
@@ -52,9 +58,19 @@ export interface PosterOptions {
     lineColor?: string
   }
   /**
-   * 像素比，默认会自动获取设备 drp
+   * 画布实际像素相对于设计图像素的倍数，默认会自动获取设备 drp
+   *
+   * **注意：**[小程序 Canvas 文档](https://developers.weixin.qq.com/miniprogram/dev/component/canvas.html#Bug-Tip)中对画布的最大宽高说明为 1365，过大的宽高存在页面崩溃的可能
    */
   dpr?: number
+}
+
+/**
+ * poster 实例属性
+ */
+interface PosterInstanceOptions extends Required<PosterOptions> {
+  node: Canvas
+  ctx: CanvasContext
 }
 
 /**
@@ -66,13 +82,7 @@ export type PosterElement = PosterText | PosterImage | PosterRect | PosterLine
  * poster 函数式绘制项
  */
 export interface PosterRenderFunction {
-  /**
-   * 手动绘制或设置上下文属性，支持异步
-   * @param ctx - canvas 上下文
-   * @param canvas - canvas 节点
-   * @param dpr - 当前画布采用的 dpr
-   */
-  (options: { ctx: CanvasContext, canvas: Canvas, dpr: number }): MaybePromise<void>
+  (options: PosterInstanceOptions): MaybePromise<void>
 }
 
 /**
@@ -102,7 +112,7 @@ export interface PosterElementCommonOptions {
    *
    * 事件中 this 为配置项本身
    */
-  onClick?: (e: MouseEvent, options: { ctx: CanvasContext, canvas: Canvas, dpr: number }) => void
+  onClick?: (e: MouseEvent, options: PosterInstanceOptions) => void
   width?: NumberWithContainer
   height?: NumberWithContainer
   top?: NumberWithContainer
