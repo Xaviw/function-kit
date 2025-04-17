@@ -69,6 +69,7 @@ onMounted(() => {
       onClick(...args) {
         console.log('logo1', ...args)
       },
+      rotate: 90,
     },
     {
       relativeTo: 'a',
@@ -119,7 +120,7 @@ onMounted(() => {
     },
     {
       type: 'text',
-      content: '某某某某某某组织的某某某某某某活动',
+      content: '某某某某某某某某某某某某某某某某某某某某某某某某某某某某',
       top: 396,
       textAlign: 'center',
       fontSize: 32,

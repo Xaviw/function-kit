@@ -58,6 +58,8 @@ export class CanvasPoster {
 
     width = Number.parseFloat(width as any)
     height = Number.parseFloat(height as any)
+    nodeWidth = Number.parseFloat(nodeWidth as any)
+    nodeHeight = Number.parseFloat(nodeHeight as any)
 
     if (isString(node)) {
       const { node: canvas, width: styleWidth, height: styleHeight } = await getCanvas(node, componentThis)
@@ -73,21 +75,40 @@ export class CanvasPoster {
 
       if (!height || height < 0)
         height = styleHeight
+
+      if (!nodeWidth || nodeWidth < 0)
+        nodeWidth = styleWidth
+      if (!nodeHeight || nodeHeight < 0)
+        nodeHeight = styleHeight
     }
 
     if (isObject(node)) {
       if (!width || width < 0) {
-        if (PLATFORM === 'miniprogram')
+        if (PLATFORM === 'miniprogram') {
           width = node.width
-        else
-          width = Number.parseFloat(node.style.width)
+          if (!nodeWidth || nodeWidth < 0)
+            nodeWidth = width
+        }
+        else {
+          const styleWidth = Number.parseFloat(node.style.width)
+          width = styleWidth
+          if (!nodeWidth || nodeWidth < 0)
+            nodeWidth = styleWidth
+        }
       }
 
       if (!height || height < 0) {
-        if (PLATFORM === 'miniprogram')
+        if (PLATFORM === 'miniprogram') {
           height = node.height
-        else
-          height = Number.parseFloat(node.style.height)
+          if (!nodeHeight || nodeHeight < 0)
+            nodeHeight = height
+        }
+        else {
+          const styleHeight = Number.parseFloat(node.style.height)
+          height = styleHeight
+          if (!nodeHeight || nodeHeight < 0)
+            nodeHeight = styleHeight
+        }
       }
     }
 
@@ -99,13 +120,6 @@ export class CanvasPoster {
     if (!ctx) {
       throw new Error('获取 Canvas 上下文失败')
     }
-
-    nodeWidth = Number.parseFloat(nodeWidth as any)
-    nodeHeight = Number.parseFloat(nodeHeight as any)
-    if (!nodeWidth || nodeWidth < 0)
-      nodeWidth = width
-    if (!nodeHeight || nodeHeight < 0)
-      nodeHeight = height
 
     dpr = getDpr(dpr)
     node.width = width * dpr
@@ -132,7 +146,10 @@ export class CanvasPoster {
 
     await this.initial
     this.configs = configs
-    const { debug, ctx } = this.options
+    const { debug, ctx, node } = this.options
+
+    if (PLATFORM === 'web')
+      node.removeEventListener('click', this.clickHandler)
 
     for (let index = 0; index < configs.length; index++) {
       const config = configs[index]
@@ -161,23 +178,29 @@ export class CanvasPoster {
         if (rotate)
           rotateCanvas(rotate, { ...props, ctx })
 
-        // if (debug) {
-        if (true) {
-          ctx.save()
-          ctx.strokeStyle = (debug as Recordable)?.lineColor || '#ff0000'
-          ctx.lineWidth = (debug as Recordable)?.lineWidth || 2
-          ctx.strokeRect(props.x, props.y, props.width, props.height)
-          ctx.restore()
-        }
-
         const globalAlpha = Number.parseFloat(props.globalAlpha)
         if (isNumber(globalAlpha) && globalAlpha >= 0 && globalAlpha <= 1)
           ctx.globalAlpha = globalAlpha
 
         plugin.render(props as any, this.options)
         ctx.restore()
+
+        // if (debug) {
+        if (true) {
+          ctx.save()
+          const rotate = Number.parseFloat(props.rotate)
+          if (rotate)
+            rotateCanvas(rotate, { ...props, ctx })
+          ctx.strokeStyle = (debug as Recordable)?.lineColor || '#ff0000'
+          ctx.lineWidth = (debug as Recordable)?.lineWidth || 2
+          ctx.strokeRect(x + props.x, y + props.y, props.width, props.height)
+          ctx.restore()
+        }
       }
     }
+
+    if (PLATFORM === 'web')
+      node.addEventListener('click', this.clickHandler.bind(this))
   }
 
   clickHandler(e: MouseEvent) {

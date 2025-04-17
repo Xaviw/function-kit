@@ -106,7 +106,7 @@ export const text = {
       }
     }
 
-    const { height: fullHeight } = enhancedMeasure(preparedProps, { maxWidth: width || maxWidth, ctx })
+    const { height: fullHeight, width: realWidth } = enhancedMeasure(preparedProps, { maxWidth: width || maxWidth, ctx })
 
     if (width <= 0) {
       width = maxWidth
@@ -122,6 +122,15 @@ export const text = {
     if (isNil(top) && !isNil(bottom)) {
       y = containerHeight - bottom - height
     }
+
+    if (preparedProps.textAlign === 'center') {
+      x += (width - realWidth) / 2
+    }
+    else if (preparedProps.textAlign === 'right') {
+      x += width - realWidth
+    }
+    width = realWidth
+    height = fullHeight
 
     return { ...preparedProps, x, y, width, height }
   },
@@ -226,7 +235,7 @@ function enhancedDraw(text: PosterText, options: {
 }
 
 /**
- * 测量全部段落总高度，以及不换行的总宽度
+ * 测量全部段落总高度，最大宽度，以及不换行的总宽度
  */
 export function enhancedMeasure(text: PosterText, options: {
   ctx: CanvasContext
@@ -241,10 +250,14 @@ export function enhancedMeasure(text: PosterText, options: {
   let height = 0
   let width = 0
   let rowNum = 1
+  let paragraphWidth = 0
   while (contents.length) {
     const { top, bottom, content } = measureRowHeight(contents, { ctx, maxWidth, baseProps })
     height += (top + bottom)
-    width += content.reduce((p, c) => p + c.width, 0)
+    const rowWidth = content.reduce((p, c) => p + c.width, 0)
+    width += rowWidth
+    if (rowWidth > paragraphWidth)
+      paragraphWidth = rowWidth
     if (rowNum < lineClamp) {
       rowNum++
       const readyLength = content.length
@@ -261,7 +274,7 @@ export function enhancedMeasure(text: PosterText, options: {
     }
   }
   ctx.restore()
-  return { width, height }
+  return { fullWidth: width, height, width: width > maxWidth ? maxWidth : width }
 }
 
 /**
