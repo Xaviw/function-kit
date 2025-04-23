@@ -162,3 +162,84 @@ export const loadFont = memo((name: string, src: string) => {
     return font.load()
   }
 })
+
+/**
+ * 检查点是否在多边形内部（射线法）
+ * @param point - 要检查的点 [x, y]
+ * @param polylinePoints - 多边形的顶点 [[x1, y1], [x2, y2], ...]
+ * @returns 如果点在多边形内部则返回 true，否则返回 false
+ */
+export function checkPointInPolyline(point: [number, number], polylinePoints: [number, number][]): boolean {
+  const px = point[0]
+  const py = point[1]
+  let isInside = false
+  const n = polylinePoints.length
+
+  // 使用射线法判断点是否在多边形内部
+  // 遍历多边形的每一条边 (p1, p2)
+  for (let i = 0, j = n - 1; i < n; j = i++) {
+    const p1 = polylinePoints[i]
+    const p2 = polylinePoints[j]
+    const x1 = p1[0]
+    const y1 = p1[1]
+    const x2 = p2[0]
+    const y2 = p2[1]
+
+    // 检查点的 Y 坐标是否在当前边的 Y 坐标范围之间（不包括上边界或下边界，取决于边的方向，以处理顶点和水平边）
+    const isYBetween = (y1 <= py && py < y2) || (y2 <= py && py < y1)
+
+    if (isYBetween) {
+      // 计算从点 P 发出的水平射线与边 (p1, p2) 所在直线的交点的 X 坐标
+      // (py - y1) * (x2 - x1) / (y2 - y1) + x1
+      // 避免除以零（水平线段），这种情况已在 isYBetween 中处理
+      const xIntersection = x1 + (py - y1) * (x2 - x1) / (y2 - y1)
+
+      // 如果交点的 X 坐标大于点的 X 坐标，说明射线与边相交
+      if (px < xIntersection) {
+        // 每相交一次，切换点是否在内部的状态
+        isInside = !isInside
+      }
+    }
+  }
+
+  return isInside
+}
+
+/**
+ * 获取矩形以中心旋转后的顶点坐标
+ * @param x - 矩形左上角 x 坐标
+ * @param y - 矩形左上角 y 坐标
+ * @param w - 矩形宽度
+ * @param h - 矩形高度
+ * @param r - 旋转角度（单位：度）
+ * @returns 旋转后的顶点坐标数组 [[x1, y1], [x2, y2], [x3, y3], [x4, y4]]
+ */
+export function getRotatedRectVertices(x: number, y: number, w: number, h: number, r: number = 0): [number, number][] {
+  const centerX = x + w / 2
+  const centerY = y + h / 2
+
+  // 将角度转换为弧度
+  const angleRad = r * Math.PI / 180
+  const cosAngle = Math.cos(angleRad)
+  const sinAngle = Math.sin(angleRad)
+
+  // 矩形的四个顶点相对于中心的坐标
+  const vertices = [
+    [-w / 2, -h / 2], // 左上角
+    [w / 2, -h / 2], // 右上角
+    [w / 2, h / 2], // 右下角
+    [-w / 2, h / 2], // 左下角
+  ]
+
+  // 计算旋转后的顶点坐标
+  const rotatedVertices = vertices.map(([vx, vy]) => {
+    // 应用旋转公式
+    const rotatedX = vx * cosAngle - vy * sinAngle
+    const rotatedY = vx * sinAngle + vy * cosAngle
+
+    // 将坐标转换回绝对坐标（加上中心点）
+    return [centerX + rotatedX, centerY + rotatedY] as [number, number]
+  })
+
+  return rotatedVertices
+}

@@ -1,4 +1,4 @@
-import type { Fn } from './common'
+import type { Fn, Recordable } from './common'
 
 export type Canvas = HTMLCanvasElement
 
@@ -108,11 +108,16 @@ export interface PosterElementCommonOptions {
    */
   relativeTo?: string
   /**
-   * 点击事件（不精确！！！仅根据元素盒模型与配置顺序确定是否被点击）
-   *
-   * 事件中 this 为配置项本身
+   * 点击事件（不精确！！！仅根据元素盒模型与配置顺序确定是否被点击，支持旋转判断，未支持圆角判断）
    */
-  onClick?: (e: MouseEvent, options: PosterInstanceOptions) => void
+  onClick?: (params: {
+    /** 点击事件 */
+    event: MouseEvent
+    /** 示例属性 */
+    instanceOptions: PosterInstanceOptions
+    /** 点击项原始配置 */
+    itemConfig: Recordable
+  }) => void
   width?: NumberWithContainer
   height?: NumberWithContainer
   top?: NumberWithContainer
@@ -125,7 +130,7 @@ export interface PosterElementCommonOptions {
    */
   globalAlpha?: number
   /**
-   * 旋转角度，注意旋转不会改变元素盒模型，不会影响子元素相对定位
+   * 旋转角度，注意子元素相对定位还是根据未选择的盒模型进行
    */
   rotate?: number
   shadowOffsetX?: number

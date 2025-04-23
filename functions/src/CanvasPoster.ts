@@ -1,11 +1,11 @@
 import type { Canvas, ElementBox, PosterElement, PosterInstanceOptions, PosterOptions, PosterRenderFunction, PosterText, PosterTextCommonOptions } from '../types/canvas'
 import type { Recordable } from '../types/common'
-import { getCanvas, getDpr, rotateCanvas } from '../utils/canvas/common'
+import { checkPointInPolyline, getCanvas, getDpr, getRotatedRectVertices, rotateCanvas } from '../utils/canvas/common'
 import { image } from '../utils/canvas/image'
 import { line } from '../utils/canvas/line'
 import { rect } from '../utils/canvas/rect'
 import { enhancedMeasure, measure, text } from '../utils/canvas/text'
-import { isArray, isFunction, isNil, isNumber, isObject, isString } from './is'
+import { isArray, isFunction, isNumber, isObject, isString } from './is'
 import { isEqual } from './isEqual'
 
 type PosterElements = (PosterElement | PosterRenderFunction)[]
@@ -17,10 +17,8 @@ interface CacheItem {
   prepare?: Recordable
   /** calculate 后的配置 */
   calculate?: ElementBox & Recordable
-  /** 元素在画布中的 x 坐标 */
-  x?: number
-  /** 元素在画布中的 y 坐标 */
-  y?: number
+  /** 元素盒模型顶点坐标数组（旋转后的） */
+  vertices?: [number, number][]
 }
 
 /** 全部绘制项 */
@@ -138,6 +136,10 @@ export class CanvasPoster {
     }
   }
 
+  /**
+   * 绘制方法（异步）
+   * @param configs 绘制函数或绘制项对象组成的数组
+   */
   async draw(configs: PosterElements) {
     if (!isArray(configs)) {
       console.error(`draw 参数错误，当前为：${configs}`)
@@ -168,8 +170,6 @@ export class CanvasPoster {
           p.y += c.y
           return p
         }, { x: 0, y: 0 })
-        this.cache[index].x = x
-        this.cache[index].y = y
 
         ctx.save()
         ctx.translate(x, y)
@@ -178,6 +178,8 @@ export class CanvasPoster {
         if (rotate)
           rotateCanvas(rotate, { ...props, ctx })
 
+        this.cache[index].vertices = getRotatedRectVertices(x + props.x, y + props.y, props.width, props.height, rotate || 0)
+
         const globalAlpha = Number.parseFloat(props.globalAlpha)
         if (isNumber(globalAlpha) && globalAlpha >= 0 && globalAlpha <= 1)
           ctx.globalAlpha = globalAlpha
@@ -185,56 +187,70 @@ export class CanvasPoster {
         plugin.render(props as any, this.options)
         ctx.restore()
 
-        // if (debug) {
-        if (true) {
+        if (debug) {
           ctx.save()
+          ctx.translate(x, y)
           const rotate = Number.parseFloat(props.rotate)
           if (rotate)
             rotateCanvas(rotate, { ...props, ctx })
           ctx.strokeStyle = (debug as Recordable)?.lineColor || '#ff0000'
           ctx.lineWidth = (debug as Recordable)?.lineWidth || 2
-          ctx.strokeRect(x + props.x, y + props.y, props.width, props.height)
+          ctx.strokeRect(props.x, props.y, props.width, props.height)
           ctx.restore()
         }
       }
     }
 
     if (PLATFORM === 'web')
-      node.addEventListener('click', this.clickHandler.bind(this))
+      node.addEventListener('click', this.clickHandler)
   }
 
-  clickHandler(e: MouseEvent) {
-    let { offsetX, offsetY } = e
+  /**
+   * 点击事件处理方法，小程序中需要手动绑定到 canvas 元素
+   */
+  clickHandler = function (this: CanvasPoster, event: MouseEvent) {
+    let { offsetX, offsetY } = event
     const { nodeHeight, nodeWidth, width, height } = this.options
     offsetX = width / nodeWidth * offsetX
     offsetY = height / nodeHeight * offsetY
+
     const cache = [...this.cache]
+
     cache.reverse().some((item) => {
       if (!item)
         return false
-      const { config, calculate, x, y } = item
-      const handler = config?.onClick
-      if (isFunction(handler) && calculate && !isNil(x) && !isNil(y)) {
-        const { width, height, x: ex, y: ey } = calculate
-        const startX = x + ex
-        const startY = y + ey
-        const endX = startX + width
-        const endY = startY + height
-        if (offsetX >= startX && offsetX <= endX && offsetY >= startY && offsetY <= endY) {
-          handler.call(config, e, { ...this.options })
-          return true
+
+      const { config, vertices } = item
+
+      if (isFunction(config?.onClick) && vertices) {
+        const res = checkPointInPolyline([offsetX, offsetY], vertices)
+        if (res) {
+          config.onClick({ event, instanceOptions: this.options, itemConfig: config as any })
+          return res
         }
       }
+
       return false
     })
-  }
+  }.bind(this)
 
+  /**
+   * 文本测量方法
+   * @param content 单段 text 配置对象
+   * @returns 同 CanvasRenderingContext2D.measureText
+   */
   async measure(content: PosterTextCommonOptions) {
     await this.initial
     return measure(content, { ctx: this.options.ctx })
   }
 
-  async measureHeight(content: PosterText, maxWidth?: number) {
+  /**
+   * 文本增强测量方法
+   * @param content 完整 text 配置对象
+   * @param maxWidth 换行宽度
+   * @returns height：总高度；width：最大单行宽度；fullWidth：不换行的总宽度
+   */
+  async enhancedMeasure(content: PosterText, maxWidth?: number) {
     await this.initial
     await text.prepare(content)
     return enhancedMeasure(content, { ctx: this.options.ctx, maxWidth: maxWidth || this.options.width })

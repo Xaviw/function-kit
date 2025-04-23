@@ -44,39 +44,35 @@ onMounted(() => {
       height: ({ containerHeight }) => containerHeight * 0.6,
       rotate: 45,
       backgroundColor: '#0000ff',
-      border: {
-        lineWidth: 3,
-        lineColor: '#ff0000',
-      },
     },
-    {
-      type: 'rect',
-      width: 30,
-      height: 30,
-      backgroundColor: '#ff0000',
-    },
-    {
-      type: 'rect',
-      width: 30,
-      height: 30,
-      right: 0,
-      backgroundColor: '#ff0000',
-    },
-    {
-      type: 'rect',
-      width: 30,
-      height: 30,
-      bottom: 0,
-      backgroundColor: '#ff0000',
-    },
-    {
-      type: 'rect',
-      width: 30,
-      height: 30,
-      bottom: 0,
-      right: 0,
-      backgroundColor: '#ff0000',
-    },
+    // {
+    //   type: 'rect',
+    //   width: 30,
+    //   height: 30,
+    //   backgroundColor: '#ff0000',
+    // },
+    // {
+    //   type: 'rect',
+    //   width: 30,
+    //   height: 30,
+    //   right: 0,
+    //   backgroundColor: '#ff0000',
+    // },
+    // {
+    //   type: 'rect',
+    //   width: 30,
+    //   height: 30,
+    //   bottom: 0,
+    //   backgroundColor: '#ff0000',
+    // },
+    // {
+    //   type: 'rect',
+    //   width: 30,
+    //   height: 30,
+    //   bottom: 0,
+    //   right: 0,
+    //   backgroundColor: '#ff0000',
+    // },
   ])
 })
 
